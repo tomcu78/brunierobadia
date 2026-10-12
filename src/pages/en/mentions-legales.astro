@@ -1,0 +1,46 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../data/site.js';
+import { abs } from '../../lib/seo.js';
+
+const lang = 'en';
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: abs('/en') },
+    { '@type': 'ListItem', position: 2, name: 'Legal Notice', item: abs('/en/mentions-legales') },
+  ],
+};
+---
+<Base lang={lang} path="/mentions-legales" title="Legal Notice" description="Legal information and regulatory details for BrunierObadia Studios." jsonLd={[breadcrumb]}>
+  <div class="wrap" style="padding-top:clamp(40px,6vw,90px);padding-bottom:clamp(60px,8vw,120px)">
+    <div class="sec-head">
+      <h1>Legal Notice</h1>
+      <span class="label">Regulation</span>
+    </div>
+
+    <div class="legal-content prose" style="max-width:76ch;margin-top:clamp(32px,4vw,64px)">
+      <section style="border:none;padding:0 0 32px 0">
+        <h3>1. Publisher</h3>
+        <p>This website is published by <strong>{SITE.legalName}</strong>.<br />
+        Headquarters: Paris, France.<br />
+        Founders: Jean-Paul Brunier &amp; Jonas Obadia.<br />
+        Contact: <a href={`mailto:${SITE.emails[0]}`}>{SITE.emails[0]}</a> · <a href={`mailto:${SITE.emails[1]}`}>{SITE.emails[1]}</a><br />
+        Editorial Directors: Jean-Paul Brunier &amp; Jonas Obadia.</p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>2. Hosting</h3>
+        <p>This site is deployed on high-availability cloud infrastructure in compliance with European GDPR standards.<br />
+        Host: Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, United States.</p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>3. Intellectual Property</h3>
+        <p>All materials (texts, design, imagery, brand identities, photographs, code) presented on this site are protected by international copyright laws.<br />
+        Reproduction or redistribution without prior written consent is strictly prohibited.</p>
+      </section>
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site.js';
+import { abs } from '../lib/seo.js';
+
+const lang = 'fr';
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Accueil', item: abs('/') },
+    { '@type': 'ListItem', position: 2, name: 'Mentions Légales', item: abs('/mentions-legales') },
+  ],
+};
+---
+<Base lang={lang} path="/mentions-legales" title="Mentions légales" description="Mentions légales et informations réglementaires de l'agence BrunierObadia Studios." jsonLd={[breadcrumb]}>
+  <div class="wrap" style="padding-top:clamp(40px,6vw,90px);padding-bottom:clamp(60px,8vw,120px)">
+    <div class="sec-head">
+      <h1>Mentions légales</h1>
+      <span class="label">Réglementation</span>
+    </div>
+
+    <div class="legal-content prose" style="max-width:76ch;margin-top:clamp(32px,4vw,64px)">
+      <section style="border:none;padding:0 0 32px 0">
+        <h3>1. Éditeur du site</h3>
+        <p>Le présent site est édité par <strong>{SITE.legalName}</strong>.<br />
+        Siège social : Paris, France.<br />
+        Fondateurs : Jean-Paul Brunier &amp; Jonas Obadia.<br />
+        Courriels : <a href={`mailto:${SITE.emails[0]}`}>{SITE.emails[0]}</a> · <a href={`mailto:${SITE.emails[1]}`}>{SITE.emails[1]}</a><br />
+        Directeur de la publication : Jean-Paul Brunier &amp; Jonas Obadia.</p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>2. Hébergement</h3>
+        <p>Le site est hébergé sur une infrastructure haute disponibilité conforme aux normes de sécurité européennes (RGPD).<br />
+        Hébergeur : Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis.</p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>3. Propriété intellectuelle</h3>
+        <p>L'ensemble des contenus (textes, visuels, photographies, identités de marque, animations, typographies et code source) présents sur ce site relève de la législation française et internationale sur le droit d'auteur et la propriété intellectuelle.<br />
+        Toute reproduction, représentation, modification ou diffusion, totale ou partielle, sans l'accord préalable écrit de BrunierObadia Studios ou de ses clients partenaires est strictement interdite.</p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>4. Données personnelles et cookies</h3>
+        <p>Le site respecte la vie privée des utilisateurs et ne déploie aucun traceur commercial invasif ni cookie publicitaire tiers. Les éventuelles données transmises par courriel ou formulaire de contact sont utilisées exclusivement pour traiter les demandes de projets et ne sont jamais cédées à des tiers.<br />
+        Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez d'un droit d'accès, de rectification et de suppression de vos données en écrivant à : <a href={`mailto:${SITE.emails[0]}`}>{SITE.emails[0]}</a>.</p>
+      </section>
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,27 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../data/site.js';
+const lang = 'en';
+const contacts = [
+  { name: 'Jonas Obadia', email: SITE.emails[0], role: 'Creative' },
+  { name: 'Jean-Paul Brunier', email: SITE.emails[1], role: 'Strategist' },
+];
+---
+<Base lang={lang} path="/contact" title="Contact" description="Contact BrunierObadia: Jonas Obadia and Jean-Paul Brunier. Creative communication agency in Paris.">
+  <div class="wrap">
+    <div class="sec-head" style="padding-top:clamp(32px,5vw,64px)">
+      <h1 style="font-size:clamp(1.8rem,1.2rem+2.6vw,3.2rem)">Contact us</h1>
+      <span class="label">Paris</span>
+    </div>
+    <p class="lead">A project, a brand to build, or a question about your visibility in AI engines. Write to us directly.</p>
+    <div class="team" style="margin-top:clamp(32px,4vw,56px)">
+      {contacts.map((c) => (
+        <div class="member">
+          <b>{c.name}</b>
+          <span>{c.role} · <a href={`mailto:${c.email}`} style="border-bottom:3px solid var(--jaune)">{c.email}</a></span>
+        </div>
+      ))}
+    </div>
+    <p style="margin-top:40px"><a class="btn btn-primary" href={`mailto:${SITE.emails[0]}?subject=Project`}>Write to us <span class="ico" aria-hidden="true">↗</span></a></p>
+  </div>
+</Base>

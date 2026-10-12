@@ -1,0 +1,222 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SITE, about, clients, totalBrands, ui } from '../../data/site.js';
+import { abs, localizePath } from '../../lib/seo.js';
+
+const lang = 'en';
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: abs('/') },
+    { '@type': 'ListItem', position: 2, name: 'The Studios', item: abs('/en/studios') },
+  ]
+};
+
+const practices = [
+  {
+    num: '01',
+    name: 'Brunier & Obadia',
+    lead: 'Strategy & Haute-Couture Craft',
+    desc: 'The union of senior strategic counsel and avant-garde art direction. We partner with houses and visionary enterprises to define their radical singularity and craft collector publications, visual worlds, and defining campaigns.',
+    tags: ['Positioning', 'Art Direction', 'Brand Identity', 'Campaigns', 'Scenography & Print'],
+    leaders: 'Jean-Paul Brunier & Jonas Obadia'
+  },
+  {
+    num: '02',
+    name: 'BrunierObadia Digital Performance',
+    lead: 'Acquisition, Scalable Platforms & Measurement',
+    desc: 'An agile digital engineering and growth unit built to generate measurable business impact. High-converting bespoke web platforms, multi-channel acquisition systems, and generative engine optimization (GEO).',
+    tags: ['Web Engineering', 'Paid Media', 'SEO & GEO (AI)', 'Data & Analytics', 'UX/UI & CRO'],
+    leaders: 'Led by Cyrille Douin'
+  },
+  {
+    num: '03',
+    name: 'BrunierObadia Brand Transformation',
+    lead: 'Culture, Change Management & Executive Advisory',
+    desc: 'Transforming organizations through brand power. We help executive leadership align board vision, corporate governance, and team culture to make brand the living engine of growth.',
+    tags: ['Leadership Alignment', 'Corporate Culture', 'Unifying Narrative', 'Brand Governance', 'Change Management'],
+    leaders: 'With Christophe Attelé'
+  }
+];
+
+const founders = [
+  {
+    name: 'Jean-Paul Brunier',
+    role: 'Strategist & Founding Partner · Former President of Publicis Conseil',
+    bio: 'Former President of Publicis Conseil and leader for over 30 years across global flagship agency networks. Trusted advisor to CAC40 chairpersons, executive boards, cultural institutions, and iconic luxury houses, bringing unmatched strategic depth and boardroom governance vision.',
+    focus: 'Brand strategy, C-suite advisory, corporate governance, long-term vision.'
+  },
+  {
+    name: 'Jonas Obadia',
+    role: 'Creative Director & Founding Partner',
+    bio: 'Art director trained in the uncompromising disciplines of graphic design, fine typography, and contemporary production. He crafts memorable visual identities, museum scenography, and campaigns for prestigious houses (Hermès, Balenciaga, Al Thani...).',
+    focus: 'Art direction, typographic craft, brand identity, publishing.'
+  },
+  {
+    name: 'Cyrille Douin',
+    role: 'Partner · Digital Performance',
+    bio: 'Web pioneer and authority on scalable, data-driven digital ecosystems. He directs BrunierObadia Digital Performance with an obsession for technological clarity, speed, and tangible return on investment.',
+    focus: 'Digital engineering, acquisition architecture, SEO, platforms.'
+  },
+  {
+    name: 'Christophe Attelé',
+    role: 'Partner · Brand Transformation',
+    bio: 'Seasoned authority in human dynamics and cultural transformation inside large corporations. He bridges boardroom corporate strategy with employee engagement and brand momentum.',
+    focus: 'Executive coaching, corporate transformation, culture.'
+  }
+];
+
+const pillars = [
+  {
+    num: '01',
+    title: 'Zero intermediaries, total partner involvement',
+    text: 'No armies of junior delegates or convoluted hierarchies. The founding partners personally conceive, direct, and execute each project with you.'
+  },
+  {
+    num: '02',
+    title: 'Radical integration',
+    text: 'We reject the artificial divide between business strategy and creative craftsmanship. Strategy takes form from the first sketch; design carries rigorous economic purpose.'
+  },
+  {
+    num: '03',
+    title: 'Crafted for longevity',
+    text: 'In a digital landscape filled with transient noise and template conformity, we build precise, enduring, and singular forms engineered to stand the test of time.'
+  }
+];
+---
+<Base lang={lang} path="/studios" title="The Studios" description="BrunierObadia agency: the rare union of a senior strategist and an avant-garde creative director. 50 years of experience, 3 specialized practices in Paris." jsonLd={[breadcrumb]}>
+  <div class="wrap" style="padding-top:clamp(40px,6vw,90px);padding-bottom:clamp(60px,8vw,120px)">
+    
+    <!-- Agency Hero -->
+    <header style="max-width:920px;margin-bottom:clamp(48px,6vw,88px)">
+      <span class="label" style="display:block;margin-bottom:12px">The Agency // Paris</span>
+      <h1 class="display" style="font-size:clamp(2rem,1.4rem+3.5vw,4.6rem);line-height:0.96;margin-bottom:28px">
+        Two generations. Absolute precision.
+      </h1>
+      <p class="lead" style="font-size:clamp(1.1rem,1rem+0.4vw,1.35rem);line-height:1.55;color:var(--ink-soft)">
+        Brunier &amp; Obadia brings together a senior boardroom strategist and an avant-garde creative director separated by 30 years. A singular configuration in Paris, architected to liberate brands from legacy agency friction and deliver high-caliber agility.
+      </p>
+    </header>
+
+    <!-- Agency Metrics -->
+    <div class="stats" style="margin-bottom:clamp(64px,8vw,120px)">
+      <div class="stat">
+        <b>50</b>
+        <span>Years of combined experience</span>
+      </div>
+      <div class="stat">
+        <b>200+</b>
+        <span>Brands advised and built</span>
+      </div>
+      <div class="stat">
+        <b>21</b>
+        <span>Market sectors</span>
+      </div>
+      <div class="stat">
+        <b>3</b>
+        <span>Specialized practices</span>
+      </div>
+    </div>
+
+    <!-- The 3 Practices -->
+    <section style="border-top:1px solid var(--line);padding-top:clamp(48px,6vw,96px);margin-bottom:clamp(64px,8vw,120px)">
+      <div class="sec-head">
+        <div>
+          <span class="label" style="display:block;margin-bottom:8px">Agency Architecture</span>
+          <h2>Our three specialized practices</h2>
+        </div>
+        <span class="label">Agile &amp; complementary model</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:24px;margin-top:36px">
+        {practices.map((p) => (
+          <div style="border:1px solid var(--ink);padding:clamp(24px,3vw,36px);background:var(--paper);display:flex;flex-direction:column;justify-content:space-between;box-shadow:6px 6px 0 var(--ink)">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:12px">
+                <span class="num" style="font-family:var(--mono);font-size:0.85rem;color:var(--muted)">PRACTICE {p.num}</span>
+                <span class="label" style="color:var(--ink);font-weight:700">{p.leaders}</span>
+              </div>
+              <h3 style="font-size:1.35rem;margin:0 0 8px;line-height:1.2">{p.name}</h3>
+              <p style="font-size:0.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;font-family:var(--mono)">{p.lead}</p>
+              <p style="font-size:0.95rem;line-height:1.55;color:var(--ink-soft);margin-bottom:24px">{p.desc}</p>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--line);padding-top:16px">
+              {p.tags.map((t) => (
+                <span style="font-family:var(--mono);font-size:0.7rem;padding:4px 8px;background:var(--paper-warm);border:1px solid var(--line);text-transform:uppercase;letter-spacing:0.04em">{t}</span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Partners & Directors -->
+    <section style="border-top:1px solid var(--line);padding-top:clamp(48px,6vw,96px);margin-bottom:clamp(64px,8vw,120px)">
+      <div class="sec-head">
+        <div>
+          <span class="label" style="display:block;margin-bottom:8px">Leadership</span>
+          <h2>The partners behind every engagement</h2>
+        </div>
+        <span class="label">Direct executive leadership</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:24px;margin-top:36px">
+        {founders.map((f) => (
+          <div style="border:1px solid var(--line);padding:clamp(20px,2.5vw,32px);background:var(--paper-warm);display:flex;flex-direction:column;justify-content:space-between">
+            <div>
+              <h3 style="font-size:1.3rem;margin:0 0 6px">{f.name}</h3>
+              <p class="label" style="margin-bottom:18px;color:var(--ink);font-weight:700">{f.role}</p>
+              <p style="font-size:0.92rem;line-height:1.55;color:var(--ink-soft);margin-bottom:20px">{f.bio}</p>
+            </div>
+            <div style="border-top:1px solid var(--line);padding-top:12px;font-size:0.75rem;font-family:var(--mono);color:var(--muted)">
+              <b style="color:var(--ink)">Focus :</b> {f.focus}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Philosophy -->
+    <section style="border-top:1px solid var(--line);padding-top:clamp(48px,6vw,96px)">
+      <div class="sec-head">
+        <div>
+          <span class="label" style="display:block;margin-bottom:8px">Principles &amp; Convictions</span>
+          <h2>How we work</h2>
+        </div>
+        <span class="label">Atelier precision · Strategic clarity</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:32px;margin-top:36px">
+        {pillars.map((pi) => (
+          <div style="border-left:2px solid var(--jaune);padding-left:24px">
+            <span style="font-family:var(--mono);font-size:0.8rem;color:var(--muted);display:block;margin-bottom:8px">{pi.num} / 03</span>
+            <h3 style="font-size:1.2rem;margin:0 0 12px;line-height:1.3">{pi.title}</h3>
+            <p style="font-size:0.92rem;line-height:1.55;color:var(--ink-soft);margin:0">{pi.text}</p>
+          </div>
+        ))}
+      </div>
+
+      <div style="margin-top:64px;display:flex;gap:16px;flex-wrap:wrap">
+        <a class="btn btn-primary btn-lg" href={localizePath('/contact', lang)}>
+          Contact our partners <span class="ico" aria-hidden="true">↗</span>
+        </a>
+        <a class="btn btn-lg" href={localizePath('/projets', lang)}>
+          Explore our work <span class="ico" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Contact Band -->
+  <section class="cta-band">
+    <div class="ghost" aria-hidden="true">
+      <span>brunier obadia · brunier obadia · brunier obadia ·&nbsp;</span>
+    </div>
+    <div class="wrap">
+      <h2>Have a brand challenge or meeting in Paris?</h2>
+      <a class="mail" href={`mailto:${SITE.emails[0]}`}>{SITE.emails[0]}</a>
+    </div>
+  </section>
+</Base>

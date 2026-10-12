@@ -1,0 +1,41 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../data/site.js';
+import { abs } from '../../lib/seo.js';
+
+const lang = 'en';
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: abs('/en') },
+    { '@type': 'ListItem', position: 2, name: 'Privacy Policy', item: abs('/en/confidentialite') },
+  ],
+};
+---
+<Base lang={lang} path="/confidentialite" title="Privacy Policy" description="Privacy policy and data governance for BrunierObadia Studios." jsonLd={[breadcrumb]}>
+  <div class="wrap" style="padding-top:clamp(40px,6vw,90px);padding-bottom:clamp(60px,8vw,120px)">
+    <div class="sec-head">
+      <h1>Privacy Policy</h1>
+      <span class="label">GDPR · Data Protection</span>
+    </div>
+
+    <div class="legal-content prose" style="max-width:76ch;margin-top:clamp(32px,4vw,64px)">
+      <section style="border:none;padding:0 0 32px 0">
+        <h3>1. Privacy Commitment</h3>
+        <p>BrunierObadia Studios respects and protects the personal data of its clients, partners, and website visitors.</p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>2. Information We Collect</h3>
+        <p>We only collect professional contact information that you voluntarily provide when inquiring about potential collaborations (name, email, organization, scope of work).<br />
+        This site does not set tracking cookies or third-party advertising scripts.</p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>3. Your Rights</h3>
+        <p>In accordance with GDPR, you may request access, rectification, or deletion of your information at any time by contacting: <a href={`mailto:${SITE.emails[0]}`}>{SITE.emails[0]}</a>.</p>
+      </section>
+    </div>
+  </div>
+</Base>

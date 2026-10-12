@@ -1,0 +1,110 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { projects, ui } from '../../../data/site.js';
+import { abs, localizePath } from '../../../lib/seo.js';
+
+const lang = 'en';
+const t = ui[lang];
+const types = [...new Set(projects.flatMap((p) => p.tags_en))].sort();
+const clientsList = [...new Set(projects.map((p) => p.client))].sort();
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: abs('/en') },
+    { '@type': 'ListItem', position: 2, name: 'Projects', item: abs('/en/projets') },
+  ]
+};
+const itemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  numberOfItems: projects.length,
+  name: 'Projects',
+  itemListElement: projects.map((p, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    url: abs(`/en/projets/${p.slug}`),
+    name: `${p.client} – ${p.name_en}`
+  }))
+};
+---
+<Base lang={lang} path="/projets" title="Projects" description={`Selected portfolio of ${projects.length} projects by BrunierObadia: Hermès, Balenciaga, Aston Martin, Samsung, Peugeot, Nissan, Valeo, Natural History Museum, CNRS, Société Générale.`} jsonLd={[breadcrumb, itemList]}>
+  <div class="wrap" style="padding-top:clamp(40px,6vw,90px);padding-bottom:clamp(60px,8vw,120px)">
+    <div class="sec-head">
+      <div>
+        <span class="label" style="display:block;margin-bottom:8px">Portfolio</span>
+        <h1>Projects</h1>
+      </div>
+      <span class="label">{projects.length} projects · {clientsList.length} clients</span>
+    </div>
+
+    <!-- Filters by discipline -->
+    <div class="filters" data-filters role="toolbar" aria-label="Filter projects">
+      <button type="button" class="chip is-on" data-filter="all">All <em>{projects.length}</em></button>
+      {types.map((ty) => (
+        <button type="button" class="chip" data-filter={ty}>
+          {ty} <em>{projects.filter((p) => p.tags_en.includes(ty)).length}</em>
+        </button>
+      ))}
+    </div>
+
+    <!-- Brutalist 3-column grid matching the original studio DNA -->
+    <div class="work-grid" data-grid>
+      {projects.map((p, i) => (
+        <a
+          class="work"
+          data-tags={p.tags_en.join('|')}
+          data-images={JSON.stringify(p.allImages || [p.image, ...(p.gallery || [])])}
+          href={localizePath(`/projets/${p.slug}`, lang)}
+        >
+          <figure>
+            <img
+              src={p.image}
+              alt={`${p.client} – ${p.name_en}`}
+              width="1920"
+              height="1280"
+              loading="eager"
+            />
+            <div class="work-meta-overlay">
+              <div class="work-head">
+                <span class="customer">{p.client}</span>
+                <span class="name">{p.name_en}</span>
+              </div>
+              <span class="work-tag-hover">{p.sector_en} ↗</span>
+            </div>
+          </figure>
+        </a>
+      ))}
+    </div>
+    <p class="filters-empty" hidden>No projects found matching this filter.</p>
+  </div>
+
+  <script>
+    function initProjectFilters() {
+      const bar = document.querySelector('[data-filters]');
+      const grid = document.querySelector('[data-grid]');
+      if (!bar || !grid || bar.dataset.filtersBound) return;
+      bar.dataset.filtersBound = 'true';
+
+      const items = [...grid.querySelectorAll('.work')];
+      bar.addEventListener('click', (e) => {
+        const btn = (e.target as HTMLElement).closest('[data-filter]') as HTMLElement | null;
+        if (!btn) return;
+        bar.querySelectorAll('.chip').forEach((b) => b.classList.toggle('is-on', b === btn));
+        const f = btn.dataset.filter;
+        let n = 0;
+        items.forEach((el) => {
+          const htmlEl = el as HTMLElement;
+          const ok = f === 'all' || (htmlEl.dataset.tags || '').split('|').includes(f || '');
+          htmlEl.hidden = !ok;
+          if (ok) n++;
+        });
+        const empty = document.querySelector('.filters-empty') as HTMLElement | null;
+        if (empty) empty.hidden = n > 0;
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', initProjectFilters);
+    document.addEventListener('astro:page-load', initProjectFilters);
+  </script>
+</Base>

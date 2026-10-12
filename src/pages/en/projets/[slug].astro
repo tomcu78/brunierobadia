@@ -1,0 +1,89 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { projects, ui } from '../../../data/site.js';
+import { abs, localizePath } from '../../../lib/seo.js';
+
+const lang = 'en';
+const t = ui[lang];
+
+export function getStaticPaths() {
+  return projects.map((p, i) => ({
+    params: { slug: p.slug },
+    props: { project: p, next: projects[(i + 1) % projects.length], prev: projects[(i - 1 + projects.length) % projects.length] },
+  }));
+}
+
+const { project, next, prev } = Astro.props;
+const text = project.long_en || project.desc_en;
+const description = `${project.client} – ${project.name_en}. ${project.desc_en || ''} Project produced by BrunierObadia, creative communication agency in Paris.`.slice(0, 300);
+const creativeWork = {
+  '@context': 'https://schema.org', '@type': 'CreativeWork',
+  name: project.name_en, headline: `${project.client} – ${project.name_en}`, about: project.client,
+  genre: project.tags_en, keywords: project.tags_en.join(', '),
+  image: abs(project.image), url: abs(`/en/projets/${project.slug}`),
+  creator: { '@id': abs('/') + '#organization' }, inLanguage: 'en',
+};
+const breadcrumb = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+  { '@type': 'ListItem', position: 1, name: 'Home', item: abs('/en') },
+  { '@type': 'ListItem', position: 2, name: 'Projects', item: abs('/en/projets') },
+  { '@type': 'ListItem', position: 3, name: project.client, item: abs(`/en/projets/${project.slug}`) },
+] };
+---
+<Base lang={lang} path={`/projets/${project.slug}`} title={`${project.client} – ${project.name_en}`} description={description} image={project.image} ogType="article" jsonLd={[creativeWork, breadcrumb]}>
+  <article>
+    <header class="wrap case-hero">
+      <div class="kicker">
+        <span class="label">{project.client}</span>
+        {project.sector_en && <span class="label">{project.sector_en}</span>}
+      </div>
+      <h1 class="display">{project.name_en}</h1>
+      {project.desc_en && <p class="lead" style="margin-top:26px">{project.desc_en}</p>}
+    </header>
+
+    <img class="cover-full" src={project.image} alt={`${project.client} – ${project.name_en}`} width="1920" height="1280" fetchpriority="high" />
+
+    <div class="wrap">
+      <div class="case-body">
+        <dl class="facts">
+          <dt>Client</dt><dd>{project.client}</dd>
+          {project.client_type_en && <><dt>Sector</dt><dd>{project.client_type_en}</dd></>}
+          {project.tags_en.length > 0 && <><dt>Disciplines</dt><dd>{project.tags_en.join(', ')}</dd></>}
+          <dt>Studios</dt><dd>BrunierObadia · Digital Performance · Brand Transformation</dd>
+        </dl>
+        <div class="prose">
+          {text ? <p>{text}</p> : <p>{project.client} – {project.name_en}. A project led by BrunierObadia, from strategy to delivery.</p>}
+          <p><a class="btn" href={localizePath('/contact', lang)}>Start a project <span class="ico" aria-hidden="true">↗</span></a></p>
+        </div>
+      </div>
+    </div>
+
+    {project.gallery.length > 0 && (
+      <div class="wrap">
+        <div class="gallery reveal-stagger">
+          {project.gallery.map((g, i) => (
+            <figure class={i % 3 === 1 ? 'g-wide' : ''}>
+              <img src={g} alt={`${project.client} – ${project.name_en} (${i + 2})`} width="1920" height="1440" loading="lazy" />
+            </figure>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <div class="wrap">
+      <nav class="case-nav" aria-label="Project navigation" style="margin-top:clamp(48px,6vw,96px)">
+        <a class="case-link" href={`/en/projets/${prev.slug}`}>
+          <img src={prev.image} alt="" width="1920" height="1440" loading="lazy" />
+          <span class="label">← Previous project</span>
+          <b>{prev.client}</b>
+          <em>{prev.name_en}</em>
+        </a>
+        <a class="case-link" href={`/en/projets/${next.slug}`}>
+          <img src={next.image} alt="" width="1920" height="1440" loading="lazy" />
+          <span class="label">Next project →</span>
+          <b>{next.client}</b>
+          <em>{next.name_en}</em>
+        </a>
+      </nav>
+    </div>
+  </article>
+</Base>

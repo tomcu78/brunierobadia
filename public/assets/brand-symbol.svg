@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- High-contrast brutalist badge -->
+  <rect width="64" height="64" rx="8" fill="#0a0a0a"/>
+  
+  <!-- Three iconic geometric spheres in signature yellow with concentric precision rings -->
+  <!-- Top Left Node -->
+  <circle cx="23" cy="23" r="10" fill="#ffff4a"/>
+  <circle cx="23" cy="23" r="6" fill="none" stroke="#0a0a0a" stroke-width="1.2"/>
+  <circle cx="23" cy="23" r="2.5" fill="#0a0a0a"/>
+  
+  <!-- Bottom Left Node -->
+  <circle cx="23" cy="41" r="10" fill="#ffff4a"/>
+  <circle cx="23" cy="41" r="6" fill="none" stroke="#0a0a0a" stroke-width="1.2"/>
+  <circle cx="23" cy="41" r="2.5" fill="#0a0a0a"/>
+  
+  <!-- Offset Right Node (Signature Triangulation) -->
+  <circle cx="41" cy="32" r="10" fill="#ffff4a"/>
+  <circle cx="41" cy="32" r="6" fill="none" stroke="#0a0a0a" stroke-width="1.2"/>
+  <circle cx="41" cy="32" r="2.5" fill="#0a0a0a"/>
+</svg>

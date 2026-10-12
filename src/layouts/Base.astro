@@ -1,0 +1,301 @@
+---
+// Enveloppe commune: SEO technique + données structurées + navigation.
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+import { SITE, ui } from '../data/site.js';
+import { localizePath, abs } from '../lib/seo.js';
+
+const {
+  lang = 'fr',
+  path = '/',
+  title,
+  description = SITE.tagline[lang],
+  ogType = 'website',
+  image = lang === 'en' ? '/assets/og-en.png' : '/assets/og.png',
+  jsonLd = [],
+  noindex = false,
+} = Astro.props;
+
+const t = ui[lang];
+const canonical = abs(localizePath(path, lang));
+const altFr = abs(localizePath(path, 'fr'));
+const altEn = abs(localizePath(path, 'en'));
+const pageTitle = title ? `${title}  –  ${SITE.name}` : `${SITE.name}  –  ${SITE.tagline[lang]}`;
+const ogImage = image.startsWith('http') ? image : abs(image);
+const home = localizePath('/', lang);
+const nav = [
+  { href: localizePath('/projets', lang), label: t.nav.projets },
+  { href: localizePath('/studios', lang), label: t.nav.studios },
+  { href: localizePath('/offres', lang), label: t.nav.offres },
+  { href: localizePath('/clients', lang), label: t.nav.clients },
+];
+
+// Entité de marque, valable sur tout le site (signal fort pour les moteurs IA et Google Knowledge Graph).
+const org = {
+  '@context': 'https://schema.org',
+  '@type': ['Organization', 'ProfessionalService'],
+  '@id': abs('/') + '#organization',
+  name: SITE.legalName,
+  alternateName: ['Brunier & Obadia', 'BrunierObadia', 'Brunier Obadia Studios'],
+  url: abs('/'),
+  logo: abs('/assets/logo-480.png'),
+  image: ogImage,
+  description: SITE.tagline.fr,
+  foundingDate: SITE.foundingDate,
+  email: SITE.emails,
+  address: { '@type': 'PostalAddress', addressLocality: 'Paris', addressCountry: 'FR' },
+  areaServed: ['FR', 'Worldwide'],
+  knowsAbout: [
+    'Communication créative',
+    'Direction artistique',
+    'Performance digitale',
+    'Brand transformation',
+    'Generative Engine Optimization (GEO)',
+    'Édition de luxe',
+    'Architecture de marque'
+  ],
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'customer service',
+    email: SITE.emails[0],
+    availableLanguage: ['French', 'English']
+  },
+  founder: [
+    {
+      '@type': 'Person',
+      name: 'Jean-Paul Brunier',
+      jobTitle: 'Stratège & Associé Fondateur · Ancien Président de Publicis Conseil',
+      description: 'Ancien Président de Publicis Conseil. Stratège de marque, conseiller auprès des comités de direction et directions générales du CAC40, d’institutions culturelles et de maisons de luxe.',
+      alumniOf: {
+        '@type': 'Organization',
+        name: 'Publicis Conseil',
+        alternateName: 'Publicis Groupe'
+      },
+      knowsAbout: ['Stratégie de marque', 'Gouvernance d’entreprise', 'Conseil de direction Comex', 'Campagnes mondiales']
+    },
+    {
+      '@type': 'Person',
+      name: 'Jonas Obadia',
+      jobTitle: 'Directeur Créatif & Associé Fondateur',
+      description: 'Directeur artistique, créateur d’univers visuels et typographe d’art pour des marques emblématiques (Hermès, Balenciaga, MAD Paris, Collection Al Thani).',
+      knowsAbout: ['Direction artistique', 'Haute façon graphique', 'Typographie sur-mesure', 'Édition d’art', 'Scénographie']
+    }
+  ],
+  employee: [
+    {
+      '@type': 'Person',
+      name: 'Jean-Paul Brunier',
+      jobTitle: 'Stratège & Associé Fondateur · Ancien Président de Publicis Conseil',
+      alumniOf: { '@type': 'Organization', name: 'Publicis Conseil' }
+    },
+    { '@type': 'Person', name: 'Jonas Obadia', jobTitle: 'Directeur Créatif & Associé Fondateur' },
+    { '@type': 'Person', name: 'Cyrille Douin', jobTitle: 'Associé Fondateur Digital Performance' },
+    { '@type': 'Person', name: 'Christophe Attelé', jobTitle: 'Associé Brand Transformation' },
+  ],
+};
+const website = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': abs('/') + '#website',
+  url: abs('/'),
+  name: SITE.name,
+  inLanguage: ['fr', 'en'],
+  publisher: { '@id': abs('/') + '#organization' },
+};
+---
+<!doctype html>
+<html lang={lang}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{pageTitle}</title>
+  <meta name="description" content={description} />
+  {noindex && <meta name="robots" content="noindex, follow" />}
+  {!noindex && <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />}
+  <link rel="canonical" href={canonical} />
+  <link rel="alternate" hreflang="fr" href={altFr} />
+  <link rel="alternate" hreflang="en" href={altEn} />
+  <link rel="alternate" hreflang="x-default" href={altFr} />
+
+  <!-- En-têtes de Sécurité HTTP & Hardening (Recommandations Addy Osmani) -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+  <!-- Découverte Moteurs IA & Agents (Standard GEO / llms.txt) -->
+  <link rel="help" type="text/plain" href="/llms.txt" title="LLM Knowledge File" />
+
+  <meta property="og:type" content={ogType} />
+  <meta property="og:site_name" content={SITE.name} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:locale" content={lang === 'fr' ? 'fr_FR' : 'en_GB'} />
+  <meta property="og:locale:alternate" content={lang === 'fr' ? 'en_GB' : 'fr_FR'} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href="/fonts/Aeroport-monospaced.ttf" as="font" type="font/ttf" crossorigin />
+  <ClientRouter />
+
+  <script type="application/ld+json" set:html={JSON.stringify(org)} />
+  <script type="application/ld+json" set:html={JSON.stringify(website)} />
+  {jsonLd.map((block) => <script type="application/ld+json" set:html={JSON.stringify(block)} />)}
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu</a>
+  <header class="site-head">
+    <div class="bar">
+      <a class="brand" href={home} aria-label={SITE.legalName}>
+        <img src="/assets/logo-transparent.png" alt={SITE.name} width="38" height="38" class="brand-logo" />
+        <span class="brand-name">
+          <span class="brand-line">Brunier</span>
+          <span class="brand-line">obadia</span>
+        </span>
+      </a>
+      <nav class="main-nav" aria-label={lang === 'fr' ? 'Navigation principale' : 'Main navigation'}>
+        {nav.map((item) => (
+          <a href={item.href} aria-current={Astro.url.pathname === item.href ? 'page' : undefined}>{item.label}</a>
+        ))}
+      </nav>
+      <div class="head-right">
+        <div class="lang">
+          <a href={altFr} class={lang === 'fr' ? 'active' : ''} hreflang="fr" aria-current={lang === 'fr' ? 'true' : undefined}>FR</a>
+          <span aria-hidden="true">/</span>
+          <a href={altEn} class={lang === 'en' ? 'active' : ''} hreflang="en" aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
+        </div>
+        <a class="btn btn-primary head-cta" href={localizePath('/contact', lang)} aria-label={t.nav.contact}>
+          <span class="head-cta-label">{t.nav.contact}</span><span class="ico" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+  </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-foot">
+      <div class="wrap">
+        <div class="foot-grid">
+          <div>
+            <p class="label" style="margin:0 0 10px">{lang === 'fr' ? 'Agence de communication créative' : 'Creative communication agency'}</p>
+            <p style="max-width:34ch;color:var(--muted);font-size:.9rem">{lang === 'fr' ? "50 ans d'expérience, plus de 200 marques." : '50 years of experience, over 200 brands.'}</p>
+          </div>
+          <div>
+            <p class="foot-col-title">{lang === 'fr' ? 'Navigation' : 'Navigation'}</p>
+            <ul>
+              <li><a href={localizePath('/projets', lang)}>{t.nav.projets}</a></li>
+              <li><a href={localizePath('/studios', lang)}>{t.nav.studios}</a></li>
+              <li><a href={localizePath('/clients', lang)}>{t.nav.clients}</a></li>
+              <li><a href={localizePath('/offres', lang)}>{t.nav.offres}</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="foot-col-title">{t.nav.offres}</p>
+            <ul>
+              <li><a href={localizePath('/offres/creation', lang)}>{lang === 'fr' ? 'Création' : 'Creation'}</a></li>
+              <li><a href={localizePath('/offres/performance-digitale', lang)}>{lang === 'fr' ? 'Performance digitale' : 'Digital performance'}</a></li>
+              <li><a href={localizePath('/offres/brand-transformation', lang)}>{lang === 'fr' ? 'Brand transformation' : 'Brand transformation'}</a></li>
+              <li><a href={localizePath('/offres/visibilite-ia', lang)}>{lang === 'fr' ? 'Visibilité IA (GEO)' : 'AI visibility (GEO)'}</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="foot-col-title">{t.nav.contact}</p>
+            <ul>
+              {SITE.emails.map((e) => <li><a href={`mailto:${e}`}>{e}</a></li>)}
+            </ul>
+          </div>
+        </div>
+        <div class="foot-bottom">
+          <span>© {new Date().getFullYear()} {SITE.legalName} · Paris</span>
+          <div class="foot-legal-links">
+            <a href={localizePath('/mentions-legales', lang)}>{lang === 'fr' ? 'Mentions légales' : 'Legal notice'}</a>
+            <span aria-hidden="true">·</span>
+            <a href={localizePath('/confidentialite', lang)}>{lang === 'fr' ? 'Confidentialité' : 'Privacy policy'}</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script is:inline>
+      // Carrousels d'images au survol pour toutes les cartes projets (fidèle à brunierobadia.com)
+      function initWorksCarousels() {
+        const works = document.querySelectorAll('.work[data-images]');
+        works.forEach((work) => {
+          if (work.dataset.carouselInitialized) return;
+          work.dataset.carouselInitialized = 'true';
+
+          let images = [];
+          try {
+            images = JSON.parse(work.getAttribute('data-images') || '[]');
+          } catch (e) {
+            images = [];
+          }
+          if (!images || images.length <= 1) return;
+
+          const img = work.querySelector('img');
+          if (!img) return;
+
+          // Création des indicateurs visuels discrets
+          let dotsWrap = work.querySelector('.work-carousel-progress');
+          if (!dotsWrap && images.length > 1) {
+            dotsWrap = document.createElement('div');
+            dotsWrap.className = 'work-carousel-progress';
+            images.forEach((_, i) => {
+              const dot = document.createElement('span');
+              dot.className = `work-carousel-dot ${i === 0 ? 'active' : ''}`;
+              dotsWrap.appendChild(dot);
+            });
+            const fig = work.querySelector('figure');
+            if (fig) fig.appendChild(dotsWrap);
+          }
+
+          let intervalId = null;
+          let currentIndex = 0;
+          let preloaded = false;
+
+          function preloadImages() {
+            if (preloaded) return;
+            preloaded = true;
+            images.forEach((src) => {
+              const pre = new Image();
+              pre.src = src;
+            });
+          }
+
+          function showImage(idx) {
+            currentIndex = idx;
+            img.src = images[idx];
+            if (dotsWrap) {
+              const dots = dotsWrap.querySelectorAll('.work-carousel-dot');
+              dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+            }
+          }
+
+          work.addEventListener('mouseenter', () => {
+            preloadImages();
+            currentIndex = 0;
+            showImage(0);
+            intervalId = setInterval(() => {
+              currentIndex = (currentIndex + 1) % images.length;
+              showImage(currentIndex);
+            }, 1000);
+          });
+
+          work.addEventListener('mouseleave', () => {
+            if (intervalId) {
+              clearInterval(intervalId);
+              intervalId = null;
+            }
+            showImage(0);
+          });
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', initWorksCarousels);
+      document.addEventListener('astro:page-load', initWorksCarousels);
+    </script>
+</body>
+</html>

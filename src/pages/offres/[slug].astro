@@ -1,0 +1,97 @@
+---
+import Base from '../../layouts/Base.astro';
+import { offers, projects, SITE } from '../../data/site.js';
+import { abs, localizePath } from '../../lib/seo.js';
+
+const lang = 'fr';
+export function getStaticPaths() {
+  return offers.map((o) => ({ params: { slug: o.slug }, props: { offer: o } }));
+}
+const { offer } = Astro.props;
+
+const relatedProjects = (offer.caseSlugs || [])
+  .map((s: string) => projects.find((p) => p.slug === s))
+  .filter(Boolean)
+  .slice(0, 4);
+
+const service = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: offer.fr.title,
+  description: offer.fr.text,
+  provider: { '@id': abs('/') + '#organization' },
+  areaServed: 'FR',
+  url: abs(`/offres/${offer.slug}`)
+};
+---
+<Base lang={lang} path={`/offres/${offer.slug}`} title={offer.fr.title} description={offer.fr.text} jsonLd={[service]}>
+  <div class="wrap" style="padding-top:clamp(40px,6vw,90px);padding-bottom:clamp(60px,8vw,120px)">
+    <article>
+      <div style="margin-bottom:28px">
+        <a class="label" href={localizePath('/offres', lang)}>← Toutes les offres</a>
+      </div>
+
+      <!-- En-tête naturel (Zéro bloc IA, Zéro gadget) -->
+      <div class="offer-detail-header-simple">
+        <h1 class="odh-title">{offer.fr.title}</h1>
+        <p class="odh-lead">{offer.fr.text}</p>
+        <div class="odh-action">
+          <a class="btn btn-primary" href={localizePath('/contact', lang)}>
+            Parler d'un projet <span class="ico" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Réalisations réelles emblématiques associées à cette discipline -->
+      {relatedProjects.length > 0 && (
+        <div style="margin-top:clamp(48px,6vw,80px)">
+          <div class="sec-head" style="margin-bottom:32px">
+            <div>
+              <span class="label" style="display:block;margin-bottom:8px">Portfolio</span>
+              <h2 style="font-size:clamp(1.5rem,1.2rem+1vw,2.2rem)">Exemples de réalisations</h2>
+            </div>
+            <a class="btn" href={localizePath('/projets', lang)}>Tous les projets ({projects.length}) →</a>
+          </div>
+
+          <div class="work-grid-offers">
+            {relatedProjects.map((p) => (
+              <a
+                class="work"
+                href={localizePath(`/projets/${p.slug}`, lang)}
+                data-images={JSON.stringify(p.allImages || [p.image, ...(p.gallery || [])])}
+                aria-label={`${p.client} – ${p.name_fr}`}
+              >
+                <figure>
+                  <img
+                    src={p.image}
+                    alt={`${p.client} – ${p.name_fr}`}
+                    width="1920"
+                    height="1280"
+                    loading="lazy"
+                  />
+                  <div class="work-meta-overlay">
+                    <div class="work-head">
+                      <span class="customer">{p.client}</span>
+                      <span class="name">{p.name_fr}</span>
+                    </div>
+                    <span class="work-tag-hover">{p.sector_fr} ↗</span>
+                  </div>
+                </figure>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </article>
+  </div>
+
+  <section class="cta-band">
+    <div class="ghost" aria-hidden="true">
+      <span>brunier obadia · brunier obadia · brunier obadia ·&nbsp;</span>
+    </div>
+    <div class="wrap">
+      <h2>Un projet en {offer.fr.title.toLowerCase()} ?</h2>
+      <a class="mail" href={`mailto:${SITE.emails[0]}`}>{SITE.emails[0]}</a>
+    </div>
+  </section>
+</Base>

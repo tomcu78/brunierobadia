@@ -1,0 +1,357 @@
+---
+import Base from '../layouts/Base.astro';
+import { clients, ui, totalBrands } from '../data/site.js';
+import { iconicBrands, clientCategories, caseStudies } from '../data/clientsWall.js';
+import { abs } from '../lib/seo.js';
+
+const lang = 'fr';
+const t = ui[lang];
+
+// Extraction des marques avec un cas d'étude
+const projectsWithClients = iconicBrands.filter((b) => b.projectSlug);
+
+const itemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Marques clientes de BrunierObadia',
+  numberOfItems: totalBrands,
+  itemListElement: clients
+    .filter((c) => c.brands.length)
+    .flatMap((c) => c.brands)
+    .map((b, i) => ({ '@type': 'ListItem', position: i + 1, name: b })),
+};
+
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Accueil', item: abs('/') },
+    { '@type': 'ListItem', position: 2, name: 'Clients', item: abs('/clients') },
+  ],
+};
+---
+
+<Base
+  lang={lang}
+  path="/clients"
+  title="Clients & Wall of Brands · 50 ans de créations"
+  description={`Plus de 200 marques et 26 grandes maisons accompagnées par BrunierObadia: Hermès, Balenciaga, Aston Martin, Jeep, Samsung, Cartier, Dior, CNRS, TotalEnergies.`}
+  jsonLd={[itemList, breadcrumb]}
+>
+  <div class="wrap">
+    <!-- Header Éditorial -->
+    <header class="client-hero-head">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+        <span class="label" style="display:inline-flex; align-items:center; gap:8px;">
+          <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--jaune); box-shadow:0 0 8px var(--jaune);"></span>
+          Wall des Marques · 1974—2024
+        </span>
+        <span class="label">{totalBrands} marques répertoriées · {clients.length} secteurs</span>
+      </div>
+      <h1 class="client-hero-title">
+        Cinquante ans de création avec les plus grandes maisons.
+      </h1>
+      <p class="lead" style="max-width:68ch; margin-bottom:0;">
+        De la haute maroquinerie d'Hermès à l'électronique de pointe de Samsung, en passant par les bolides d'Aston Martin, l'énergie mondiale et les fleurons de la recherche nationale, BrunierObadia façonne l'expression des marques les plus exigeantes.
+      </p>
+    </header>
+
+    <!-- Bandeau KPI -->
+    <div class="client-kpi-bar">
+      <div class="client-kpi-item">
+        <span class="client-kpi-val">+{totalBrands}</span>
+        <span class="client-kpi-lbl">Marques accompagnées</span>
+      </div>
+      <div class="client-kpi-item">
+        <span class="client-kpi-val">26</span>
+        <span class="client-kpi-lbl">Maisons emblématiques</span>
+      </div>
+      <div class="client-kpi-item">
+        <span class="client-kpi-val">{clients.length}</span>
+        <span class="client-kpi-lbl">Secteurs d'activité</span>
+      </div>
+      <div class="client-kpi-item">
+        <span class="client-kpi-val">50 ans</span>
+        <span class="client-kpi-lbl">D'expérience cumulée</span>
+      </div>
+    </div>
+
+    <!-- Contrôles interactifs (Filtres sectoriels + Barre de recherche) -->
+    <section class="client-controls" aria-label="Filtres des marques">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+        <div class="client-filters" id="categoryFilters" role="tablist">
+          {clientCategories.map((cat, idx) => (
+            <button
+              type="button"
+              class={`client-filter-btn ${idx === 0 ? 'active' : ''}`}
+              data-filter={cat.id}
+              role="tab"
+              aria-selected={idx === 0 ? 'true' : 'false'}
+            >
+              {cat.fr}
+              <span class="count">{cat.id === 'all' ? iconicBrands.length : cat.count}</span>
+            </button>
+          ))}
+        </div>
+        <div class="client-search-bar">
+          <span class="client-search-icon" aria-hidden="true">⌕</span>
+          <input
+            type="search"
+            id="brandSearch"
+            class="client-search-input"
+            placeholder="Rechercher une marque ou un secteur..."
+            autocomplete="off"
+            aria-label="Rechercher une marque"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Wall des 26 Logos Vectoriels -->
+    <section aria-label="Maisons emblématiques">
+      <div class="client-wall-grid" id="wallGrid">
+        {iconicBrands.map((brand) => {
+          const Tag = brand.projectSlug ? 'a' : 'div';
+          const href = brand.projectSlug ? `/projets/${brand.projectSlug}` : undefined;
+          return (
+            <Tag
+              href={href}
+              class={`client-card ${brand.projectSlug ? 'has-case' : ''}`}
+              data-brand={brand.name.toLowerCase()}
+              data-sector={brand.sector_fr.toLowerCase()}
+              data-category={brand.category}
+            >
+              <div class="client-card-logo-wrap">
+                <img
+                  src={brand.logo}
+                  alt={`Logo officiel ${brand.name}`}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div class="client-card-bottom">
+                <div class="client-card-info">
+                  <span class="client-card-name">{brand.name}</span>
+                  <span class="client-card-sector">{brand.sector_fr}</span>
+                </div>
+                {brand.projectSlug ? (
+                  <span class="client-case-pill" title="Consulter l'étude de cas">
+                    Cas d'étude ↗
+                  </span>
+                ) : (
+                  <span style="font-family:var(--mono); font-size:0.62rem; color:var(--muted); text-transform:uppercase;">
+                    Partenaire
+                  </span>
+                )}
+              </div>
+            </Tag>
+          );
+        })}
+      </div>
+      <div id="noResults" style="display:none; text-align:center; padding:48px 20px; font-family:var(--mono); color:var(--muted);">
+        <p style="font-size:1.1rem; margin-bottom:8px;">Aucune marque ne correspond à votre recherche.</p>
+        <button type="button" id="resetSearch" class="btn btn-ghost" style="margin-top:12px; font-size:0.75rem;">
+          Réinitialiser les filtres
+        </button>
+      </div>
+    </section>
+
+    <!-- Cas d'études complémentaires -->
+    <section style="margin-top:clamp(40px,5vw,70px); padding:clamp(28px,3.5vw,44px); background:#0a0a0a; color:#fff; border-radius:4px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; margin-bottom:28px;">
+        <div>
+          <span style="font-family:var(--mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.14em; color:var(--jaune); display:block; margin-bottom:6px;">
+            Sélection Portfolio
+          </span>
+          <h2 style="color:#fff; font-size:clamp(1.4rem, 1rem + 1.6vw, 2.2rem); margin:0;">
+            Ils ont fait l'histoire du studio.
+          </h2>
+        </div>
+        <a href="/projets" class="btn" style="background:var(--jaune); color:#0a0a0a; font-weight:700;">
+          Voir tous les cas d'étude ({projectsWithClients.length + caseStudies.length}) ↗
+        </a>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
+        {caseStudies.map((cs) => (
+          <a
+            href={`/projets/${cs.slug}`}
+            style="display:block; padding:18px 20px; background:#141414; border:1px solid #222; text-decoration:none; color:#fff; border-radius:3px; transition:border-color 0.2s, transform 0.2s;"
+            onmouseover="this.style.borderColor='var(--jaune)'; this.style.transform='translateY(-2px)'"
+            onmouseout="this.style.borderColor='#222'; this.style.transform='translateY(0)'"
+          >
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span style="font-family:var(--mono); font-size:0.65rem; text-transform:uppercase; color:var(--jaune); letter-spacing:0.08em;">
+                {cs.category}
+              </span>
+              <span style="font-family:var(--mono); font-size:0.65rem; color:#888;">Étude ↗</span>
+            </div>
+            <strong style="display:block; font-size:1.05rem; font-family:var(--mono); margin-bottom:4px;">
+              {cs.client}
+            </strong>
+            <p style="font-size:0.8rem; color:#aaa; margin:0; line-height:1.4;">
+              {cs.title_fr}
+            </p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Répertoire Exhaustif des 21 Secteurs -->
+    <section class="client-registry" id="registrySection">
+      <div class="client-registry-head">
+        <div>
+          <span class="label" style="display:block; margin-bottom:6px;">Index Général</span>
+          <h2 style="font-size:clamp(1.5rem, 1.1rem + 1.8vw, 2.4rem); margin:0;">
+            Répertoire exhaustif par secteur
+          </h2>
+        </div>
+        <p style="margin:0; max-width:44ch; font-size:0.88rem; color:var(--ink-soft);">
+          Une présence sectorielle sans équivalent. Cliquez sur n'importe quelle marque majeure pour explorer nos archives de création.
+        </p>
+      </div>
+
+      <div class="client-registry-grid" id="registryGrid">
+        {clients.map((sec) => (
+          <div class="client-sector-card" data-sector-card={sec.fr.toLowerCase()}>
+            <div class="client-sector-header">
+              <h3 class="client-sector-name">{sec.fr}</h3>
+              <span class="client-sector-count">{sec.brands.length} marques</span>
+            </div>
+            <div class="client-sector-brands">
+              {sec.brands.map((brandName) => {
+                const matchedIconic = iconicBrands.find(
+                  (b) => b.name.toLowerCase() === brandName.toLowerCase()
+                );
+                const hasProject = matchedIconic && matchedIconic.projectSlug;
+                return hasProject ? (
+                  <a
+                    href={`/projets/${matchedIconic.projectSlug}`}
+                    class="client-brand-chip featured"
+                    title={`Voir le cas ${brandName}`}
+                  >
+                    {brandName} <span style="color:var(--jaune); font-weight:900;">•</span>
+                  </a>
+                ) : (
+                  <span class={`client-brand-chip ${matchedIconic ? 'featured' : ''}`}>
+                    {brandName}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Appel à l'action final -->
+    <section style="margin-top:clamp(60px,7vw,96px); padding-top:clamp(36px,4vw,56px); border-top:1px solid var(--ink); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:24px;">
+      <div>
+        <span class="label" style="display:block; margin-bottom:6px;">Nouvelle collaboration</span>
+        <h3 style="font-size:clamp(1.3rem, 1rem + 1.2vw, 1.8rem); margin:0 0 6px;">
+          Votre marque a une histoire. Donnons-lui de l'envergure.
+        </h3>
+        <p style="margin:0; font-size:0.9rem; color:var(--ink-soft);">
+          Échangez directement avec Jonas Obadia et Jean-Paul Brunier sur vos enjeux stratégiques.
+        </p>
+      </div>
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <a href="mailto:jonasobadia@brunierobadia.com?subject=Nouvelle%20collaboration%20marque" class="btn btn-primary">
+          Contacter les associés <span class="arr">→</span>
+        </a>
+        <a href="/studios" class="btn btn-ghost">
+          Découvrir les 3 Studios
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <!-- Script interactif de filtrage et recherche zéro-latence -->
+  <script is:inline>
+    function initClientsPage() {
+      const container = document.querySelector('.clients-hub');
+      if (!container || container.dataset.clientsInitialized) return;
+      container.dataset.clientsInitialized = 'true';
+
+      const filterBtns = document.querySelectorAll('.client-filter-btn');
+      const searchInput = document.getElementById('brandSearch');
+      const cards = document.querySelectorAll('#wallGrid .client-card');
+      const sectorCards = document.querySelectorAll('#registryGrid .client-sector-card');
+      const noResults = document.getElementById('noResults');
+      const resetBtn = document.getElementById('resetSearch');
+
+      let currentCategory = 'all';
+      let searchQuery = '';
+
+      function applyFilter() {
+        let visibleCount = 0;
+        const q = searchQuery.toLowerCase().trim();
+
+        cards.forEach((card) => {
+          const brand = card.getAttribute('data-brand') || '';
+          const sector = card.getAttribute('data-sector') || '';
+          const category = card.getAttribute('data-category') || '';
+
+          const matchesCat = currentCategory === 'all' || category === currentCategory;
+          const matchesQuery = !q || brand.includes(q) || sector.includes(q);
+
+          if (matchesCat && matchesQuery) {
+            card.style.display = 'flex';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // Filtrage du registre sectoriel
+        sectorCards.forEach((secCard) => {
+          if (!q) {
+            secCard.style.display = 'flex';
+          } else {
+            const text = secCard.innerText.toLowerCase();
+            secCard.style.display = text.includes(q) ? 'flex' : 'none';
+          }
+        });
+
+        if (noResults) {
+          noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+      }
+
+      filterBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach((b) => {
+            b.classList.remove('active');
+            b.setAttribute('aria-selected', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-selected', 'true');
+          currentCategory = btn.getAttribute('data-filter') || 'all';
+          applyFilter();
+        });
+      });
+
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          searchQuery = e.target.value;
+          applyFilter();
+        });
+      }
+
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          if (searchInput) searchInput.value = '';
+          searchQuery = '';
+          currentCategory = 'all';
+          filterBtns.forEach((b, i) => {
+            b.classList.toggle('active', i === 0);
+            b.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+          });
+          applyFilter();
+        });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', initClientsPage);
+    document.addEventListener('astro:page-load', initClientsPage);
+  </script>
+</Base>

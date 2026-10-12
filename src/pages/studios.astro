@@ -1,0 +1,222 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE, about, clients, totalBrands, ui } from '../data/site.js';
+import { abs, localizePath } from '../lib/seo.js';
+
+const lang = 'fr';
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Accueil', item: abs('/') },
+    { '@type': 'ListItem', position: 2, name: 'Les Studios', item: abs('/studios') },
+  ]
+};
+
+const practices = [
+  {
+    num: '01',
+    name: 'Brunier & Obadia',
+    lead: 'Stratégie & Création Haute Façon',
+    desc: 'L’alliance au sommet de la réflexion stratégique et de la direction artistique d’avant-garde. Nous accompagnons les maisons et entreprises dans la définition de leur singularité et la conception d’objets graphiques, éditoriaux et publicitaires d’exception.',
+    tags: ['Positionnement', 'Direction Artistique', 'Identité de Marque', 'Campagnes', 'Édition & Scénographie'],
+    leaders: 'Jean-Paul Brunier & Jonas Obadia'
+  },
+  {
+    num: '02',
+    name: 'BrunierObadia Digital Performance',
+    lead: 'Acquisition, Plateformes & Mesure',
+    desc: 'Une structure d’ingénierie et d’activation digitale conçue pour délivrer des résultats mesurables. Création de sites et plateformes sur-mesure, stratégies d’acquisition multicanales, optimisation de la conversion et référencement IA générative (GEO).',
+    tags: ['Architecture Web', 'Acquisition Média', 'SEO & GEO (IA)', 'Data & Analytics', 'UX/UI & CRO'],
+    leaders: 'Dirigé par Cyrille Douin'
+  },
+  {
+    num: '03',
+    name: 'BrunierObadia Brand Transformation',
+    lead: 'Culture, Conduite du Changement & Comex',
+    desc: 'La transformation des organisations par la marque. Nous aidons les comités de direction à aligner vision, gouvernance et culture d’entreprise pour faire de la marque le moteur vivant de l’évolution des équipes et des modèles d’affaires.',
+    tags: ['Alignement Comex', 'Culture d’Entreprise', 'Récit Fédérateur', 'Gouvernance de Marque', 'Change Management'],
+    leaders: 'Avec Christophe Attelé'
+  }
+];
+
+const founders = [
+  {
+    name: 'Jean-Paul Brunier',
+    role: 'Stratège & Associé Fondateur · Ancien Président de Publicis Conseil',
+    bio: 'Ancien Président de Publicis Conseil et dirigeant pendant plus de 30 ans des plus grands réseaux d’agences mondiaux. Conseiller auprès des directions générales et comités de direction du CAC40, d’institutions culturelles et de maisons de luxe, il apporte une profondeur stratégique sans équivalent et une vision claire des enjeux de gouvernance.',
+    focus: 'Stratégie de marque, conseil auprès des Comex et directions générales, vision long terme.'
+  },
+  {
+    name: 'Jonas Obadia',
+    role: 'Directeur Créatif & Associé Fondateur',
+    bio: 'Directeur artistique formé aux exigences rigoureuses du design graphique, de la typographie d’art et de la production contemporaine. Il conçoit des univers visuels remarquables, des scénographies muséales et des campagnes pour des marques prestigieuses (Hermès, Balenciaga, Al Thani...).',
+    focus: 'Direction artistique, craft typographique, identité, objet éditorial.'
+  },
+  {
+    name: 'Cyrille Douin',
+    role: 'Partner · Digital Performance',
+    bio: 'Pionnier du web et expert reconnu des écosystèmes digitaux et data-driven. Il dirige BrunierObadia Digital Performance avec l’obsession de la clarté technologique, de la vélocité et du retour sur investissement concret.',
+    focus: 'Ingénierie web, performance d’acquisition, SEO, plateformes.'
+  },
+  {
+    name: 'Christophe Attelé',
+    role: 'Partner · Brand Transformation',
+    bio: 'Spécialiste chevronné des dynamiques humaines et de la transformation culturelle au sein des grandes organisations. Il fait converger stratégie d’entreprise, engagement des collaborateurs et puissance de la marque.',
+    focus: 'Accompagnement Comex, dynamique collective, transformation.'
+  }
+];
+
+const pillars = [
+  {
+    num: '01',
+    title: 'Zéro intermédiaire, implication totale',
+    text: 'Pas d’armées de consultants juniors ni de couches hiérarchiques superflues. Les associés fondateurs conçoivent, dirigent et fabriquent personnellement chaque projet à vos côtés.'
+  },
+  {
+    num: '02',
+    title: 'Décloisonnement radical',
+    text: 'Nous refusons la frontière artificielle entre conseil en stratégie et artisanat créatif. La stratégie s’incarne dès le premier trait de dessin ; le design est porteur d’un sens économique rigoureux.'
+  },
+  {
+    num: '03',
+    title: 'Le sens du beau et de la durée',
+    text: 'Dans un paysage digital saturé d’éphémère et de solutions standardisées, nous créons des formes justes, pérennes et mémorables, pensées pour traverser le temps.'
+  }
+];
+---
+<Base lang={lang} path="/studios" title="Les Studios" description="L'agence BrunierObadia: l'alliance d'un stratège et d'un créatif. 50 ans d'expérience, 3 pôles d'excellence à Paris." jsonLd={[breadcrumb]}>
+  <div class="wrap" style="padding-top:clamp(40px,6vw,90px);padding-bottom:clamp(60px,8vw,120px)">
+    
+    <!-- Hero d'Agence -->
+    <header style="max-width:920px;margin-bottom:clamp(48px,6vw,88px)">
+      <span class="label" style="display:block;margin-bottom:12px">L'Agence // Paris</span>
+      <h1 class="display" style="font-size:clamp(2rem,1.4rem+3.5vw,4.6rem);line-height:0.96;margin-bottom:28px">
+        Deux générations. Une exigence absolue.
+      </h1>
+      <p class="lead" style="font-size:clamp(1.1rem,1rem+0.4vw,1.35rem);line-height:1.55;color:var(--ink-soft)">
+        Brunier &amp; Obadia réunit un stratège chevronné et un créatif d'avant-garde que plus de 30 ans séparent. Une configuration singulière sur la place de Paris, conçue pour libérer les marques des lourdeurs d'agences traditionnelles et offrir une agilité rare au plus haut niveau.
+      </p>
+    </header>
+
+    <!-- Métriques Réelles -->
+    <div class="stats" style="margin-bottom:clamp(64px,8vw,120px)">
+      <div class="stat">
+        <b>50</b>
+        <span>Ans d'expérience cumulée</span>
+      </div>
+      <div class="stat">
+        <b>200+</b>
+        <span>Marques accompagnées</span>
+      </div>
+      <div class="stat">
+        <b>21</b>
+        <span>Secteurs d'activité</span>
+      </div>
+      <div class="stat">
+        <b>3</b>
+        <span>Pôles d'excellence</span>
+      </div>
+    </div>
+
+    <!-- Les Trois Pôles Spécialisés -->
+    <section style="border-top:1px solid var(--line);padding-top:clamp(48px,6vw,96px);margin-bottom:clamp(64px,8vw,120px)">
+      <div class="sec-head">
+        <div>
+          <span class="label" style="display:block;margin-bottom:8px">Architecture de l'Agence</span>
+          <h2>Nos trois entités spécialisées</h2>
+        </div>
+        <span class="label">Organisation agile &amp; complémentaire</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:24px;margin-top:36px">
+        {practices.map((p) => (
+          <div style="border:1px solid var(--ink);padding:clamp(24px,3vw,36px);background:var(--paper);display:flex;flex-direction:column;justify-content:space-between;box-shadow:6px 6px 0 var(--ink)">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:12px">
+                <span class="num" style="font-family:var(--mono);font-size:0.85rem;color:var(--muted)">POLE {p.num}</span>
+                <span class="label" style="color:var(--ink);font-weight:700">{p.leaders}</span>
+              </div>
+              <h3 style="font-size:1.35rem;margin:0 0 8px;line-height:1.2">{p.name}</h3>
+              <p style="font-size:0.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;font-family:var(--mono)">{p.lead}</p>
+              <p style="font-size:0.95rem;line-height:1.55;color:var(--ink-soft);margin-bottom:24px">{p.desc}</p>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--line);padding-top:16px">
+              {p.tags.map((t) => (
+                <span style="font-family:var(--mono);font-size:0.7rem;padding:4px 8px;background:var(--paper-warm);border:1px solid var(--line);text-transform:uppercase;letter-spacing:0.04em">{t}</span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Les Dirigeants & Associés -->
+    <section style="border-top:1px solid var(--line);padding-top:clamp(48px,6vw,96px);margin-bottom:clamp(64px,8vw,120px)">
+      <div class="sec-head">
+        <div>
+          <span class="label" style="display:block;margin-bottom:8px">Direction &amp; Associés</span>
+          <h2>Les personnes derrière les projets</h2>
+        </div>
+        <span class="label">Implication directe des associés</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:24px;margin-top:36px">
+        {founders.map((f) => (
+          <div style="border:1px solid var(--line);padding:clamp(20px,2.5vw,32px);background:var(--paper-warm);display:flex;flex-direction:column;justify-content:space-between">
+            <div>
+              <h3 style="font-size:1.3rem;margin:0 0 6px">{f.name}</h3>
+              <p class="label" style="margin-bottom:18px;color:var(--ink);font-weight:700">{f.role}</p>
+              <p style="font-size:0.92rem;line-height:1.55;color:var(--ink-soft);margin-bottom:20px">{f.bio}</p>
+            </div>
+            <div style="border-top:1px solid var(--line);padding-top:12px;font-size:0.75rem;font-family:var(--mono);color:var(--muted)">
+              <b style="color:var(--ink)">Expertise :</b> {f.focus}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Notre Philosophie / Méthode -->
+    <section style="border-top:1px solid var(--line);padding-top:clamp(48px,6vw,96px)">
+      <div class="sec-head">
+        <div>
+          <span class="label" style="display:block;margin-bottom:8px">Méthode &amp; Convictions</span>
+          <h2>Comment nous travaillons</h2>
+        </div>
+        <span class="label">Rigueur d'atelier · Esprit de synthèse</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:32px;margin-top:36px">
+        {pillars.map((pi) => (
+          <div style="border-left:2px solid var(--jaune);padding-left:24px">
+            <span style="font-family:var(--mono);font-size:0.8rem;color:var(--muted);display:block;margin-bottom:8px">{pi.num} / 03</span>
+            <h3 style="font-size:1.2rem;margin:0 0 12px;line-height:1.3">{pi.title}</h3>
+            <p style="font-size:0.92rem;line-height:1.55;color:var(--ink-soft);margin:0">{pi.text}</p>
+          </div>
+        ))}
+      </div>
+
+      <div style="margin-top:64px;display:flex;gap:16px;flex-wrap:wrap">
+        <a class="btn btn-primary btn-lg" href={localizePath('/contact', lang)}>
+          Prendre contact avec l'agence <span class="ico" aria-hidden="true">↗</span>
+        </a>
+        <a class="btn btn-lg" href={localizePath('/projets', lang)}>
+          Explorer nos réalisations <span class="ico" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Bandeau Contact Prestige -->
+  <section class="cta-band">
+    <div class="ghost" aria-hidden="true">
+      <span>brunier obadia · brunier obadia · brunier obadia ·&nbsp;</span>
+    </div>
+    <div class="wrap">
+      <h2>Un projet de marque, une rencontre à Paris ?</h2>
+      <a class="mail" href={`mailto:${SITE.emails[0]}`}>{SITE.emails[0]}</a>
+    </div>
+  </section>
+</Base>

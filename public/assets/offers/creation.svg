@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" width="100%" height="100%">
+  <!-- Fond papier chaud épuré -->
+  <rect width="480" height="320" fill="#faf9f5"/>
+
+  <!-- Composition géométrique minimale : Cercle, arc & disque solaire -->
+  <g transform="translate(240, 160)">
+    <!-- Grand cercle fin -->
+    <circle cx="0" cy="0" r="80" fill="none" stroke="#0a0a0a" stroke-width="1.2"/>
+    <!-- Arc intérieur -->
+    <path d="M -80,0 A 80,80 0 0,1 0,-80" fill="none" stroke="#0a0a0a" stroke-width="1.2"/>
+    <!-- Ligne d'horizon épurée -->
+    <line x1="-120" y1="0" x2="120" y2="0" stroke="#0a0a0a" stroke-width="0.8"/>
+    <!-- Disque jaune signature BrunierObadia -->
+    <circle cx="32" cy="-32" r="18" fill="#ffff4a" stroke="#0a0a0a" stroke-width="1.2"/>
+    <!-- Point central -->
+    <circle cx="0" cy="0" r="3" fill="#0a0a0a"/>
+  </g>
+</svg>

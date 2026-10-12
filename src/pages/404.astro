@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { localizePath } from '../lib/seo.js';
+const lang = 'fr';
+---
+<Base lang={lang} path="/404" title="Page introuvable" description="La page demandée n'existe pas." noindex={true}>
+  <div class="wrap">
+    <div class="notfound">
+      <p class="label">Erreur 404</p>
+      <h1>Cette page n'existe pas.</h1>
+      <p class="lead">Elle a peut-être été déplacée. Revenez à l'accueil ou parcourez les projets.</p>
+      <p style="margin-top:24px">
+        <a class="btn btn-primary" href={localizePath('/', lang)}>Accueil <span class="ico" aria-hidden="true">→</span></a>
+        <a class="btn" href={localizePath('/projets', lang)}>Voir les projets <span class="ico" aria-hidden="true">→</span></a>
+      </p>
+    </div>
+  </div>
+</Base>

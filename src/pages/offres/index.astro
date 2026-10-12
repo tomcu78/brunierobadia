@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import { offers, SITE } from '../../data/site.js';
+import { abs, localizePath } from '../../lib/seo.js';
+
+const lang = 'fr';
+
+const itemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Offres BrunierObadia',
+  itemListElement: offers.map((o, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    url: abs(`/offres/${o.slug}`),
+    name: o.fr.title,
+  })),
+};
+---
+<Base lang={lang} path="/offres" title="Nos offres" description="Les 4 offres de BrunierObadia: création et direction artistique, performance digitale, brand transformation, visibilité IA (GEO)." jsonLd={[itemList]}>
+  <div class="wrap" style="padding-top:clamp(40px,6vw,90px);padding-bottom:clamp(60px,8vw,120px)">
+    <div class="sec-head">
+      <div>
+        <span class="label" style="display:block;margin-bottom:8px">Expertises</span>
+        <h1>Nos quatre offres</h1>
+      </div>
+      <span class="label">Du positionnement à l'exécution chirurgicale</span>
+    </div>
+    <p class="lead">Une agence d'élite, quatre disciplines complémentaires pour concevoir et faire grandir des marques de premier rang.</p>
+
+    <div class="offers-list">
+      {offers.map((o) => (
+        <a class="offer-row" href={localizePath(`/offres/${o.slug}`, lang)}>
+          <h3>{o.fr.title}</h3>
+          <p>{o.fr.text}</p>
+          <span class="go" aria-hidden="true">→</span>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <section class="cta-band">
+    <div class="ghost" aria-hidden="true">
+      <span>brunier obadia · brunier obadia · brunier obadia ·&nbsp;</span>
+    </div>
+    <div class="wrap">
+      <h2>Un projet d'envergure, une question sur nos offres ?</h2>
+      <a class="mail" href={`mailto:${SITE.emails[0]}`}>{SITE.emails[0]}</a>
+    </div>
+  </section>
+</Base>

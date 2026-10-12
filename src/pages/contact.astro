@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site.js';
+import { localizePath } from '../lib/seo.js';
+const lang = 'fr';
+const contacts = [
+  { name: 'Jonas Obadia', email: SITE.emails[0], role: 'Créatif' },
+  { name: 'Jean-Paul Brunier', email: SITE.emails[1], role: 'Stratège' },
+];
+---
+<Base lang={lang} path="/contact" title="Contact" description="Contacter BrunierObadia: Jonas Obadia et Jean-Paul Brunier. Agence de communication créative à Paris.">
+  <div class="wrap">
+    <div class="sec-head" style="padding-top:clamp(32px,5vw,64px)">
+      <h1 style="font-size:clamp(1.8rem,1.2rem+2.6vw,3.2rem)">Nous contacter</h1>
+      <span class="label">Paris</span>
+    </div>
+    <p class="lead">Un projet, une marque à construire, ou une question sur votre visibilité dans les moteurs IA. Écrivez-nous directement.</p>
+    <div class="team" style="margin-top:clamp(32px,4vw,56px)">
+      {contacts.map((c) => (
+        <div class="member">
+          <b>{c.name}</b>
+          <span>{c.role} · <a href={`mailto:${c.email}`} style="border-bottom:3px solid var(--jaune)">{c.email}</a></span>
+        </div>
+      ))}
+    </div>
+    <p style="margin-top:40px"><a class="btn btn-primary" href={`mailto:${SITE.emails[0]}?subject=Projet`}>Nous écrire <span class="ico" aria-hidden="true">↗</span></a></p>
+  </div>
+</Base>

@@ -1,0 +1,89 @@
+---
+import Base from '../../layouts/Base.astro';
+import { projects, ui } from '../../data/site.js';
+import { abs, localizePath } from '../../lib/seo.js';
+
+const lang = 'fr';
+const t = ui[lang];
+
+export function getStaticPaths() {
+  return projects.map((p, i) => ({
+    params: { slug: p.slug },
+    props: { project: p, next: projects[(i + 1) % projects.length], prev: projects[(i - 1 + projects.length) % projects.length] },
+  }));
+}
+
+const { project, next, prev } = Astro.props;
+const text = project.long_fr || project.desc_fr;
+const description = `${project.client} – ${project.name_fr}. ${project.desc_fr || ''} Projet réalisé par BrunierObadia, agence de communication créative à Paris.`.slice(0, 300);
+const creativeWork = {
+  '@context': 'https://schema.org', '@type': 'CreativeWork',
+  name: project.name_fr, headline: `${project.client} – ${project.name_fr}`, about: project.client,
+  genre: project.tags_fr, keywords: project.tags_fr.join(', '),
+  image: abs(project.image), url: abs(`/projets/${project.slug}`),
+  creator: { '@id': abs('/') + '#organization' }, inLanguage: 'fr',
+};
+const breadcrumb = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+  { '@type': 'ListItem', position: 1, name: 'Accueil', item: abs('/') },
+  { '@type': 'ListItem', position: 2, name: 'Projets', item: abs('/projets') },
+  { '@type': 'ListItem', position: 3, name: project.client, item: abs(`/projets/${project.slug}`) },
+] };
+---
+<Base lang={lang} path={`/projets/${project.slug}`} title={`${project.client} – ${project.name_fr}`} description={description} image={project.image} ogType="article" jsonLd={[creativeWork, breadcrumb]}>
+  <article>
+    <header class="wrap case-hero">
+      <div class="kicker">
+        <span class="label">{project.client}</span>
+        {project.sector_fr && <span class="label">{project.sector_fr}</span>}
+      </div>
+      <h1 class="display">{project.name_fr}</h1>
+      {project.desc_fr && <p class="lead" style="margin-top:26px">{project.desc_fr}</p>}
+    </header>
+
+    <img class="cover-full" src={project.image} alt={`${project.client} – ${project.name_fr}`} width="1920" height="1280" fetchpriority="high" />
+
+    <div class="wrap">
+      <div class="case-body">
+        <dl class="facts">
+          <dt>Client</dt><dd>{project.client}</dd>
+          {project.client_type_fr && <><dt>Secteur</dt><dd>{project.client_type_fr}</dd></>}
+          {project.tags_fr.length > 0 && <><dt>Disciplines</dt><dd>{project.tags_fr.join(', ')}</dd></>}
+          <dt>Studios</dt><dd>BrunierObadia · Digital Performance · Brand Transformation</dd>
+        </dl>
+        <div class="prose">
+          {text ? <p>{text}</p> : <p>{project.client} – {project.name_fr}. Un projet mené par BrunierObadia, de la stratégie à l'exécution.</p>}
+          <p><a class="btn" href={localizePath('/contact', lang)}>Parler d'un projet <span class="ico" aria-hidden="true">↗</span></a></p>
+        </div>
+      </div>
+    </div>
+
+    {project.gallery.length > 0 && (
+      <div class="wrap">
+        <div class="gallery reveal-stagger">
+          {project.gallery.map((g, i) => (
+            <figure class={i % 3 === 1 ? 'g-wide' : ''}>
+              <img src={g} alt={`${project.client} – ${project.name_fr} (${i + 2})`} width="1920" height="1440" loading="lazy" />
+            </figure>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <div class="wrap">
+      <nav class="case-nav" aria-label="Navigation entre projets" style="margin-top:clamp(48px,6vw,96px)">
+        <a class="case-link" href={`/projets/${prev.slug}`}>
+          <img src={prev.image} alt="" width="1920" height="1440" loading="lazy" />
+          <span class="label">← {t.prevProject || 'Projet précédent'}</span>
+          <b>{prev.client}</b>
+          <em>{prev.name_fr}</em>
+        </a>
+        <a class="case-link" href={`/projets/${next.slug}`}>
+          <img src={next.image} alt="" width="1920" height="1440" loading="lazy" />
+          <span class="label">{t.nextProject || 'Projet suivant'} →</span>
+          <b>{next.client}</b>
+          <em>{next.name_fr}</em>
+        </a>
+      </nav>
+    </div>
+  </article>
+</Base>

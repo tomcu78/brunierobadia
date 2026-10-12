@@ -1,0 +1,68 @@
+# brunierobadia.com — Redirections SEO & Hardening Cybersécurité (Apache / OVH)
+RewriteEngine On
+
+# 1) Désactivation de l'exploration de répertoires (Anti-Directory Listing)
+Options -Indexes
+
+# 2) Domaine canonique : forcer HTTPS et www
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^brunierobadia\.com$ [NC]
+RewriteRule ^(.*)$ https://www.brunierobadia.com/$1 [L,R=301]
+
+# 3) Ancienne route SPA
+Redirect 301 /projects /projets
+Redirect 301 /projects/ /projets
+
+# 4) Anciennes URLs de projet (identifiants Airtable) vers les nouveaux slugs
+Redirect 301 /projects/recZzPj9iTg5HjR6Y /projets/balenciaga-global-retail-meeting-2023
+Redirect 301 /projects/rec0rpOFhndq98pX5 /projets/mad-paris-metal-design
+Redirect 301 /projects/recN9TWrc0Vbeu2gj /projets/nissan-x-trail-escapes
+Redirect 301 /projects/recLM4DMmgoK1BXIe /projets/museum-of-natural-history-london-life-s-journey
+Redirect 301 /projects/recigOtE2JCnuUEcv /projets/archistorm-refonte-mise-en-page-magazine
+Redirect 301 /projects/recBk6zb8yAozVpry /projets/merci-raymond-pour-des-villes-plus-vertes
+Redirect 301 /projects/recSwSlFQvSUsucOS /projets/penninghen-creation-site-web
+Redirect 301 /projects/rec4VaKRk1mH1VCA0 /projets/micro-macro-cnrs
+
+# 5) Page 404 dans le style du site
+ErrorDocument 404 /404.html
+
+# 6) En-têtes de Sécurité HTTP (Recommandations Addy Osmani / OWASP Top 10)
+<IfModule mod_headers.c>
+  # Protection contre le Clickjacking (interdire l'iframe dans un tiers)
+  Header always set X-Frame-Options "DENY"
+
+  # Protection contre le MIME Sniffing
+  Header always set X-Content-Type-Options "nosniff"
+
+  # Contrôle des fuites de Referrer
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Restriction stricte des permissions matérielles
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+
+  # Forcer le chiffrement HSTS (1 an + sous-domaines + preload)
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+  # Content Security Policy (CSP) robuste pour site statique
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self' mailto:;"
+
+  # Isolation inter-origines (anti cross-origin leak)
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+</IfModule>
+
+# 7) Protection des fichiers sensibles et cachés (Git, Env, Logs, Backups)
+<FilesMatch "(^\.|\.(bak|config|sql|fla|psd|ini|log|sh|inc|swp|dist|env)|~)$">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
+
+# 8) Mise en cache des assets statiques hashés
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType font/ttf "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
+</IfModule>

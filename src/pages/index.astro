@@ -1,0 +1,361 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE, projects, clients, offers, about, totalBrands, ui } from '../data/site.js';
+import logos from '../data/logos.json';
+import { abs, localizePath } from '../lib/seo.js';
+
+const lang = 'fr';
+const description = "BrunierObadia, agence de communication créative à Paris. Direction artistique, création et brand transformation. 50 ans d'expérience, plus de 200 marques.";
+
+// Top luxury & iconic client brands for the dual-track vector marquee
+const topBrandsRowA = [
+  'HERMÈS', 'BALENCIAGA', 'CARTIER', 'DIOR', 'CHANEL', 'ASTON MARTIN',
+  'NISSAN', 'PEUGEOT', 'SAMSUNG', 'NIKE', 'TOTAL ENERGIES', 'SOCIÉTÉ GÉNÉRALE', 'CNRS'
+];
+const topBrandsRowB = [
+  'RENAULT', 'JEEP', 'VALEO', 'PIAGET', 'ADIDAS', 'JORDAN',
+  'CISCO', 'SFR', 'BNP PARIBAS', 'BARCLAYS', 'CENTRE POMPIDOU', "L'ORÉAL", 'AIR FRANCE'
+];
+
+// Curated flagship projects for the Master Interactive Hero Stage
+const heroFlagships = [
+  {
+    slug: 'hermes-maison-hermes-les-podiums',
+    client: 'HERMÈS',
+    title: 'Maison Hermès — Les Podiums',
+    sector: 'Édition & Scénographie',
+    image: '/projets/hermes-maison-hermes-les-podiums.jpg',
+    tag: 'Haute Horlogerie & Cuir'
+  },
+  {
+    slug: 'balenciaga-global-retail-meeting-2023',
+    client: 'BALENCIAGA',
+    title: 'Global Retail Summit 2023',
+    sector: 'Direction artistique & Campagne',
+    image: '/projets/balenciaga-global-retail-meeting-2023.webp',
+    tag: 'Haute Couture & Retail'
+  },
+  {
+    slug: 'aston-martin-db4-60-ans',
+    client: 'ASTON MARTIN',
+    title: 'DB4 — 60 Ans d’un mythe',
+    sector: 'Film & Motion 3D',
+    image: '/projets/aston-martin-db4-60-ans.webp',
+    tag: 'Automobile d’exception'
+  },
+  {
+    slug: 'al-thani-collection-comment-saisir-une-passion-eclectique',
+    client: 'AL THANI COLLECTION',
+    title: 'Comment saisir une passion éclectique',
+    sector: 'Photographie & Livre d’art',
+    image: '/projets/al-thani-collection-comment-saisir-une-passion-eclectique.webp',
+    tag: 'Patrimoine & Art'
+  },
+  {
+    slug: 'jeep-jeep-animaux',
+    client: 'JEEP',
+    title: 'Campagne Animaux Iconiques',
+    sector: 'Campagne & Direction artistique',
+    image: '/projets/jeep-jeep-animaux.webp',
+    tag: 'Mobilité & Campagne'
+  }
+];
+
+const itemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Projets BrunierObadia',
+  numberOfItems: projects.length,
+  itemListElement: projects.map((p, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    url: abs(`/projets/${p.slug}`),
+    name: `${p.client} – ${p.name_fr}`
+  })),
+};
+---
+<Base lang={lang} path="/" description={description} image={heroFlagships[0].image} jsonLd={[itemList]}>
+  <!-- HERO SECTION MONUMENTALE HAUTE COUTURE -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-kicker">
+        <span>Agence de communication créative · Paris</span>
+        <span class="live-badge"><span class="live-dot" aria-hidden="true"></span>Studio disponible</span>
+      </div>
+
+      <h1 class="display hero-title">
+        Création, direction artistique, transformation de marque.
+      </h1>
+
+      <div class="hero-main-grid">
+        <div class="hero-left">
+          <p class="hero-desc">
+            L'alliance singulière d'un stratège et d'un créatif. Nous concevons des marques remarquables, de la définition de leur singularité jusqu'à l'exécution de leurs campagnes, plateformes et objets éditoriaux.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" href={localizePath('/contact', lang)}>
+              Parler d'un projet <span class="ico" aria-hidden="true">↗</span>
+            </a>
+            <a class="btn btn-lg" href={localizePath('/projets', lang)}>
+              Explorer le portfolio <span class="ico" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Master Interactive Showcase Stage -->
+        <div class="hero-stage" data-hero-stage>
+          <div class="stage-viewport">
+            {heroFlagships.map((f, i) => (
+              <a
+                href={localizePath(`/projets/${f.slug}`, lang)}
+                class={`stage-slide ${i === 0 ? 'is-active' : ''}`}
+                data-slide-index={i}
+              >
+                <img
+                  src={f.image}
+                  alt={`${f.client} — ${f.title}`}
+                  width="1920"
+                  height="1280"
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  fetchpriority={i === 0 ? 'high' : 'auto'}
+                />
+                <div class="stage-overlay">
+                  <span class="stage-tag">{f.tag}</span>
+                  <div class="stage-title-wrap">
+                    <h2 class="stage-client">{f.client}</h2>
+                    <p class="stage-project-name">{f.title} · {f.sector} ↗</p>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+
+          <!-- Selector pills -->
+          <div class="stage-nav" role="tablist" aria-label="Projets phares">
+            {heroFlagships.map((f, i) => (
+              <button
+                type="button"
+                role="tab"
+                class={`stage-tab ${i === 0 ? 'is-active' : ''}`}
+                data-tab-index={i}
+                aria-selected={i === 0 ? 'true' : 'false'}
+              >
+                0{i + 1} {f.client}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BANDEAU DÉFILANT DE VRAIS LOGOS CLIENTS EN VECTORIEL -->
+  <section class="band">
+    <div class="band-head">
+      <h2 style="font-size:clamp(1.3rem, 1.1rem + 1.2vw, 2.1rem)">Marques &amp; Maisons accompagnées</h2>
+      <span class="label">Direction artistique &amp; Campagnes</span>
+    </div>
+
+    <!-- Piste 1 -->
+    <div class="logo-wall">
+      <div class="logo-track">
+        {[...topBrandsRowA, ...topBrandsRowA].map((b) => (
+          <div class="logo-cell" title={b}>
+            {logos[b] ? (
+              <img src={logos[b]} alt={b} loading="lazy" />
+            ) : (
+              <span>{b}</span>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Piste 2 inversée -->
+    <div class="logo-wall reverse" style="margin-top:20px">
+      <div class="logo-track">
+        {[...topBrandsRowB, ...topBrandsRowB].map((b) => (
+          <div class="logo-cell" title={b}>
+            {logos[b] ? (
+              <img src={logos[b]} alt={b} loading="lazy" />
+            ) : (
+              <span>{b}</span>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- GRILLE PROJETS 3 COLONNES BRUTALISTE (ADN D'ORIGINE) -->
+  <section>
+    <div class="wrap">
+      <div class="project-section-head">
+        <div>
+          <span class="label" style="display:block;margin-bottom:8px">Portfolio sélectionné</span>
+          <h2>Projets</h2>
+        </div>
+        <a class="btn" href={localizePath('/projets', lang)}>
+          Tous les {projects.length} projets <span class="ico" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <div class="work-grid">
+        {projects.slice(0, 9).map((p, i) => (
+          <a
+            class="work"
+            href={localizePath(`/projets/${p.slug}`, lang)}
+            data-images={JSON.stringify(p.allImages || [p.image, ...(p.gallery || [])])}
+          >
+            <figure>
+              <img
+                src={p.image}
+                alt={`${p.client} – ${p.name_fr}`}
+                width="1920"
+                height="1280"
+                loading="eager"
+              />
+              <div class="work-meta-overlay">
+                <div class="work-head">
+                  <span class="customer">{p.client}</span>
+                  <span class="name">{p.name_fr}</span>
+                </div>
+                <span class="work-tag-hover">{p.sector_fr} ↗</span>
+              </div>
+            </figure>
+          </a>
+        ))}
+      </div>
+
+      <div style="margin-top:40px;text-align:center">
+        <a class="btn btn-lg btn-primary" href={localizePath('/projets', lang)}>
+          Voir l'intégralité des {projects.length} projets <span class="ico" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOS OFFRES ÉPURÉES -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="label" style="display:block;margin-bottom:8px">Expertises</span>
+          <h2>Nos quatre offres</h2>
+        </div>
+        <span class="label">Du positionnement à l'exécution</span>
+      </div>
+
+      <div class="offers-list">
+        {offers.map((o) => (
+          <a class="offer-row" href={localizePath(`/offres/${o.slug}`, lang)}>
+            <h3>{o.fr.title}</h3>
+            <p>{o.fr.text}</p>
+            <span class="go" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- LES STUDIOS & STATS -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="label" style="display:block;margin-bottom:8px">L'Agence</span>
+          <h2>Les Studios</h2>
+        </div>
+        <a class="label" href={localizePath('/studios', lang)}>Rencontrer l'équipe →</a>
+      </div>
+      <p class="lead">{about.fr}</p>
+
+      <div class="stats">
+        {about.stats.map((s) => (
+          <div class="stat">
+            <b>{s.value}{s.value === '200' ? '+' : ''}</b>
+            <span>{s.label.fr}</span>
+          </div>
+        ))}
+      </div>
+
+      <div style="margin-top:36px">
+        <a class="btn" href={localizePath('/studios', lang)}>
+          Découvrir les Studios &amp; nos associés <span class="ico" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BANDEAU CONTACT PRESTIGE -->
+  <section class="cta-band">
+    <div class="ghost" aria-hidden="true">
+      <span>brunier obadia · brunier obadia · brunier obadia ·&nbsp;</span>
+    </div>
+    <div class="wrap">
+      <h2>Un projet d'envergure, une marque à construire ?</h2>
+      <a class="mail" href={`mailto:${SITE.emails[0]}`}>{SITE.emails[0]}</a>
+    </div>
+  </section>
+
+  <!-- Script d'interaction pour le Master Stage du Hero -->
+  <script>
+    function setupHeroStage() {
+      const stage = document.querySelector('[data-hero-stage]');
+      if (!stage) return;
+
+      const slides = stage.querySelectorAll('.stage-slide');
+      const tabs = stage.querySelectorAll('.stage-tab');
+      let current = 0;
+      let timer = null;
+
+      function goTo(idx) {
+        current = idx;
+        slides.forEach((s, i) => s.classList.toggle('is-active', i === idx));
+        tabs.forEach((t, i) => {
+          t.classList.toggle('is-active', i === idx);
+          t.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+        });
+      }
+
+      function next() {
+        goTo((current + 1) % slides.length);
+      }
+
+      function startTimer() {
+        stopTimer();
+        timer = setInterval(next, 5000);
+      }
+
+      function stopTimer() {
+        if (timer) clearInterval(timer);
+      }
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('mouseenter', () => {
+          const idx = parseInt(tab.dataset.tabIndex || '0', 10);
+          goTo(idx);
+          stopTimer();
+        });
+        tab.addEventListener('click', () => {
+          const idx = parseInt(tab.dataset.tabIndex || '0', 10);
+          goTo(idx);
+          stopTimer();
+        });
+      });
+
+      stage.addEventListener('mouseenter', stopTimer);
+      stage.addEventListener('mouseleave', startTimer);
+
+      startTimer();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupHeroStage);
+    } else {
+      setupHeroStage();
+    }
+    document.addEventListener('astro:page-load', setupHeroStage);
+  </script>
+</Base>

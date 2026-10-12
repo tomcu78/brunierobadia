@@ -1,0 +1,50 @@
+# robots.txt — brunierobadia.com
+# Agence Brunier & Obadia · Paris
+
+User-agent: *
+Allow: /
+Disallow: /.git/
+Disallow: /.env
+Disallow: /node_modules/
+
+# Moteurs de réponse et crawlers IA (Indexation & Citabilité autorisées)
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+# Sitemaps & Fichiers de Découverte Machine (Standard GEO / LLM)
+Sitemap: https://www.brunierobadia.com/sitemap-index.xml
+# llms.txt: https://www.brunierobadia.com/llms.txt
+# llms-full.txt: https://www.brunierobadia.com/llms-full.txt
