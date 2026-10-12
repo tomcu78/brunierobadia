@@ -24,7 +24,7 @@ const heroFlagships = [
     client: 'HERMÈS',
     title: 'Maison Hermès — Les Podiums',
     sector: 'Édition & Scénographie',
-    image: '/projets/hermes-maison-hermes-les-podiums.jpg',
+    image: '/projets/hermes-maison-hermes-les-podiums.webp',
     tag: 'Haute Horlogerie & Cuir'
   },
   {
@@ -113,7 +113,9 @@ const itemList = {
                 data-slide-index={i}
               >
                 <img
-                  src={f.image}
+                  src={f.image.replace('.jpg', '.webp')}
+                  srcset={`${f.image.replace('.jpg', '.webp').replace('.webp', '-800w.webp')} 800w, ${f.image.replace('.jpg', '.webp')} 1920w`}
+                  sizes="(max-width: 800px) 100vw, 1200px"
                   alt={`${f.client} — ${f.title}`}
                   width="1920"
                   height="1280"
@@ -210,11 +212,13 @@ const itemList = {
           >
             <figure>
               <img
-                src={p.image}
+                src={p.image.replace('.jpg', '.webp')}
+                srcset={`${p.image.replace('.jpg', '.webp').replace('.webp', '-800w.webp')} 800w, ${p.image.replace('.jpg', '.webp')} 1920w`}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 alt={`${p.client} – ${p.name_fr}`}
                 width="1920"
                 height="1280"
-                loading="eager"
+                loading="lazy"
               />
               <div class="work-meta-overlay">
                 <div class="work-head">

@@ -59,11 +59,13 @@ const itemList = {
         >
           <figure>
             <img
-              src={p.image}
+              src={p.image.replace('.jpg', '.webp')}
+              srcset={`${p.image.replace('.jpg', '.webp').replace('.webp', '-800w.webp')} 800w, ${p.image.replace('.jpg', '.webp')} 1920w`}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               alt={`${p.client} – ${p.name_fr}`}
               width="1920"
               height="1280"
-              loading="eager"
+              loading={i < 3 ? 'eager' : 'lazy'}
             />
             <div class="work-meta-overlay">
               <div class="work-head">

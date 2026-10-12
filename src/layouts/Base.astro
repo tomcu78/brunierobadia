@@ -60,16 +60,27 @@ const org = {
     email: SITE.emails[0],
     availableLanguage: ['French', 'English']
   },
+  sameAs: [
+    'https://www.linkedin.com/company/brunier-obadia/',
+    'https://github.com/tomcu78/brunierobadia'
+  ],
   founder: [
     {
       '@type': 'Person',
       name: 'Jean-Paul Brunier',
       jobTitle: 'Stratège & Associé Fondateur · Ancien Président de Publicis Conseil',
       description: 'Ancien Président de Publicis Conseil. Stratège de marque, conseiller auprès des comités de direction et directions générales du CAC40, d’institutions culturelles et de maisons de luxe.',
+      sameAs: [
+        'https://fr.wikipedia.org/wiki/Publicis_Conseil',
+        'https://fr.wikipedia.org/wiki/Association_des_agences-conseils_en_communication',
+        'https://www.strategies.fr/actualites/agences/104118W/jean-paul-brunier-quitte-publicis-conseil.html',
+        'https://www.cbnews.fr/agences/image-jean-paul-brunier-quitte-publicis-conseil-28526'
+      ],
       alumniOf: {
         '@type': 'Organization',
         name: 'Publicis Conseil',
-        alternateName: 'Publicis Groupe'
+        alternateName: 'Publicis Groupe',
+        sameAs: 'https://fr.wikipedia.org/wiki/Publicis_Conseil'
       },
       knowsAbout: ['Stratégie de marque', 'Gouvernance d’entreprise', 'Conseil de direction Comex', 'Campagnes mondiales']
     },
@@ -117,8 +128,6 @@ const website = {
   <link rel="alternate" hreflang="en" href={altEn} />
   <link rel="alternate" hreflang="x-default" href={altFr} />
 
-  <!-- En-têtes de Sécurité HTTP & Hardening (Recommandations Addy Osmani) -->
-  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 
   <!-- Découverte Moteurs IA & Agents (Standard GEO / llms.txt) -->
