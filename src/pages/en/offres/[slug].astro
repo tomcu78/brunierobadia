@@ -31,8 +31,13 @@ const service = {
         <a class="label" href={localizePath('/offres', lang)}>← All practices</a>
       </div>
 
-      <!-- Natural header (Zero AI blocks, Zero gadgets) -->
+      <!-- Natural header -->
       <div class="offer-detail-header-simple">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap">
+          <span class="label" style="color:var(--ink);font-weight:700">{offer.code}</span>
+          <span style="color:var(--line)" aria-hidden="true">·</span>
+          <span class="label" style="color:var(--muted)">Led by {offer.en.lead}</span>
+        </div>
         <h1 class="odh-title">{offer.en.title}</h1>
         <p class="odh-lead">{offer.en.text}</p>
         <div class="odh-action">
@@ -41,6 +46,28 @@ const service = {
           </a>
         </div>
       </div>
+
+      <!-- Scope & Key Deliverables -->
+      {offer.en.deliverables && offer.en.deliverables.length > 0 && (
+        <div style="margin-top:clamp(40px,5vw,64px);border-top:1px solid var(--line);padding-top:clamp(32px,4vw,48px)">
+          <div class="sec-head" style="margin-bottom:24px">
+            <div>
+              <span class="label" style="display:block;margin-bottom:8px">{offer.en.scope}</span>
+              <h2 style="font-size:clamp(1.4rem,1.1rem+0.8vw,1.9rem)">Scope &amp; Deliverables</h2>
+            </div>
+            <span class="label" style="color:var(--muted)">{offer.en.standard}</span>
+          </div>
+
+          <ul style="list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px">
+            {offer.en.deliverables.map((d: string) => (
+              <li style="font-size:0.95rem;line-height:1.55;color:var(--ink-soft);display:flex;gap:12px;padding:16px;background:var(--paper-warm);border:1px solid var(--line)">
+                <span style="color:var(--ink);font-weight:700" aria-hidden="true">—</span>
+                <span>{d}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <!-- Real projects showcase -->
       {relatedProjects.length > 0 && (

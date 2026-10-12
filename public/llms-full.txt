@@ -78,23 +78,23 @@ Gouvernance, Fondateurs & Autorité Sémantique :
 - Standard d'excellence : Pérennité stratégique garantie à 10 ans
 - URL : https://www.brunierobadia.com/offres/brand-transformation
 
-### 2.4 Visibilité IA (GEO) (DISCIPLINE // 04)
-- Définition : Être cité par ChatGPT, Perplexity, Gemini et Google AI Overviews : audit, contenus citables, suivi des citations.
-- Direction de la discipline : Pôle R&D & Stratégie Sémantique BrunierObadia
-- Périmètre d'intervention : Generative Engine Optimization (GEO)
+### 2.4 La marque dans les IA (DISCIPLINE // 04)
+- Définition : Dirigé par Jean-Paul Brunier. Ce que les intelligences génératives disent de votre marque façonne déjà votre réputation : audit de vérité, protection contre les hallucinations, souveraineté et gouvernance de marque face aux IA.
+- Direction de la discipline : Jean-Paul Brunier (Stratège & Associé Fondateur · Ancien Président de Publicis Conseil)
+- Périmètre d'intervention : Souveraineté & Gouvernance de Marque à l’Ère de l’IA
 - Livrables clés :
-  * Audit de citabilité IA & Benchmark concurrentiel
-  * Cartographie des entités Wikidata & Knowledge Graph
-  * Balisage sémantique Schema.org haute précision
-  * Production de corpus de vérité citable
-  * Veille continue ChatGPT, Gemini & Perplexity
-  * Stratégie de présence Google AI Overviews
+  * Audit de vérité de marque : ce que ChatGPT, Perplexity, Gemini et Claude disent de vous
+  * Stratégie de réputation et de souveraineté générative pour les Comex et directions générales
+  * Structuration du corpus de vérité et du narratif officiel de la marque (Knowledge Graph & llms.txt)
+  * Protection contre les hallucinations, amalgames et déformations sémantiques
+  * Imposition de votre singularité et de votre désirabilité face aux moteurs conversationnels
+  * Observatoire permanent de citabilité et d’autorité de marque dans les IA
 - Processus méthodologique :
-  * 01. Cartographie des requêtes IA cibles
-  * 02. Structuration du corpus d’autorité
-  * 03. Monitoring du taux de citation génératif
-- Standard d'excellence : Couverture ChatGPT, Gemini, Perplexity, Copilot
-- URL : https://www.brunierobadia.com/offres/visibilite-ia
+  * 01. Diagnostic de réputation & cartographie des hallucinations IA
+  * 02. Définition du corpus de vérité et ancrage sémantique
+  * 03. Souveraineté de marque et gouvernance continue
+- Standard d'excellence : Contrôle et souveraineté du narratif sur 100% des moteurs génératifs majeurs
+- URL : https://www.brunierobadia.com/offres/la-marque-dans-les-ia
 
 ## 3. Les Trois Studios Spécialisés
 

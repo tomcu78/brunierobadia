@@ -31,8 +31,13 @@ const service = {
         <a class="label" href={localizePath('/offres', lang)}>← Toutes les offres</a>
       </div>
 
-      <!-- En-tête naturel (Zéro bloc IA, Zéro gadget) -->
+      <!-- En-tête naturel -->
       <div class="offer-detail-header-simple">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap">
+          <span class="label" style="color:var(--ink);font-weight:700">{offer.code}</span>
+          <span style="color:var(--line)" aria-hidden="true">·</span>
+          <span class="label" style="color:var(--muted)">Dirigé par {offer.fr.lead}</span>
+        </div>
         <h1 class="odh-title">{offer.fr.title}</h1>
         <p class="odh-lead">{offer.fr.text}</p>
         <div class="odh-action">
@@ -41,6 +46,28 @@ const service = {
           </a>
         </div>
       </div>
+
+      <!-- Périmètre d'intervention & Livrables -->
+      {offer.fr.deliverables && offer.fr.deliverables.length > 0 && (
+        <div style="margin-top:clamp(40px,5vw,64px);border-top:1px solid var(--line);padding-top:clamp(32px,4vw,48px)">
+          <div class="sec-head" style="margin-bottom:24px">
+            <div>
+              <span class="label" style="display:block;margin-bottom:8px">{offer.fr.scope}</span>
+              <h2 style="font-size:clamp(1.4rem,1.1rem+0.8vw,1.9rem)">Périmètre d'intervention &amp; Livrables</h2>
+            </div>
+            <span class="label" style="color:var(--muted)">{offer.fr.standard}</span>
+          </div>
+
+          <ul style="list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px">
+            {offer.fr.deliverables.map((d: string) => (
+              <li style="font-size:0.95rem;line-height:1.55;color:var(--ink-soft);display:flex;gap:12px;padding:16px;background:var(--paper-warm);border:1px solid var(--line)">
+                <span style="color:var(--ink);font-weight:700" aria-hidden="true">—</span>
+                <span>{d}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <!-- Réalisations réelles emblématiques associées à cette discipline -->
       {relatedProjects.length > 0 && (
