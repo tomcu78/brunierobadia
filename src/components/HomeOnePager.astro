@@ -243,8 +243,9 @@ const stats = about.stats.slice(0, 3);
             <span class="op-card-media">
               <span class="op-card-inner">
               <img
-                src={s.p.image}
-                srcset={`${s.p.image.replace('.webp', '-800w.webp')} 800w, ${s.p.image.replace('.webp', '-1200w.webp')} 1200w, ${s.p.image.replace('.webp', '-1440w.webp')} 1440w, ${s.p.image} 1920w`}
+                data-defer
+                data-src={s.p.image}
+                data-srcset={`${s.p.image.replace('.webp', '-800w.webp')} 800w, ${s.p.image.replace('.webp', '-1200w.webp')} 1200w, ${s.p.image.replace('.webp', '-1440w.webp')} 1440w, ${s.p.image} 1920w`}
                 sizes={`(max-width: 820px) 100vw, ${(Math.max(s.w, s.h * 1.24 * 1.5) * 1.08 / 14.4).toFixed(1)}vw`}
                 alt={`${s.p.client} – ${fr ? s.p.name_fr : s.p.name_en}`}
                 width="1920"
@@ -376,8 +377,8 @@ const stats = about.stats.slice(0, 3);
 
   <!-- Signature jaune flottante : suit le défilement après « Nos projets » -->
   <a class="op-sig" href={L('/studios')} aria-label="BrunierObadia Studios" data-sig>
-    <img class="op-sig-trio" src="/brand/sphere-jaune-256.webp" alt="" width="256" height="260" loading="lazy" decoding="async" />
-    <img class="op-sig-logo" src="/brand/signature-logo.svg" alt="" width="705" height="714" loading="lazy" />
+    <img class="op-sig-trio" data-defer data-src="/brand/sphere-jaune-256.webp" alt="" width="256" height="260" loading="lazy" decoding="async" />
+    <img class="op-sig-logo" data-defer data-src="/brand/signature-logo.svg" alt="" width="705" height="714" loading="lazy" />
   </a>
 </div>
 
@@ -512,11 +513,35 @@ const stats = about.stats.slice(0, 3);
 
     // Décodage anticipé : chaque photo est chargée et décodée hors du fil principal
     // bien avant d'arriver à l'écran, pour qu'aucun décodage ne bloque l'apparition.
+    // images hors du premier écran (collage, signature) : leur adresse n'est posée qu'une fois la page chargée, puis à
+    // l'approche de l'écran ; elles ne concurrencent pas l'affichage du hero et sont toujours prêtes avant d'être vues
+    const showDeferred = (img) => {
+      if (!img || !img.dataset.src) return;
+      if (img.dataset.srcset) img.srcset = img.dataset.srcset;
+      img.src = img.dataset.src;
+      delete img.dataset.src; delete img.dataset.srcset;
+    };
+    const deferIo = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { showDeferred(e.target); deferIo.unobserve(e.target); } });
+    }, { rootMargin: '1200px 0px' });
+    const startDeferred = () => document.querySelectorAll('img[data-defer][data-src]').forEach((img) => {
+      if (img.closest('.op-sig')) showDeferred(img); else deferIo.observe(img);
+    });
+    // au plus tôt de : fin du chargement, premier défilement / toucher, ou 1,5 s après l'affichage
+    let deferStarted = false;
+    const kickDeferred = () => { if (deferStarted) return; deferStarted = true; startDeferred(); };
+    if (document.readyState === 'complete') kickDeferred();
+    else {
+      addEventListener('load', kickDeferred, { once: true });
+      ['wheel', 'touchstart', 'keydown', 'scroll'].forEach((ev) => addEventListener(ev, kickDeferred, { once: true, passive: true }));
+      setTimeout(kickDeferred, 1500);
+    }
     const decoded = new Map();
     const preDecode = (card) => {
       if (decoded.has(card)) return decoded.get(card);
       const img = card.querySelector('.op-card-media img');
       if (!img) return Promise.resolve();
+      showDeferred(img);
       img.loading = 'eager';
       const p = (img.decode ? img.decode() : Promise.resolve()).catch(() => {});
       decoded.set(card, p);
