@@ -10,7 +10,7 @@ export default defineConfig({
     '/offres/performance-digitale': '/offres/brand-transformation',
     '/en/offres/performance-digitale': '/en/offres/brand-transformation',
   },
-  build: { inlineStylesheets: 'auto' },
+  build: { inlineStylesheets: 'always' },
   // NOMIN=1 : construction non compressée, pour lire les traces de performance
   vite: process.env.NOMIN ? { build: { minify: false } } : {},
   integrations: [
