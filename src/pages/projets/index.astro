@@ -29,7 +29,7 @@ const itemList = {
   }))
 };
 ---
-<Base lang={lang} path="/projets" title="Projets" description={`Les ${projects.length} projets de BrunierObadia: Hermès, Balenciaga, Aston Martin, Samsung, Peugeot, Nissan, Valeo, Musée d'Histoire naturelle, CNRS, Société Générale, Sopalin.`} jsonLd={[breadcrumb, itemList]}>
+<Base preloads={[{ href: projects[0].image.replace('.jpg', '.webp'), srcset: `${projects[0].image.replace('.jpg', '.webp').replace('.webp', '-800w.webp')} 800w, ${projects[0].image.replace('.jpg', '.webp')} 1920w`, sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw' }]} lang={lang} path="/projets" title="Projets" description={`Les ${projects.length} projets de BrunierObadia: Hermès, Balenciaga, Aston Martin, Samsung, Peugeot, Nissan, Valeo, Musée d'Histoire naturelle, CNRS, Société Générale, Sopalin.`} jsonLd={[breadcrumb, itemList]}>
   <div class="wrap" style="padding-top:clamp(40px,6vw,90px);padding-bottom:clamp(60px,8vw,120px)">
     <div class="sec-head">
       <div>
