@@ -4,7 +4,15 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://www.brunierobadia.com',
   trailingSlash: 'never',
+  devToolbar: { enabled: false },
+  // Brand transformation a remplacé Performance digitale : l'ancienne adresse mène à la nouvelle offre
+  redirects: {
+    '/offres/performance-digitale': '/offres/brand-transformation',
+    '/en/offres/performance-digitale': '/en/offres/brand-transformation',
+  },
   build: { inlineStylesheets: 'auto' },
+  // NOMIN=1 : construction non compressée, pour lire les traces de performance
+  vite: process.env.NOMIN ? { build: { minify: false } } : {},
   integrations: [
     sitemap({
       i18n: {

@@ -1,0 +1,227 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import sharp from 'sharp';
+import { localizePath } from '../lib/seo.js';
+
+const { project, prev, next, lang } = Astro.props;
+const en = lang === 'en';
+const k = (field) => project[`${field}_${lang}`];
+const base = en ? '/en/projets' : '/projets';
+const L = en
+  ? { back: 'All projects', client: 'Client', sector: 'Sector', disc: 'Disciplines', cta: 'Start a project', prev: 'Previous project', next: 'Next project', nav: 'Project navigation', fallback: 'A project led by BrunierObadia, from strategy to delivery.' }
+  : { back: 'Tous les projets', client: 'Client', sector: 'Secteur', disc: 'Disciplines', cta: "Parler d'un projet", prev: 'Projet précédent', next: 'Projet suivant', nav: 'Navigation entre projets', fallback: "Un projet mené par BrunierObadia, de la stratégie à l'exécution." };
+
+const pub = (src) => path.join(process.cwd(), 'public', src);
+const variant = (src, w) => src.replace(/\.(webp|jpe?g|png)$/i, `-${w}w.webp`);
+const exists = (src) => fs.existsSync(pub(src));
+
+async function measure(src) {
+  try {
+    const { width, height } = await sharp(pub(src)).metadata();
+    return { src, w: width, h: height, r: width / height };
+  } catch {
+    return { src, w: 1600, h: 1067, r: 1.5 };
+  }
+}
+const srcset = (img) => {
+  const set = [800, 1200, 1440].filter((w) => w < img.w && exists(variant(img.src, w))).map((w) => `${variant(img.src, w)} ${w}w`);
+  return set.length ? [...set, `${img.src} ${img.w}w`].join(', ') : undefined;
+};
+
+const cover = await measure(project.image);
+const shots = await Promise.all(project.gallery.map(measure));
+
+// Rangées justifiées : les images très larges seules, les autres par deux, à hauteur égale, sans recadrage.
+const rows = [];
+let pending = [];
+for (const s of shots) {
+  if (s.r >= 1.9) { if (pending.length) { rows.push(pending); pending = []; } rows.push([s]); continue; }
+  pending.push(s);
+  if (pending.length === 2) { rows.push(pending); pending = []; }
+}
+if (pending.length) {
+  const last = rows[rows.length - 1];
+  // Une image seule en fin de galerie rejoint la rangée précédente plutôt que de rester isolée.
+  if (last && last.length === 2) last.push(...pending); else rows.push(pending);
+}
+
+const paragraphs = (k('long') || k('desc') || '').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+const title = project.client.toLowerCase() === (k('name') || '').toLowerCase() ? project.client : `${project.client} – ${k('name')}`;
+let n = 1;
+---
+<article class="cs">
+  <header class="wrap case-hero">
+    <a class="cs-back label" href={localizePath('/projets', lang)}>← {L.back}</a>
+    <p class="cs-kicker label">
+      <span>{project.client}</span>
+      {k('sector') && <span>{k('sector')}</span>}
+    </p>
+    <h1 class="display">{k('name')}</h1>
+    {k('desc') && <p class="lead cs-lead">{k('desc')}</p>}
+  </header>
+
+  <div class="wrap">
+    <figure class="cs-cover" style={`--r:${cover.r.toFixed(4)}`}>
+      <img src={cover.src} srcset={srcset(cover)} sizes="(max-width: 1440px) 92vw, 1320px" alt={title} width={cover.w} height={cover.h} fetchpriority="high" decoding="async" />
+      {/* même film que sur l'accueil : il joue en boucle, sans le son, posé sur l'image (qui reste en attendant) */}
+      {project.video && (
+        <video class="cs-cover-video" src={project.video} poster={cover.src} autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
+      )}
+    </figure>
+
+    <section class="cs-intro">
+      <dl class="cs-facts">
+        <div><dt>{L.client}</dt><dd>{project.client}</dd></div>
+        {k('client_type') && !/^(client|customer)$/i.test(k('client_type')) && <div><dt>{L.sector}</dt><dd>{k('client_type')}</dd></div>}
+        {k('tags')?.length > 0 && <div><dt>{L.disc}</dt><dd>{k('tags').join(' · ')}</dd></div>}
+      </dl>
+      <div class="cs-text">
+        {paragraphs.length ? paragraphs.map((p) => <p>{p}</p>) : <p>{title}. {L.fallback}</p>}
+        <a class="btn" href={localizePath('/contact', lang)}>{L.cta} <span class="ico" aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+
+    {rows.length > 0 && (
+      <section class="cs-gallery" aria-label={title}>
+        {rows.map((row) => {
+          const sum = row.reduce((a, s) => a + s.r, 0);
+          return (
+            <div class={`cs-row${row.length === 1 ? ' is-single' : ''}`} style={`--sum:${sum.toFixed(4)}`} data-cs-reveal>
+              {row.map((s) => (
+                <figure style={`--r:${s.r.toFixed(4)}`}>
+                  <img src={s.src} srcset={srcset(s)} sizes={row.length === 1 ? '(max-width: 1440px) 92vw, 1320px' : '(max-width: 760px) 92vw, 50vw'} alt={`${title} (${++n})`} width={s.w} height={s.h} loading="lazy" decoding="async" />
+                </figure>
+              ))}
+            </div>
+          );
+        })}
+      </section>
+    )}
+
+    <nav class="cs-nav" aria-label={L.nav}>
+      {[{ p: prev, label: `← ${L.prev}`, cls: 'is-prev' }, { p: next, label: `${L.next} →`, cls: 'is-next' }].map(({ p, label, cls }) => (
+        <a class={`cs-link ${cls}`} href={`${base}/${p.slug}`}>
+          <img src={exists(variant(p.image, 800)) ? variant(p.image, 800) : p.image} alt="" width="160" height="120" loading="lazy" decoding="async" />
+          <span class="cs-link-text">
+            <span class="label">{label}</span>
+            <b>{p.client}</b>
+            <em>{p[`name_${lang}`]}</em>
+          </span>
+        </a>
+      ))}
+    </nav>
+  </div>
+</article>
+
+<script>
+  const rows = document.querySelectorAll('[data-cs-reveal]');
+  if (rows.length && 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    rows.forEach((r) => { r.classList.add('is-pending'); io.observe(r); });
+  }
+</script>
+
+<style>
+  .cs-back { display: inline-block; margin-bottom: clamp(22px, 3vw, 40px); text-decoration: none; transition: opacity .3s; }
+  .cs-back:hover { opacity: 1; color: #fff; }
+  .cs-kicker { display: flex; flex-wrap: wrap; gap: 0 14px; margin: 0 0 18px; }
+  .cs-kicker span + span::before { content: '·'; margin-right: 14px; }
+  .case-hero h1 { max-width: 18ch; text-wrap: balance; }
+  .cs-lead { margin-top: 22px; max-width: 54ch; text-wrap: pretty; }
+
+  /* Couverture : ratio d'origine, hauteur plafonnée, jamais pleine largeur écran */
+  /* Passe-partout : l'image est posée sur un fond teinté, avec une marge comme un tirage encadré. */
+  .cs-cover {
+    --pad: clamp(18px, 4vw, 64px);
+    box-sizing: border-box;
+    width: min(100%, calc(70vh / var(--z, 1) * var(--r) + 2 * var(--pad)));
+    margin: 0 auto;
+    padding: var(--pad);
+    background: #f2efeb;
+  }
+  .cs-cover { position: relative; }
+  .cs-cover-video {
+    position: absolute;
+    inset: var(--pad);
+    width: calc(100% - 2 * var(--pad));
+    height: calc(100% - 2 * var(--pad));
+    object-fit: cover;
+    display: block;
+  }
+  @media (prefers-reduced-motion: reduce) { .cs-cover-video { display: none; } }
+  .cs-cover img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: var(--r);
+    object-fit: cover;
+    box-shadow: 0 1px 2px rgba(40, 20, 15, .06), 0 10px 24px -16px rgba(40, 20, 15, .22);
+  }
+
+  .cs-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: clamp(32px, 6vw, 112px);
+    padding: clamp(56px, 7vw, 120px) 0 clamp(56px, 7vw, 112px);
+  }
+  .cs-facts { margin: 0; border-top: 1px solid var(--line); align-self: start; }
+  .cs-facts div { display: grid; grid-template-columns: 112px 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .cs-facts dt { font-family: var(--mono); text-transform: uppercase; font-size: .68rem; letter-spacing: .12em; color: var(--muted); padding-top: 3px; }
+  .cs-facts dd { margin: 0; font-size: .95rem; line-height: 1.45; }
+  .cs-text p { margin: 0 0 1.1em; font-size: clamp(1.08rem, 1.25vw, 1.3rem); line-height: 1.55; max-width: 58ch; text-wrap: pretty; }
+  .cs-text .btn { margin-top: 18px; }
+
+  /* Galerie : rangées à hauteur égale, ratios respectés */
+  .cs-gallery {
+    display: grid;
+    gap: clamp(14px, 1.6vw, 24px);
+    padding: clamp(40px, 5vw, 88px) 0;
+    /* Bande pleine largeur légèrement teintée : les visuels sur fond blanc gardent leurs contours. */
+    border-image: conic-gradient(#f2efeb 0 0) fill 0 // 0 100vmax;
+  }
+  .cs-row {
+    --gap: clamp(14px, 1.6vw, 24px);
+    display: flex;
+    gap: var(--gap);
+    width: min(100%, calc(80vh / var(--z, 1) * var(--sum) + var(--gap)));
+    margin: 0 auto;
+  }
+  .cs-row.is-single { width: min(100%, calc(76vh / var(--z, 1) * var(--sum))); }
+  .cs-row figure { flex: var(--r) 1 0; min-width: 0; margin: 0; overflow: hidden; background: var(--line); }
+  .cs-row img { display: block; width: 100%; height: auto; aspect-ratio: var(--r); object-fit: cover; transition: transform 1.2s var(--ease-out); }
+  .cs-row figure:hover img { transform: scale(1.025); }
+  .cs-row.is-pending { opacity: 0; transform: translateY(28px); }
+  .cs-row.is-in { opacity: 1; transform: none; transition: opacity .9s var(--ease-out), transform .9s var(--ease-out); }
+
+  /* Navigation précédent / suivant compacte */
+  .cs-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: clamp(40px, 5vw, 72px);
+    padding: 0 0 8px;
+  }
+  .cs-link { display: flex; align-items: center; gap: 20px; text-decoration: none; color: inherit; }
+  .cs-link.is-next { flex-direction: row-reverse; text-align: right; }
+  .cs-link img { flex: none; width: clamp(96px, 10vw, 150px); height: auto; aspect-ratio: 4 / 3; object-fit: cover; filter: grayscale(1); transition: filter .5s var(--ease-out); }
+  .cs-link:hover img { filter: none; }
+  .cs-link-text { display: grid; gap: 4px; min-width: 0; }
+  .cs-link b { font-family: var(--mono); font-weight: 400; font-size: 1.05rem; text-transform: uppercase; }
+  .cs-link em { font-style: normal; color: var(--muted); font-size: .9rem; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .cs-link:hover b { text-decoration: underline; text-underline-offset: 4px; }
+
+  @media (max-width: 900px) {
+    .cs-intro { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px) {
+    /* Mobile : les paires restent côte à côte, à hauteur égale, pour éviter les images géantes. */
+    .cs-row, .cs-row.is-single { --gap: 8px; width: 100%; }
+    .cs-row.is-single { width: min(100%, calc(62vh / var(--z, 1) * var(--sum))); }
+    .cs-gallery { gap: 8px; }
+    .cs-nav { grid-template-columns: 1fr; }
+    .cs-link.is-next { flex-direction: row; text-align: left; }
+  }
+</style>

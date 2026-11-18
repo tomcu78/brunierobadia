@@ -13,28 +13,99 @@ const breadcrumb = {
   ],
 };
 ---
-<Base lang={lang} path="/confidentialite" title="Privacy Policy" description="Privacy policy and data governance for BrunierObadia Studios." jsonLd={[breadcrumb]}>
+<Base lang={lang} path="/confidentialite" title="Privacy Policy" description="Personal data protection policy and GDPR compliance framework for BrunierObadia Studios." jsonLd={[breadcrumb]}>
   <div class="wrap" style="padding-top:clamp(40px,6vw,90px);padding-bottom:clamp(60px,8vw,120px)">
     <div class="sec-head">
       <h1>Privacy Policy</h1>
-      <span class="label">GDPR · Data Protection</span>
+      <span class="label">GDPR · Data Protection · Supervisory Authority</span>
     </div>
 
     <div class="legal-content prose" style="max-width:76ch;margin-top:clamp(32px,4vw,64px)">
+      <p style="font-size:0.95rem;color:var(--muted);line-height:1.6;margin-bottom:32px">
+        This Privacy Policy explains how <strong>{SITE.legalName}</strong> collects, processes, and protects your personal data in accordance with the EU General Data Protection Regulation (Regulation EU 2016/679, "GDPR") and applicable French data protection legislation.
+      </p>
+
       <section style="border:none;padding:0 0 32px 0">
-        <h3>1. Privacy Commitment</h3>
-        <p>BrunierObadia Studios respects and protects the personal data of its clients, partners, and website visitors.</p>
+        <h3>1. Data Controller</h3>
+        <p>The designated data controller for this website is:</p>
+        <p>
+          <strong>{SITE.legalName}</strong> (Simplified Joint-Stock Company / SAS with a share capital of {SITE.shareCapital})<br />
+          Registered Office: {SITE.headquarters}<br />
+          SIRET: {SITE.siret} · Trade &amp; Companies Register: R.C.S. {SITE.rcs}<br />
+          Data Protection Contact: <a href={`mailto:${SITE.emails[0]}`}>{SITE.emails[0]}</a> · <a href={`mailto:${SITE.emails[1]}`}>{SITE.emails[1]}</a><br />
+          Telephone: <a href={`tel:${SITE.phone.replace(/\s+/g, '')}`}>{SITE.phone}</a>
+        </p>
       </section>
 
       <section style="border-top:1px solid var(--line);padding:32px 0">
-        <h3>2. Information We Collect</h3>
-        <p>We only collect professional contact information that you voluntarily provide when inquiring about potential collaborations (name, email, organization, scope of work).<br />
-        This site does not set tracking cookies or third-party advertising scripts.</p>
+        <h3>2. Data Collected &amp; Minimization Principle</h3>
+        <p>
+          We strictly adhere to data minimization (Art. 5(1)(c) GDPR). We only collect professional information voluntarily provided by you when initiating contact regarding a collaboration or project inquiry:
+        </p>
+        <ul style="list-style:disc;padding-left:24px;margin:16px 0;line-height:1.8">
+          <li><strong>Identity:</strong> first and last name, business role/title;</li>
+          <li><strong>Contact Details:</strong> business email, telephone number, organization/brand represented;</li>
+          <li><strong>Communications:</strong> messages and project specifications transmitted for our review.</li>
+        </ul>
       </section>
 
       <section style="border-top:1px solid var(--line);padding:32px 0">
-        <h3>3. Your Rights</h3>
-        <p>In accordance with GDPR, you may request access, rectification, or deletion of your information at any time by contacting: <a href={`mailto:${SITE.emails[0]}`}>{SITE.emails[0]}</a>.</p>
+        <h3>3. Purposes and Legal Bases for Processing</h3>
+        <ul style="list-style:disc;padding-left:24px;margin:16px 0;line-height:1.8">
+          <li><strong>Handling project inquiries and preliminary proposals:</strong> pre-contractual basis (Art. 6(1)(b) GDPR);</li>
+          <li><strong>Client relationship and delivery of design / strategy services:</strong> contractual performance basis;</li>
+          <li><strong>Statutory accounting and tax record-keeping:</strong> legal compliance basis (Art. 6(1)(c) GDPR).</li>
+        </ul>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>4. Data Recipients &amp; Transfers Outside the EU</h3>
+        <p>
+          Collected data is strictly restricted to authorized team members of <strong>{SITE.legalName}</strong>. We do not sell, rent, monetize, or transfer your personal data to any external commercial entity.
+        </p>
+        <p>
+          <strong>Hosting:</strong> the website is hosted by {SITE.host.name} ({SITE.host.address}), acting as a data processor. To keep the service secure and running, the host processes technical connection data (IP address, browser type, pages viewed, date and time), kept in its logs for a limited period.
+        </p>
+        <p>
+          This data may be processed in the United States. This transfer outside the European Union is covered by appropriate safeguards under Chapter V of the GDPR: Standard Contractual Clauses adopted by the European Commission and, where applicable, the EU-US Data Privacy Framework. No other transfer outside the European Union takes place.
+        </p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>5. Retention Periods</h3>
+        <ul style="list-style:disc;padding-left:24px;margin:16px 0;line-height:1.8">
+          <li><strong>Prospects and inquiries:</strong> kept for a maximum duration of 3 years following the last active contact from you.</li>
+          <li><strong>Clients and contractual records:</strong> kept for the duration of the engagement and archived as required by statutory French limitation periods (5 to 10 years).</li>
+        </ul>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>6. Your GDPR Rights</h3>
+        <p>
+          Under Articles 15 to 22 of the GDPR, you have the right to access, rectify, erase ("right to be forgotten"), restrict processing, object to processing, and request portability of your data.
+        </p>
+        <p>
+          To exercise your rights, contact us at: <a href={`mailto:${SITE.emails[0]}`}>{SITE.emails[0]}</a> or by post addressed to {SITE.legalName}, {SITE.headquarters}.
+        </p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>7. Right to Lodge a Complaint with the Supervisory Authority</h3>
+        <p>
+          You have the statutory right to lodge a complaint with the competent supervisory authority:
+        </p>
+        <p>
+          <strong>Commission Nationale de l'Informatique et des Libertés (CNIL)</strong><br />
+          3 Place de Fontenoy — TSA 80715, 75334 PARIS CEDEX 07, France<br />
+          Phone: +33 (0)1 53 73 22 22 · Website: <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">www.cnil.fr</a>
+        </p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>8. Cookies and Privacy-by-Design</h3>
+        <p>
+          The website <strong>{SITE.url}</strong> operates under a privacy-first approach and does not set advertising cookies, behavioral tracking scripts, or invasive analytics requiring consent banners.
+        </p>
       </section>
     </div>
   </div>

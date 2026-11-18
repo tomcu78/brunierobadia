@@ -1,0 +1,108 @@
+---
+// Page Contact (FR / EN), dans la direction artistique de l'accueil : les deux associés en grand,
+// puis l'adresse, le téléphone et les trois offres entre filets.
+import { SITE, offers } from '../data/site.js';
+import { localizePath } from '../lib/seo.js';
+
+const { lang } = Astro.props;
+const T = {
+  fr: {
+    kicker: 'Contact · Paris',
+    title: 'Parlons de votre marque.',
+    lead: 'Un projet, une marque à construire, ou une question sur sa place dans les réponses des IA : écrivez directement aux associés.',
+    people: [
+      { name: 'Jonas Obadia', role: 'Directeur de création, associé fondateur', email: SITE.emails[0] },
+      { name: 'Jean-Paul Brunier', role: 'Stratège, associé fondateur', email: SITE.emails[1] },
+    ],
+    write: 'Écrire',
+    address: 'Adresse',
+    phone: 'Téléphone',
+    offers: 'Nos offres',
+  },
+  en: {
+    kicker: 'Contact · Paris',
+    title: 'Let’s talk about your brand.',
+    lead: 'A project, a brand to build, or a question about its place in AI answers: write directly to the partners.',
+    people: [
+      { name: 'Jonas Obadia', role: 'Creative director, founding partner', email: SITE.emails[0] },
+      { name: 'Jean-Paul Brunier', role: 'Strategist, founding partner', email: SITE.emails[1] },
+    ],
+    write: 'Write',
+    address: 'Address',
+    phone: 'Phone',
+    offers: 'Our offers',
+  },
+}[lang];
+// versions « jour » des boules, faites pour un fond blanc
+const ORBS = { creation: '/brand/sphere-rouge-jour.webp', 'brand-transformation': '/brand/sphere-rose-jour.webp', 'la-marque-dans-les-ia': '/brand/sphere-corail-jour.webp' };
+---
+<header class="ct-hero">
+  <p class="label">{T.kicker}</p>
+  <h1>{T.title}</h1>
+  <p class="ct-lead">{T.lead}</p>
+</header>
+
+<section class="ct-people">
+  {T.people.map((p) => (
+    <a class="ct-person" href={`mailto:${p.email}?subject=${encodeURIComponent(lang === 'fr' ? 'Projet' : 'Project')}`}>
+      <span class="ct-role">{p.role}</span>
+      <b>{p.name}</b>
+      <span class="ct-mail">{p.email}</span>
+      <span class="ct-go">{T.write} <i class="arw arw--diag" aria-hidden="true"></i></span>
+    </a>
+  ))}
+</section>
+
+<section class="ct-info">
+  <div>
+    <span class="ct-k">{T.address}</span>
+    <p>{SITE.address.streetAddress}<br />{SITE.address.postalCode} {SITE.address.locality}</p>
+  </div>
+  <div>
+    <span class="ct-k">{T.phone}</span>
+    <p><a href={`tel:${SITE.phone.replace(/\s+/g, '')}`}>{SITE.phone}</a></p>
+  </div>
+  <div>
+    <span class="ct-k">{T.offers}</span>
+    <ul>
+      {offers.map((o) => (
+        <li><a href={localizePath(`/offres/${o.slug}`, lang)}><img src={ORBS[o.slug]} alt="" width="22" height="22" />{o[lang].title}</a></li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  section.ct-people, section.ct-info { border: 0; font-family: var(--sans); }
+  .ct-hero h1 { font-family: var(--sans); font-size: clamp(2.4rem, 1.2rem + 4.4vw, 5.4rem); letter-spacing: -0.05em; line-height: 0.95; margin: 14px 0 0; }
+  .ct-lead { margin: 26px 0 0 !important; max-width: 56ch; font-size: clamp(15px, 1.15vw, 17px); line-height: 1.45; }
+
+  .ct-people { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(32px, 5vw, 96px); padding: clamp(24px, 3vw, 48px) 0 clamp(80px, 8vw, 130px) !important; }
+  .ct-person { display: grid; gap: 14px; padding-top: 22px; border-top: 1px solid var(--ink); color: var(--ink); text-decoration: none; }
+  .ct-role { font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+  .ct-person b { font-weight: 400; font-size: clamp(32px, 3.2vw, 48px); letter-spacing: -0.045em; line-height: 1; }
+  .ct-mail { justify-self: start; font-size: clamp(15px, 1.2vw, 18px); letter-spacing: -0.02em; border-bottom: 1px solid #ff4a4a; padding-bottom: 2px; }
+  .ct-go { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; font-family: var(--sans-a); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .ct-go .arw { width: 15px; transition: transform 220ms cubic-bezier(.16, 1, .3, 1); }
+  .ct-person:hover .ct-go .arw { transform: translate(3px, -3px); }
+  .ct-person:hover b { color: var(--bordeaux); }
+
+  .ct-info { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); margin-bottom: clamp(24px, 3vw, 48px); }
+  .ct-info > div { padding: 26px 28px 30px 0; border-right: 1px solid var(--line); }
+  .ct-info > div + div { padding-left: 28px; }
+  .ct-info > div:last-child { border-right: 0; }
+  .ct-k { display: block; margin-bottom: 14px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+  .ct-info p { margin: 0; font-size: clamp(16px, 1.3vw, 20px); letter-spacing: -0.03em; line-height: 1.3; }
+  .ct-info a { color: var(--ink); text-decoration: none; }
+  .ct-info p a:hover { color: var(--bordeaux); }
+  .ct-info ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .ct-info li a { display: inline-flex; align-items: center; gap: 12px; font-size: clamp(15px, 1.15vw, 17px); letter-spacing: -0.03em; }
+  .ct-info li img { width: 22px; height: 22px; }
+  .ct-info li a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+
+  @media (max-width: 800px) {
+    .ct-people, .ct-info { grid-template-columns: 1fr; }
+    .ct-info > div, .ct-info > div + div { padding: 22px 0; border-right: 0; }
+    .ct-info > div + div { border-top: 1px solid var(--line); }
+  }
+</style>

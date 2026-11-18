@@ -1,27 +1,26 @@
 # Brunier & Obadia
 
-> Brunier & Obadia est une agence indépendante de communication créative, direction artistique et transformation de marque, fondée à Paris par Jean-Paul Brunier (ex-Président de Publicis Conseil) et Jonas Obadia.
+> Brunier & Obadia est une agence indépendante de communication créative, direction artistique et transformation de marque, fondée à Paris par Jean-Paul Brunier (ancien président de Leo Burnett France et dirigeant chez Publicis) et Jonas Obadia.
 
 ## À propos
 L'alliance singulière d'un stratège de premier plan et d'un créatif. Nous concevons des marques remarquables, de la définition de leur singularité jusqu'à l'exécution de leurs campagnes, plateformes digitales et objets éditoriaux d'exception.
 
-- Fondateurs : Jean-Paul Brunier (ex-Président de Publicis Conseil) & Jonas Obadia (Directeur Créatif)
-- Associés & Direction : Cyrille Douin (Digital Performance), Christophe Attelé (Brand Transformation)
+- Fondateurs : Jean-Paul Brunier (ancien président de Leo Burnett France, dirigeant chez Publicis Groupe 2000-2022) & Jonas Obadia (directeur de création, président de Brunier Obadia Studios)
+- Associés & Direction : Tom Cottu (AI Endorsement), Christophe Attelé (Brand Transformation)
 - Localisation : Paris, France
 - Site officiel : https://www.brunierobadia.com
 - Version anglaise : https://www.brunierobadia.com/en
 
 ## Gouvernance & Leadership
-- **Jean-Paul Brunier** (Stratège & Associé Fondateur) : Ancien Président de Publicis Conseil (navire amiral du groupe Publicis). Plus de 30 ans de leadership à la tête des plus grands réseaux d'agences internationaux. Conseiller auprès des présidents et directions générales du CAC40, d'institutions culturelles et de maisons de luxe mondiales. Expert en gouvernance de marque, stratégie de repositionnement et influence Comex.
+- **Jean-Paul Brunier** (Stratège & Associé Fondateur) : Président de Leo Burnett France à partir de 2008, vingt-deux ans chez Publicis Groupe (2000-2022), puis global client leader du groupe. Ancien président du pôle Société de l'AACC et administrateur de l'ARPP pendant plus de dix ans. Tribunes dans Atlantico et Influencia. Conseille directions générales et comités exécutifs sur leur stratégie de marque. Présentation complète : https://www.brunierobadia.com/studios#jean-paul-brunier
 - **Jonas Obadia** (Directeur Créatif & Associé Fondateur) : Directeur artistique, haute façon typographique, scénographies muséales et campagnes d'exception (Hermès, Balenciaga, MAD Paris, Al Thani Collection).
-- **Cyrille Douin** (Partner · Digital Performance) : Ingénierie web moderne, plateformes headless, SEO & acquisition ROIste.
+- **Tom Cottu** (Partner · AI Endorsement) : Architectures LLM et agents autonomes, pilote l'ingénierie d'AI Endorsement et les protocoles de mesure de la visibilité dans les IA.
 - **Christophe Attelé** (Partner · Brand Transformation) : Alignement Comex, culture d'entreprise et conduite du changement.
 
-## Nos 4 Disciplines & Offres
+## Nos 3 Disciplines & Offres
 - [Création & Direction artistique](https://www.brunierobadia.com/offres/creation) : Direction artistique globale, identité visuelle, typographie sur-mesure, campagnes 360°, édition d'art et fabrication d'exception.
-- [Performance digitale](https://www.brunierobadia.com/offres/performance-digitale) : Ingénierie web, plateformes headless haute vélocité, acquisition, design systems, content factory et mesure de performance ROI.
-- [Brand transformation](https://www.brunierobadia.com/offres/brand-transformation) : Positionnement stratégique, plateforme de marque, récit singulier, raison d'être et conduite du changement.
-- [La marque dans les IA](https://www.brunierobadia.com/offres/la-marque-dans-les-ia) : Dirigé par Jean-Paul Brunier. Ce que l'intelligence artificielle générative dit de votre marque façonne votre réputation : audit de vérité, protection contre les hallucinations, souveraineté et gouvernance de marque face aux IA pour les Comex et directions générales.
+- [Brand transformation](https://www.brunierobadia.com/offres/brand-transformation) : Plateforme et récit de marque, raison d'être, ateliers ComEx, architecture de portefeuille et conduite du changement, avec Christophe Attelé et Jean-Paul Brunier.
+- [AI Endorsement](https://www.brunierobadia.com/offres/la-marque-dans-les-ia) : Ne soyez pas seulement trouvé par l'IA. Soyez recommandé. Mesure de ce que les IA disent d'une marque et passage de la mention à la recommandation, en quatre temps : audit, stratégie, activation, suivi.
 
 ## Réalisations & Clients Emblématiques
 - [Balenciaga - Global Retail Meeting](https://www.brunierobadia.com/projets/balenciaga-global-retail-meeting-2023) : Identité visuelle et direction artistique d'événement mondial.

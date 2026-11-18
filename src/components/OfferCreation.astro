@@ -1,0 +1,357 @@
+---
+// Corps de la page « Création & Direction artistique ». Même esprit que la page AI Endorsement (bordeaux, boules,
+// Styrene serré, filets, mono) : on montre le travail plutôt que de l'énumérer.
+//  1. l'index des disciplines : chaque ligne est illustrée par un vrai projet, affiché à côté ;
+//  2. l'argument, sur bande bordeaux : cinquante ans de métier, deux associés, aucun intermédiaire ;
+//  3. la méthode en trois temps, et ce que l'on reçoit à chacun ;
+//  4. une sélection de réalisations.
+import { localizePath } from '../lib/seo.js';
+import { projects } from '../data/site.js';
+const { lang, slug = 'creation' } = Astro.props;
+const en = lang === 'en';
+const P = (slug) => projects.find((p) => p.slug === slug);
+
+const CONTENT = {
+ creation: {
+  work: ['hermes-maison-hermes-les-podiums', 'mad-paris-metal-design', 'balenciaga-global-retail-meeting-2023', 'al-thani-collection-comment-saisir-une-passion-eclectique'],
+  fr: {
+    indexKicker: 'Ce que nous dessinons',
+    indexTitle: 'Une marque se reconnaît à chaque détail.',
+    indexText: 'De l’identité au dernier objet imprimé, une seule main tient le dessin. Chaque discipline, ici, par un projet réel.',
+    disciplines: [
+      { name: 'Direction artistique', text: 'Un univers complet, tenu de bout en bout.', slug: 'hermes-maison-hermes-les-podiums' },
+      { name: 'Identité & système de marque', text: 'Logo, typographie, règles : une identité faite pour durer.', slug: 'balenciaga-global-retail-meeting-2023' },
+      { name: 'Édition d’art', text: 'Beaux livres et catalogues, du chemin de fer au façonnage.', slug: 'mad-paris-metal-design' },
+      { name: 'Mise en page & typographie', text: 'Hiérarchie, titrage, blancs : la voix visuelle de la marque.', slug: 'safilo-group-oeil-pour-oeil' },
+      { name: 'Photographie & scénographie', text: 'Des images et des espaces qui racontent la maison.', slug: 'al-thani-collection-comment-saisir-une-passion-eclectique' },
+      { name: 'Campagnes', text: 'Une idée forte, déclinée partout sans s’affaiblir.', slug: 'jeep-jeep-animaux' },
+    ],
+    also: 'Aussi : packaging, signalétique, objets et façonnages d’exception (dorure, gaufrage, reliure).',
+    stat: '50 ans',
+    statTitle: 'Deux associés. Aucun intermédiaire.',
+    statText: 'Jonas Obadia dessine, Jean-Paul Brunier pense la stratégie. Ce sont eux qui travaillent sur votre projet, du premier rendez-vous au bon à tirer. Pas de chef de projet entre vous et la création.',
+    statSource: 'Plus de 200 marques accompagnées',
+    methodKicker: 'Comment nous travaillons',
+    methodTitle: 'Trois temps. Une seule exigence.',
+    method: [
+      { name: 'Comprendre', text: 'Ce que la marque a de singulier, ce qu’elle doit dire, à qui.', get: ['Entretiens dirigeants', 'Analyse du territoire', 'Plateforme de marque'] },
+      { name: 'Dessiner', text: 'Les pistes créatives, puis une direction, affinée jusqu’au détail.', get: ['Pistes créatives', 'Identité & charte', 'Maquettes des supports'] },
+      { name: 'Fabriquer', text: 'Le suivi de chaque support, chez l’imprimeur comme à l’écran.', get: ['Déclinaisons', 'Suivi de fabrication', 'Bon à tirer'] },
+    ],
+    workKicker: 'Réalisations',
+    workTitle: 'Le travail, plutôt que les mots.',
+    all: (n) => `Tous les projets (${n})`,
+  },
+  en: {
+    indexKicker: 'What we design',
+    indexTitle: 'A brand is recognised in every detail.',
+    indexText: 'From the identity to the last printed object, one hand holds the drawing. Each discipline, here, through a real project.',
+    disciplines: [
+      { name: 'Art direction', text: 'A complete world, held from start to finish.', slug: 'hermes-maison-hermes-les-podiums' },
+      { name: 'Identity & brand system', text: 'Logo, typography, rules: an identity built to last.', slug: 'balenciaga-global-retail-meeting-2023' },
+      { name: 'Art publishing', text: 'Art books and catalogues, from flatplan to binding.', slug: 'mad-paris-metal-design' },
+      { name: 'Layout & typography', text: 'Hierarchy, titling, white space: the brand’s visual voice.', slug: 'safilo-group-oeil-pour-oeil' },
+      { name: 'Photography & scenography', text: 'Images and spaces that tell the house’s story.', slug: 'al-thani-collection-comment-saisir-une-passion-eclectique' },
+      { name: 'Campaigns', text: 'One strong idea, rolled out everywhere without losing strength.', slug: 'jeep-jeep-animaux' },
+    ],
+    also: 'Also: packaging, signage, objects and exceptional finishes (gilding, embossing, binding).',
+    stat: '50 years',
+    statTitle: 'Two partners. No intermediary.',
+    statText: 'Jonas Obadia designs, Jean-Paul Brunier shapes the strategy. They are the ones working on your project, from the first meeting to the final proof. No project manager between you and the work.',
+    statSource: 'More than 200 brands',
+    methodKicker: 'How we work',
+    methodTitle: 'Three stages. One standard.',
+    method: [
+      { name: 'Understand', text: 'What makes the brand singular, what it must say, and to whom.', get: ['Leadership interviews', 'Territory analysis', 'Brand platform'] },
+      { name: 'Design', text: 'Creative routes, then one direction, refined down to the detail.', get: ['Creative routes', 'Identity & guidelines', 'Mock-ups of the media'] },
+      { name: 'Make', text: 'Every piece followed through, at the printer as on screen.', get: ['Roll-out', 'Production follow-up', 'Final proof'] },
+    ],
+    workKicker: 'Selected work',
+    workTitle: 'The work, rather than words.',
+    all: (n) => `All projects (${n})`,
+  },
+ },
+};
+const T = CONTENT[slug][lang];
+
+const ORBS = ['/brand/sphere-rose-jour.webp', '/brand/sphere-corail-jour.webp', '/brand/sphere-rouge-jour.webp'];
+const pad = (i) => String(i + 1).padStart(2, '0');
+const items = T.disciplines.map((d) => ({ ...d, p: P(d.slug) })).filter((d) => d.p);
+const srcset = (img) => `${img.replace('.webp', '-800w.webp')} 800w, ${img} 1920w`;
+const WORK = CONTENT[slug].work.map(P).filter(Boolean);
+const nameOf = (p) => (en ? p.name_en || p.name_fr : p.name_fr);
+const sectorOf = (p) => (en ? p.sector_en || p.sector_fr : p.sector_fr);
+---
+<div class="ocr">
+  <!-- 1. L'index des disciplines, illustré par de vrais projets -->
+  <section class="ocr-index" data-ocr-reveal>
+    <div class="ocr-index-head">
+      <div>
+        <p class="ocr-kicker">{T.indexKicker}</p>
+        <h2 class="ocr-title">{T.indexTitle}</h2>
+      </div>
+      <p class="ocr-text">{T.indexText}</p>
+    </div>
+    <div class="ocr-index-copy">
+      <figure class="ocr-preview" aria-hidden="true">
+        {items.map((d, i) => (
+          <img class={i === 0 ? 'is-on' : ''} data-preview={i} src={d.p.image} srcset={srcset(d.p.image)} sizes="(max-width: 1000px) 0px, 40vw" alt="" width="1920" height="1280" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+        ))}
+        <figcaption><span data-cap-client>{items[0].p.client}</span><span data-cap-name>{nameOf(items[0].p)}</span></figcaption>
+      </figure>
+    </div>
+    <div class="ocr-list-wrap">
+      <ol class="ocr-list">
+        {items.map((d, i) => (
+          <li style={`--i:${i}`} data-row={i} data-client={d.p.client} data-name={nameOf(d.p)} class={i === 0 ? 'is-on' : ''}>
+            <a href={localizePath(`/projets/${d.p.slug}`, lang)}>
+              <span class="ocr-num">{pad(i)}</span>
+              <span class="ocr-row-main">
+                <h3>{d.name}</h3>
+                <p>{d.text}</p>
+              </span>
+              <span class="ocr-row-client">{d.p.client}</span>
+              <img class="ocr-row-img" src={d.p.image.replace('.webp', '-800w.webp')} alt="" width="800" height="533" loading="lazy" decoding="async" />
+            </a>
+          </li>
+        ))}
+      </ol>
+      <p class="ocr-also">{T.also}</p>
+    </div>
+  </section>
+
+  <!-- 2. L'argument, sur bande bordeaux -->
+  <section class="ocr-stat" data-ocr-reveal>
+    <img class="ocr-stat-orb" src="/brand/sphere-rouge.svg" alt="" width="892" height="892" loading="lazy" aria-hidden="true" />
+    <p class="ocr-big">{T.stat}</p>
+    <div class="ocr-stat-copy">
+      <h2>{T.statTitle}</h2>
+      <p>{T.statText}</p>
+      <span class="ocr-kicker">{T.statSource}</span>
+    </div>
+  </section>
+
+  <!-- 3. La méthode -->
+  <section class="ocr-method" data-ocr-reveal>
+    <p class="ocr-kicker">{T.methodKicker}</p>
+    <h2 class="ocr-title">{T.methodTitle}</h2>
+    <ol>
+      {T.method.map((m, i) => (
+        <li style={`--i:${i}`}>
+          <div class="ocr-stage" aria-hidden="true">
+            <span class="ocr-orb"><img src={ORBS[i]} alt="" width="480" height="480" loading="lazy" decoding="async" /></span>
+          </div>
+          <span class="ocr-num">{pad(i)}</span>
+          <h3>{m.name}</h3>
+          <p>{m.text}</p>
+          <ul class="ocr-get">
+            {m.get.map((g) => <li>{g}</li>)}
+          </ul>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- 4. Réalisations -->
+  <section class="ocr-work" data-ocr-reveal>
+    <div class="ocr-work-head">
+      <div>
+        <p class="ocr-kicker">{T.workKicker}</p>
+        <h2 class="ocr-title">{T.workTitle}</h2>
+      </div>
+      <a class="ocr-all" href={localizePath('/projets', lang)}>{T.all(projects.length)}<i class="arw arw--right" aria-hidden="true"></i></a>
+    </div>
+    <div class="ocr-grid">
+      {WORK.map((p, i) => (
+        <a class="ocr-card" style={`--i:${i}`} href={localizePath(`/projets/${p.slug}`, lang)}>
+          <span class="ocr-card-media">
+            <img src={p.image} srcset={srcset(p.image)} sizes={i === 0 ? '(max-width: 760px) 100vw, 58vw' : '(max-width: 760px) 100vw, 40vw'} alt={`${p.client} – ${nameOf(p)}`} width="1920" height="1280" loading="lazy" decoding="async" />
+          </span>
+          <span class="ocr-card-meta">
+            <span class="ocr-card-client">{p.client}</span>
+            <span class="ocr-card-name">{nameOf(p)}</span>
+            <span class="ocr-card-sector">{sectorOf(p)}</span>
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+</div>
+
+<script>
+  const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Index : la ligne survolée (ou, sans souris, celle qui passe au milieu de l'écran) affiche son projet à côté.
+  function initIndex(root) {
+    if (root.dataset.ready) return;
+    root.dataset.ready = '1';
+    const rows = [...root.querySelectorAll('[data-row]')];
+    const imgs = [...root.querySelectorAll('[data-preview]')];
+    const cClient = root.querySelector('[data-cap-client]');
+    const cName = root.querySelector('[data-cap-name]');
+    const cap = cClient?.parentElement;
+    let cur = 0, t = 0;
+    const set = (i) => {
+      if (i === cur) return;
+      cur = i;
+      rows.forEach((r, k) => r.classList.toggle('is-on', k === i));
+      imgs.forEach((im, k) => im.classList.toggle('is-on', k === i));
+      cap?.classList.add('is-swap');
+      clearTimeout(t);
+      t = setTimeout(() => { cClient.textContent = rows[i].dataset.client; cName.textContent = rows[i].dataset.name; cap?.classList.remove('is-swap'); }, 220);
+    };
+    rows.forEach((r, i) => {
+      r.addEventListener('pointerenter', () => set(i));
+      r.addEventListener('focusin', () => set(i));
+    });
+    // au défilement : la ligne la plus proche du milieu de l'écran
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting && !root.matches(':hover')) set(rows.indexOf(e.target)); });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    rows.forEach((r) => io.observe(r));
+    document.addEventListener('astro:before-swap', () => io.disconnect(), { once: true });
+  }
+
+  const init = () => {
+    document.querySelectorAll('.ocr-index').forEach(initIndex);
+    const els = document.querySelectorAll('[data-ocr-reveal]:not(.is-in)');
+    if (!els.length) return;
+    if (!('IntersectionObserver' in window) || reduce()) { els.forEach((el) => el.classList.add('is-in')); return; }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -15% 0px' });
+    els.forEach((el) => { el.classList.add('is-pending'); io.observe(el); });
+  };
+  document.addEventListener('astro:page-load', init);
+</script>
+
+<style>
+  .ocr {
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --rule: #e3e3dc;
+    font-family: var(--sans);
+  }
+  .ocr section { border: 0; position: relative; }
+  .ocr p { margin: 0; text-wrap: pretty; }
+  .ocr h2, .ocr h3 { font-family: var(--sans); font-weight: 400; margin: 0; }
+  .ocr-kicker { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin: 0 0 18px !important; }
+  .ocr-title { font-size: clamp(32px, 3.6vw, 52px); letter-spacing: -0.045em; line-height: 0.98; max-width: 16ch; }
+  .ocr-text { margin-top: 28px !important; max-width: 430px; font-size: clamp(15px, 1.15vw, 17px); line-height: 1.55; color: #2b2b2b; }
+  .ocr-num { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; color: var(--muted); }
+
+  /* 1. Index des disciplines */
+  .ocr-index { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 112px); align-items: start; padding: clamp(24px, 3vw, 48px) 0 clamp(40px, 4vw, 64px); }
+  .ocr-index-head { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 112px); align-items: end; margin-bottom: clamp(24px, 3vw, 48px); }
+  .ocr-index-head .ocr-text { margin-top: 0 !important; }
+  /* l'image reste au milieu de l'écran pendant la liste, et s'arrête avec la dernière ligne (jamais sous le menu) */
+  .ocr-index-copy { position: sticky; top: max(calc(var(--head-h) + 32px), calc(50vh - 11.5vw)); }
+  .ocr-preview { position: relative; margin: 0; aspect-ratio: 3 / 2; max-height: calc(100vh - var(--head-h) - 64px); overflow: hidden; background: #ebe9e2; }
+  .ocr-preview img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; clip-path: inset(100% 0 0 0); scale: 1.08; transition: clip-path 900ms var(--ease), scale 1400ms var(--ease); }
+  .ocr-preview img.is-on { clip-path: inset(0 0 0 0); scale: 1; z-index: 1; }
+  .ocr-preview figcaption { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; display: flex; justify-content: space-between; gap: 16px; padding: 12px 14px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: #fff; background: linear-gradient(transparent, rgba(0, 0, 0, 0.45)); transition: opacity 220ms ease; }
+  .ocr-preview figcaption.is-swap { opacity: 0; }
+  .ocr-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+  .ocr-list > li { border-bottom: 1px solid var(--rule); }
+  .ocr-list a { display: grid; grid-template-columns: 3em minmax(0, 1fr) auto; align-items: baseline; gap: 16px; padding: clamp(20px, 2.2vw, 30px) 0; color: inherit; text-decoration: none; }
+  .ocr-list h3 { font-size: clamp(22px, 2.2vw, 32px); letter-spacing: -0.05em; line-height: 1.05; transition: color 300ms ease, translate 500ms var(--ease); }
+  .ocr-list .ocr-row-main p { margin-top: 8px !important; font-size: clamp(13px, 1vw, 15px); line-height: 1.4; color: #2b2b2b; max-width: 40ch; }
+  .ocr-row-client { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); white-space: nowrap; transition: color 300ms ease; }
+  .ocr-row-img { display: none; }
+  .ocr-list > li .ocr-num { transition: color 300ms ease; }
+  .ocr-list > li.is-on h3 { color: var(--bordeaux); translate: 10px 0; }
+  .ocr-list > li.is-on :is(.ocr-num, .ocr-row-client) { color: var(--ink); }
+  .ocr-also { margin-top: 24px !important; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; line-height: 1.6; text-transform: uppercase; color: var(--muted); max-width: 60ch; }
+
+  /* 2. L'argument : bande bordeaux, boule rouge vivante */
+  .ocr-stat {
+    border-image: conic-gradient(var(--bordeaux) 0 0) fill 0 // 0 100vmax !important;
+    color: #fff;
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    gap: clamp(32px, 5vw, 96px);
+    align-items: end;
+    padding: clamp(90px, 9vw, 150px) 0;
+    overflow: clip;
+    overflow-clip-margin: 100vmax;
+    isolation: isolate;
+  }
+  .ocr-stat-orb { position: absolute; z-index: -1; left: clamp(160px, 22vw, 360px); top: 50%; width: clamp(260px, 30vw, 460px); translate: 0 -50%; mix-blend-mode: screen; opacity: 0.9; pointer-events: none; animation: ocr-spin 60s linear infinite; }
+  .ocr-big { font-weight: 700; white-space: nowrap; font-size: clamp(76px, 11vw, 168px); letter-spacing: -0.06em; line-height: 0.85; }
+  .ocr-stat-copy h2 { font-size: clamp(22px, 2vw, 30px); letter-spacing: -0.04em; line-height: 1.08; color: #fff; max-width: 22ch; }
+  .ocr-stat-copy p { margin: 22px 0 26px !important; max-width: 420px; font-size: clamp(14px, 1.05vw, 16px); line-height: 1.4; color: rgba(255, 255, 255, 0.82); }
+  .ocr-stat .ocr-kicker { color: rgba(255, 255, 255, 0.5); margin: 0 !important; }
+
+  /* 3. Méthode : trois boules de même taille, qui se succèdent */
+  .ocr-method { padding: clamp(110px, 11vw, 180px) 0 clamp(110px, 11vw, 180px); }
+  .ocr-method > ol { list-style: none; margin: clamp(48px, 6vw, 96px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 4vw, 72px); }
+  .ocr-stage { position: relative; height: clamp(110px, 11vw, 170px); margin-bottom: clamp(22px, 2.4vw, 36px); border-bottom: 1px solid var(--ink); }
+  .ocr-orb { position: absolute; left: 0; bottom: 18px; width: clamp(80px, 8vw, 128px); aspect-ratio: 1; animation: ocr-float calc(6s + var(--i) * 1.4s) ease-in-out calc(var(--i) * -1.3s) infinite; }
+  .ocr-orb img { display: block; width: 100%; height: 100%; animation: ocr-spin calc(40s + var(--i) * 14s) linear infinite; }
+  .ocr-method h3 { margin-top: 12px; font-size: clamp(20px, 1.7vw, 24px); letter-spacing: -0.06em; line-height: 1.1; margin-bottom: 8px; }
+  .ocr-method li p { font-size: clamp(13px, 1vw, 15px); line-height: 1.4; color: #2b2b2b; max-width: 30ch; }
+  .ocr-get { list-style: none; margin: 22px 0 0; padding: 0; max-width: 300px; border-bottom: 1px solid var(--rule); }
+  .ocr-get li { padding: 9px 0; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); }
+  @keyframes ocr-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -14px; } }
+  @keyframes ocr-spin { to { rotate: 360deg; } }
+
+  /* 4. Réalisations : une grande image, trois plus petites */
+  .ocr-work { padding: 0 0 clamp(40px, 4vw, 64px); }
+  .ocr-work-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; flex-wrap: wrap; }
+  .ocr-all { display: inline-flex; align-items: center; gap: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--ink); font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+  .ocr-all .arw { width: 17px; transition: transform 300ms var(--ease); }
+  .ocr-all:hover { color: var(--bordeaux); border-color: var(--bordeaux); }
+  .ocr-all:hover .arw { transform: translateX(4px); }
+  .ocr-grid { margin-top: clamp(40px, 4.5vw, 72px); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(24px, 3vw, 48px) clamp(16px, 2vw, 32px); }
+  .ocr-card { grid-column: span 4; color: inherit; text-decoration: none; display: block; }
+  .ocr-card:first-child { grid-column: 1 / span 7; grid-row: span 2; }
+  .ocr-card:nth-child(2) { grid-column: 8 / span 5; }
+  .ocr-card:nth-child(3) { grid-column: 8 / span 5; }
+  .ocr-card:nth-child(4) { grid-column: 3 / span 6; }
+  .ocr-card-media { display: block; overflow: hidden; aspect-ratio: 3 / 2; background: #ebe9e2; }
+  .ocr-card:first-child .ocr-card-media { aspect-ratio: 4 / 3.4; }
+  .ocr-card-media img { display: block; width: 100%; height: 100%; object-fit: cover; transition: scale 1200ms var(--ease), filter 600ms ease; }
+  .ocr-card:hover .ocr-card-media img { scale: 1.04; }
+  .ocr-grid:has(.ocr-card:hover) .ocr-card:not(:hover) img { filter: grayscale(1); }
+  .ocr-card-meta { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; padding-top: 14px; border-top: 1px solid var(--ink); margin-top: 14px; }
+  .ocr-card-client { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+  .ocr-card-name { grid-row: 2; font-size: clamp(17px, 1.4vw, 21px); letter-spacing: -0.04em; line-height: 1.15; transition: color 300ms ease; }
+  .ocr-card-sector { grid-row: 1 / 3; grid-column: 2; align-self: start; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+  .ocr-card:hover .ocr-card-name { color: var(--bordeaux); }
+
+  /* Apparitions */
+  .is-pending :is(.ocr-kicker, .ocr-title, .ocr-text, .ocr-preview, .ocr-also, .ocr-big, .ocr-stat-copy, .ocr-all) { opacity: 0; translate: 0 24px; }
+  .is-in :is(.ocr-kicker, .ocr-title, .ocr-text, .ocr-preview, .ocr-also, .ocr-big, .ocr-stat-copy, .ocr-all) { opacity: 1; translate: 0 0; transition: opacity 1000ms ease, translate 1200ms var(--ease); }
+  .is-in :is(.ocr-title, .ocr-stat-copy) { transition-delay: 90ms; }
+  .is-in :is(.ocr-text, .ocr-preview, .ocr-also) { transition-delay: 200ms; }
+  .is-pending .ocr-list > li { opacity: 0; translate: 0 18px; }
+  .is-in .ocr-list > li { opacity: 1; translate: 0 0; transition: opacity 0.9s ease calc(0.25s + var(--i) * 0.1s), translate 0.9s var(--ease) calc(0.25s + var(--i) * 0.1s); }
+  .is-pending .ocr-orb img { scale: 0; }
+  .is-in .ocr-orb img { scale: 1; transition: scale 1.4s cubic-bezier(0.16, 1.2, 0.3, 1) calc(0.3s + var(--i) * 0.28s); }
+  .is-pending.ocr-method > ol > li > :not(.ocr-stage) { opacity: 0; translate: 0 14px; }
+  .is-in.ocr-method > ol > li > :not(.ocr-stage) { opacity: 1; translate: 0 0; transition: opacity 0.9s ease, translate 0.9s var(--ease); transition-delay: calc(0.55s + var(--i) * 0.28s); }
+  .ocr-stat.is-pending .ocr-stat-orb { opacity: 0; scale: 0.7; }
+  .ocr-stat.is-in .ocr-stat-orb { opacity: 0.9; scale: 1; transition: opacity 1.6s ease, scale 2s var(--ease); }
+  .is-pending .ocr-card { opacity: 0; translate: 0 30px; }
+  .is-in .ocr-card { opacity: 1; translate: 0 0; transition: opacity 1s ease calc(0.2s + var(--i) * 0.15s), translate 1.2s var(--ease) calc(0.2s + var(--i) * 0.15s); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ocr-orb, .ocr-orb img, .ocr-stat-orb { animation: none; }
+  }
+  @media (max-width: 1000px) {
+    .ocr-index, .ocr-stat { grid-template-columns: minmax(0, 1fr); }
+    .ocr-index-copy { position: static; }
+    .ocr-index-head { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+    .ocr-preview { display: none; }
+    .ocr-list a { grid-template-columns: 2.4em minmax(0, 1fr); }
+    .ocr-row-client { grid-column: 2; }
+    .ocr-row-img { display: block; grid-column: 2; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; margin-top: 6px; }
+    .ocr-list > li.is-on h3 { translate: 0 0; }
+    .ocr-stat-orb { left: auto; right: -12%; top: 22%; }
+  }
+  @media (max-width: 760px) {
+    .ocr-method > ol { grid-template-columns: 1fr; gap: 56px; }
+    .ocr-grid { grid-template-columns: 1fr; }
+    .ocr-card, .ocr-card:first-child, .ocr-card:nth-child(n) { grid-column: auto; grid-row: auto; }
+    .ocr-card:first-child .ocr-card-media { aspect-ratio: 3 / 2; }
+  }
+</style>

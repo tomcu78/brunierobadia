@@ -1,0 +1,92 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site.js';
+import { abs } from '../lib/seo.js';
+
+const lang = 'fr';
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Accueil', item: abs('/') },
+    { '@type': 'ListItem', position: 2, name: "Conditions Générales d'Utilisation", item: abs('/cgu') },
+  ],
+};
+---
+<Base lang={lang} path="/cgu" title="Conditions Générales d'Utilisation (CGU)" description="Conditions Générales d'Utilisation régissant la consultation et l'usage du site officiel de BrunierObadia Studios." jsonLd={[breadcrumb]}>
+  <div class="wrap" style="padding-top:clamp(40px,6vw,90px);padding-bottom:clamp(60px,8vw,120px)">
+    <div class="sec-head">
+      <h1>Conditions Générales d'Utilisation</h1>
+      <span class="label">Cadre légal · CGU</span>
+    </div>
+
+    <div class="legal-content prose" style="max-width:76ch;margin-top:clamp(32px,4vw,64px)">
+      <p style="font-size:0.95rem;color:var(--muted);line-height:1.6;margin-bottom:32px">
+        Les présentes Conditions Générales d'Utilisation (ci-après « CGU ») ont pour objet de définir les modalités et conditions d'accès, de navigation et d'utilisation du site internet <strong>{SITE.url}</strong>, édité par la société <strong>{SITE.legalName}</strong>.
+      </p>
+
+      <section style="border:none;padding:0 0 32px 0">
+        <h3>1. Acceptation des CGU</h3>
+        <p>
+          Tout accès, consultation ou utilisation du site implique l'acceptation expresse, pleine et entière de l'ensemble des termes des présentes CGU par l'utilisateur. Si l'utilisateur n'accepte pas ces conditions, il lui est demandé de cesser toute utilisation du site.
+        </p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>2. Accès au site et continuité de service</h3>
+        <p>
+          Le site est accessible gratuitement en tout lieu à tout utilisateur disposant d'un accès à Internet. {SITE.legalName} met en œuvre tous les moyens raisonnables pour assurer un accès continu et performant 24h/24 et 7j/7. Toutefois, l'éditeur se réserve la possibilité de suspendre, limiter ou interrompre l'accès à tout ou partie du site à tout moment, notamment pour des raisons techniques, de maintenance ou de mise à jour, sans préavis ni indemnité.
+        </p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>3. Propriété intellectuelle et protection des œuvres</h3>
+        <p>
+          Tous les éléments composant le site (créations graphiques, direction artistique, campagnes, photographies, vidéos, typographies, textes, marques, logos, concepts, études de cas et programmes informatiques) constituent des créations de l'esprit protégées par les dispositions du Code de la propriété intellectuelle.
+        </p>
+        <p>
+          Ces contenus sont la propriété exclusive de <strong>{SITE.legalName}</strong> ou font l'objet d'une autorisation expresse d'exploitation concédée par ses clients et partenaires. Aucune cession de droits de propriété intellectuelle n'est consentie à l'utilisateur au titre des présentes.
+        </p>
+        <p>
+          Sont formellement interdites, sans accord écrit préalable de l'éditeur :
+        </p>
+        <ul style="list-style:disc;padding-left:24px;margin:16px 0;line-height:1.8">
+          <li>Toute reproduction, représentation, diffusion, extraction ou réutilisation, intégrale ou partielle, du contenu du site ;</li>
+          <li>Toute aspiration automatisée de données (data scraping, fouille de textes et de données) à des fins commerciales ou d'entraînement de modèles d'intelligence artificielle non autorisés expressément ;</li>
+          <li>Toute décompilation, ingénierie inverse ou tentative d'atteinte à l'intégrité technique du site.</li>
+        </ul>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>4. Responsabilité de l'éditeur</h3>
+        <p>
+          Les informations et études de cas présentées sur le site sont fournies à titre indicatif et promotionnel des savoir-faire de l'agence. {SITE.legalName} s'efforce d'assurer la fiabilité des informations diffusées, mais ne saurait être tenue responsable des éventuelles omissions, inexactitudes ou retards de mise à jour.
+        </p>
+        <p>
+          {SITE.legalName} ne saurait être tenue responsable des dommages directs ou indirects (perte de données, manque à gagner, virus informatique, indisponibilité de réseau) subis par l'utilisateur du fait de l'accès ou de l'impossibilité d'accéder au site.
+        </p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>5. Liens hypertextes</h3>
+        <p>
+          Le site peut contenir des liens hypertextes renvoyant vers des sites internet tiers (éditeurs, partenaires, réseaux sociaux). {SITE.legalName} n'exerce aucun contrôle sur le contenu de ces sites tiers et décline toute responsabilité quant à leurs pratiques ou contenus.
+        </p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>6. Données personnelles et confidentialité</h3>
+        <p>
+          Pour connaître notre politique en matière de recueil et de protection des données personnelles, l'utilisateur est invité à consulter notre <a href="/confidentialite">Politique de confidentialité</a>, ainsi que nos <a href="/mentions-legales">Mentions légales</a>.
+        </p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>7. Droit applicable et juridiction compétente</h3>
+        <p>
+          Les présentes CGU sont soumises à la loi française. En cas de différend relatif à l'interprétation ou à l'exécution des présentes, et à défaut d'accord amiable, les tribunaux compétents du ressort de la Cour d'appel de Paris seront seuls compétents.
+        </p>
+      </section>
+    </div>
+  </div>
+</Base>

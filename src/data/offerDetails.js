@@ -50,53 +50,6 @@ export const offerDetails = {
     }
   },
 
-  'performance-digitale': {
-    fr: {
-      headline: 'Ingénierie web moderne, vitesse d’exécution et performance d’acquisition ROIste.',
-      intro: 'Une marque prestigieuse ne peut pas se permettre un site lent, vulnérable ou standardisé. BrunierObadia Digital Performance, dirigée par Cyrille Douin, réconcilie l’exigence esthétique du luxe avec les plus hauts standards mondiaux de l’ingénierie logicielle. Nous concevons des plateformes web ultra-véloces, des architectures headless pérennes et des stratégies d’acquisition ciblées pour transformer votre visibilité en résultats économiques concrets.',
-      sections: [
-        {
-          title: '01. L’Obsession de la Vélocité & Core Web Vitals 100/100',
-          content: 'Chaque dixième de seconde de temps de chargement gagné améliore la perception de prestige et augmente directement les conversions. Nous bannissons les CMS lourds et les empilements de plug-ins instables. Nos plateformes sont bâties sur des architectures modernes JAMstack / Headless (Astro, architectures statiques hybrides, Edge distribution) garantissant un affichage instantané sous les 400 millisecondes et des scores parfaits de 100/100 sur Google Lighthouse.'
-        },
-        {
-          title: '02. Nos Disciplines d’Ingénierie & d’Activation',
-          content: 'Notre pôle Digital Performance intervient sur l’ensemble du cycle de vie de vos plateformes :\n\n• Plateformes Web Headless & Jamstack : Développement sur-mesure, sécurisé par conception, zéro maintenance lourde, résistant aux pics de trafic massifs.\n• Design Systems Figma to Code : Systèmes de composants modulaires, synchronisés entre design et code pour déployer de nouvelles pages en quelques heures en toute cohérence.\n• Acquisition d’Audience Qualifiée & SEA : Campagnes payantes ciblées sur Google Ads, LinkedIn et Meta Ads pour capter des décideurs, acheteurs de luxe ou prospects B2B à haute valeur.\n• Référencement Naturel Technique (SEO) : Balisage sémantique chirurgical, hiérarchies de pages nettes, sitemaps multilingues stricts et optimisations de crawl pour dominer les résultats de recherche.\n• Content Factory & Motion Design : Création continue d’actifs visuels dynamiques, formats interactifs et vidéos adaptés aux différents canaux d’activation.\n• Mesure de Performance & Tracking Éthique : Déploiement de solutions analytics respectueuses de la vie privée (RGPD-compliant), tableaux de bord de pilotage en temps réel et calcul du coût d’acquisition client.'
-        },
-        {
-          title: '03. Sécurité Maximale et Zéro Dette Technique',
-          content: 'La réputation d’une grande marque dépend aussi de son inviolabilité informatique. En éliminant les bases de données dynamiques vulnérables sur le front-office, nos architectures éliminent 99% des vecteurs d’attaques traditionnels (injections SQL, failles WordPress, attaques XSS). Durcissement strict des en-têtes HTTP, conformité OWASP Top 10 et chiffrement SSL de bout en bout font partie de notre standard de base.'
-        },
-        {
-          title: '04. Un Partenaire Orienté Valeur Réelle',
-          content: 'Nous ne parlons pas de clics superflus ou de métriques de vanité. Nous construisons des outils d’affaires précis qui augmentent votre notoriété, crédibilisent votre positionnement auprès des investisseurs et accélèrent vos cycles de vente.'
-        }
-      ]
-    },
-    en: {
-      headline: 'Modern digital engineering, velocity, and high-ROI acquisition performance.',
-      intro: 'A prestigious brand cannot afford a sluggish, vulnerable, or generic digital presence. BrunierObadia Digital Performance, led by partner Cyrille Douin, harmonizes refined aesthetic elegance with tier-one software engineering. We engineer ultra-fast headless platforms, modern Jamstack architectures, and precision acquisition strategies that transform traffic into measurable enterprise value.',
-      sections: [
-        {
-          title: '01. The Obsession with Speed & 100/100 Core Web Vitals',
-          content: 'Every hundred milliseconds saved directly elevates brand prestige and bolsters conversion rates. We deliberately discard bloated monolithic CMS setups and brittle plugins. Our platforms are built on modern static and edge-native architectures (Astro, modern JavaScript runtimes, CDN edge caching), delivering instantaneous sub-400ms page loads and perfect 100/100 Google Lighthouse scores.'
-        },
-        {
-          title: '02. Our Engineering & Acquisition Capabilities',
-          content: 'Our digital practice covers the entire digital asset lifecycle:\n\n• Headless & Jamstack Web Platforms: Bespoke codebases, impenetrable security by design, zero technical debt, built to withstand massive worldwide traffic surges.\n• Figma-to-Code Design Systems: Modular, component-driven design systems guaranteeing flawless brand coherence across every touchpoint.\n• Qualified Audience Acquisition & SEA: Precision paid search and social campaigns targeting verified C-suite decision-makers and high-net-worth audiences.\n• Technical SEO & Semantic Architecture: Surgical schema markup, clean canonical hierarchies, and multilingual routing built for immediate organic indexing.\n• Content Factory & Motion Assets: Ongoing generation of high-engagement video, motion graphics, and interactive digital features.\n• Ethical Tracking & Executive Dashboards: Privacy-first analytics (GDPR compliant), transparent attribution modeling, and real-time ROI monitoring.'
-        },
-        {
-          title: '03. Zero Vulnerability & Ironclad Security',
-          content: 'Brand reputation relies on complete digital trustworthiness. By decoupling presentation from backend databases, our static and headless pipelines eliminate traditional vulnerability vectors such as SQL injections and CMS exploits. Enterprise-grade HTTP security headers, OWASP Top 10 compliance, and continuous deployment are baked into every release.'
-        },
-        {
-          title: '04. Concrete Commercial Momentum',
-          content: 'We discard vanity metrics to focus strictly on commercial outcomes: pipeline expansion, executive trust, high-ticket conversion, and international authority.'
-        }
-      ]
-    }
-  },
-
   'brand-transformation': {
     fr: {
       headline: 'Alignement stratégique des dirigeants, récit fédérateur et transformation par la marque.',
@@ -134,7 +87,7 @@ export const offerDetails = {
         },
         {
           title: '03. Decades of Boardroom Advisory Leadership',
-          content: 'Gain direct access to the unmatched track record of Jean-Paul Brunier, former President of Publicis Conseil with 30+ years advising chairpersons of CAC40 conglomerates and global institutions, paired with Christophe Attelé’s deep mastery of human dynamics and corporate change management.'
+          content: 'Gain direct access to the unmatched track record of Jean-Paul Brunier, former president of Leo Burnett France and a Publicis Groupe executive for twenty-two years, who has advised chairpersons and leadership teams of major companies and institutions, paired with Christophe Attelé’s deep mastery of human dynamics and corporate change management.'
         },
         {
           title: '04. Building Resilient Enterprise Value',
@@ -146,46 +99,46 @@ export const offerDetails = {
 
   'la-marque-dans-les-ia': {
     fr: {
-      headline: 'Ce que les intelligences artificielles disent de votre marque façonne déjà votre réputation.',
-      intro: 'Les moteurs de recherche traditionnels fondés sur des listes de liens bleus cèdent la place aux réponses de synthèse générative. Aujourd’hui, les comités de direction, les acheteurs stratégiques, les journalistes et vos clients demandent directement à ChatGPT, Perplexity, Gemini ou Claude de recommander, de comparer ou de résumer les entreprises de votre secteur. Ce que ces modèles racontent de vous détermine votre désirabilité et votre crédibilité. Dirigée par Jean-Paul Brunier, ancien Président de Publicis Conseil, notre offre « La marque dans les IA » apporte aux comités de direction et directions générales la souveraineté, la vérité factuelle et la maîtrise de leur réputation dans les nouveaux écosystèmes génératifs.',
+      headline: 'Ne soyez pas seulement trouvé par l\'IA. Soyez recommandé.',
+      intro: 'L\'IA devient le premier conseiller d\'achat. Elle ne donne pas dix liens : elle donne une réponse et deux ou trois marques. Celles qui n\'y figurent pas n\'existent pas pour cet acheteur. Être cité ne suffit pas. Ce qui compte, c\'est d\'être la marque que l\'IA conseille, avec les bons arguments.',
       sections: [
         {
-          title: '01. Les Nouveaux Risques de Réputation pour les Dirigeants et Marques',
-          content: 'Les modèles d’intelligence artificielle ne « cherchent » pas de l’information comme Google : ils prédisent du texte en assemblant des fragments statistiques de données passées. Pour les entreprises de premier plan, cela engendre des menaces critiques :\n\n• Les hallucinations et déformations factuelles : L’IA invente des partenariats, attribue vos innovations à des concurrents ou déforme l’historique de vos dirigeants.\n• L’invisibilisation sémantique : Lors d’une requête sectorielle clé (« Quelles sont les meilleures agences de conseil stratégique à Paris ? »), votre marque est absente des réponses recommandées au profit d’acteurs qui ont su structurer leurs données.\n• La dilution de la valeur : L’IA résume votre offre d’exception avec des termes génériques et low-cost, détruisant instantanément votre positionnement de prix et votre prestige.\n• La confusion avec des tiers : L’amalgame de votre marque avec des homonymes ou des crises de réputation tierces.'
+          title: '01. De la mention à l\'endorsement',
+          content: '• Mention : la marque apparaît dans la réponse, parmi d\'autres.\n• Recommandation : l\'IA suggère la marque comme une bonne option.\n• Endorsement : l\'IA présente la marque comme la référence, avec des arguments de confiance.\n\nNotre métier : faire monter votre marque d\'une marche, puis la tenir.'
         },
         {
-          title: '02. Notre Dispositif Stratégique en Quatre Étapes',
-          content: 'Nous n’abordons pas l’IA sous l’angle d’un gadget technique de référenceur web, mais comme une question majeure de gouvernance de marque :\n\n1. Audit de Vérité Générative : Nous soumettons des centaines de prompts ciblés à l’ensemble des modèles majeurs (OpenAI ChatGPT Search, Perplexity Pro, Google Gemini, Anthropic Claude, Apple Intelligence) pour cartographier exactement ce que l’IA dit de vous, ce qu’elle ignore, et où elle hallucine.\n2. Définition du Corpus de Vérité de Marque : Sous la direction de Jean-Paul Brunier, nous rédigeons le corpus factuel infalsifiable de l’entreprise : gouvernance, réalisations historiques réelles, chiffres clés, singularité d’offre et prises de parole officielles.\n3. Structuration Technique & Ancrage Sémantique (Standard llms.txt & Knowledge Graph) : Nous traduisons ce corpus dans les standards lisibles par les machines (fichiers llms.txt et llms-full.txt, balisage Schema.org JSON-LD de haute précision, maillage des entités Wikidata et sources de référence tierces) pour que votre site devienne la source primaire incontestable des moteurs IA.\n4. Observatoire Permanent & Veille de Souveraineté : Surveillance continue des citations de marque dans les résumés génératifs et interventions correctives dès qu’une dérive sémantique apparaît.'
+          title: '02. Quatre temps, une mesure continue',
+          content: '1. Audit : ce que disent les principales IA de votre marque et de vos concurrents, sur une centaine de questions de vos clients.\n2. Stratégie : les messages, les preuves et les sources à renforcer pour passer de la mention à la recommandation.\n3. Activation : contenus de référence, relations presse, avis, sources tierces, site et données structurées.\n4. Suivi : un indicateur d\'endorsement mesuré chaque mois, et des ajustements au fil de l\'évolution des modèles.\n\nL\'audit peut être commandé seul. Le suivi fait l\'objet d\'un abonnement mensuel.'
         },
         {
-          title: '03. Pourquoi Jean-Paul Brunier au Cœur de cette Discipline ?',
-          content: 'La protection et l’affirmation d’une marque face aux IA requièrent la même séniorité que la gestion d’une crise médiatique ou la refonte d’un positionnement stratégique mondial. Ancien Président de Publicis Conseil, Jean-Paul Brunier apporte aux dirigeants la certitude que leur récit ne sera ni dénaturé par des algorithmes, ni délégué à des techniciens déconnectés des enjeux d’influence et de Comex.'
+          title: '03. La marque et la technique, dans une seule équipe',
+          content: 'Les sites des marques ne représentent que 5 à 10 % des sources citées par les IA (McKinsey, 2025). Le reste vient de la presse, des avis, des forums, des experts : de votre réputation. L\'endorsement se gagne donc d\'abord par ce que disent de vous la presse, les experts et les clients. C\'est notre métier depuis toujours. Nous l\'associons à une expertise technique des modèles d\'IA, de la stratégie à la mesure.'
         },
         {
-          title: '04. Vos Livrables Clés & Bénéfices Immédiats',
-          content: '• Rapport d’audit confidentiel complet de citabilité IA et cartographie des hallucinations.\n• Corpus de vérité de marque validé par votre direction générale.\n• Fichiers racines d’ingestion machine (llms.txt et llms-full.txt) déployés sur vos serveurs.\n• Données structurées d’entités certifiées (Organization, Person, knowsAbout).\n• Imposition de votre singularité et de votre autorité dans 100% des moteurs conversationnels majeurs.'
+          title: '04. Nos engagements',
+          content: 'On n\'achète pas la recommandation d\'une IA. On la construit avec des preuves.\n\n• Des preuves réelles : jamais de faux avis ni de contenus trompeurs.\n• La transparence : nous expliquons ce que nous faisons, source par source.\n• La mesure : chaque action est suivie dans le temps.\n• Des promesses tenables : les modèles évoluent sans cesse, nous nous engageons sur une méthode et des progrès mesurés, pas sur un rang garanti.\n\nPour commencer : un audit pilote en quatre semaines.'
         }
       ]
     },
     en: {
-      headline: 'What generative artificial intelligence says about your brand already shapes your reputation.',
-      intro: 'Traditional search engines powered by blue links are rapidly yielding to generative synthesis engines. Today, board members, corporate buyers, investigative journalists, and discerning clients directly ask ChatGPT, Perplexity, Gemini, or Claude to compare, evaluate, and recommend enterprises in your category. What these neural models say about you directly dictates your desirability and commercial credibility. Led by Jean-Paul Brunier, former President of Publicis Conseil, our practice « Brands in the Age of AI » equips executive leadership and boards with narrative sovereignty, factual truth, and reputation governance across the generative landscape.',
+      headline: 'Don\'t just be found by AI. Be recommended.',
+      intro: 'AI is becoming the first purchase advisor. It does not give ten links: it gives one answer and two or three brands. Those left out do not exist for that buyer. Being mentioned is not enough. What matters is being the brand the AI recommends, with the right arguments.',
       sections: [
         {
-          title: '01. Critical Reputation Risks for Corporate Leadership',
-          content: 'Generative AI models do not search the web like traditional indexers: they synthesize statistical probabilities from vast historical training data. For premier houses and institutions, this introduces unprecedented vulnerabilities:\n\n• Hallucinations & Factual Distortions: Language models fabricate non-existent relationships, misattribute intellectual property to competitors, or distort executive bios.\n• Semantic Disappearance: On high-intent queries (« Which strategic brand advisory firms operate at the highest level in Paris? »), your house is completely omitted while lesser competitors dominate AI shortlists.\n• Value Dilution: AI syntheses compress high-craft positioning into generic commodity descriptions, eroding price elasticity and brand prestige.\n• Competitor Conflation: Negative external events or unrelated homonyms become erroneously linked to your entity.'
+          title: '01. From mention to endorsement',
+          content: '• Mention: the brand appears in the answer, among others.\n• Recommendation: the AI suggests the brand as a good option.\n• Endorsement: the AI presents the brand as the reference, with trusted arguments.\n\nOur job: move your brand up one step, then hold it there.'
         },
         {
-          title: '02. Our Four-Stage Strategic Framework',
-          content: 'We treat AI visibility not as a technical gimmick, but as an essential mandate of corporate brand governance:\n\n1. Generative Truth Audit: We execute hundreds of structured queries across leading engines (ChatGPT Search, Perplexity Pro, Google Gemini, Anthropic Claude, Apple Intelligence) to map exactly what AI states about your enterprise, what it omits, and where it hallucinates.\n2. Authoring the Definitive Brand Truth Corpus: Directed by Jean-Paul Brunier, we author the unassailable factual ground truth of your company: governance, validated case milestones, metrics, and core narrative.\n3. Technical Semantic Grounding (llms.txt & Knowledge Graph): We structure this corpus into machine-readable formats (llms.txt, llms-full.txt, high-precision Schema.org JSON-LD, Wikidata entity linking) ensuring your official domain serves as the primary ground truth for AI bots.\n4. Ongoing Generative Sovereignty Observatory: Continuous monitoring of brand citations across AI engines with proactive mitigation whenever semantic drift emerges.'
+          title: '02. Four stages, continuous measurement',
+          content: '1. Audit: what the main AI assistants say about your brand and your competitors, across about a hundred of your customers\' questions.\n2. Strategy: the messages, proof and sources to strengthen to move from mention to recommendation.\n3. Activation: reference content, press relations, reviews, third-party sources, website and structured data.\n4. Monitoring: an endorsement indicator measured every month, adjusted as the models evolve.\n\nThe audit can be ordered on its own. Monitoring is a monthly subscription.'
         },
         {
-          title: '03. Why Jean-Paul Brunier Leads this Practice',
-          content: 'Preserving brand sovereignty in conversational search requires the exact same boardroom maturity as navigating a crisis or orchestrating a global repositioning. Former President of Publicis Conseil, Jean-Paul Brunier provides chairpersons with the absolute assurance that their narrative will neither be diluted by statistical algorithms nor delegated to technicians unfamiliar with executive influence.'
+          title: '03. Brand and technology, in one team',
+          content: 'Brand websites account for only 5 to 10% of the sources cited by AI assistants (McKinsey, 2025). The rest comes from the press, reviews, forums and experts: your reputation. Endorsement is therefore won first through what the press, experts and customers say about you. That has always been our craft. We combine it with technical expertise in AI models, from strategy to measurement.'
         },
         {
-          title: '04. Core Deliverables & Immediate Strategic Impact',
-          content: '• Confidential Generative Truth & AI Hallucination Audit Report.\n• Executive-approved brand ground truth dossier.\n• Root machine discovery files (llms.txt and llms-full.txt) deployed to your infrastructure.\n• Validated Schema.org Knowledge Graph entity hierarchy.\n• Uncompromising narrative authority across all major conversational engines.'
+          title: '04. Our commitments',
+          content: 'An AI recommendation cannot be bought. It is built with proof.\n\n• Real proof: never fake reviews or misleading content.\n• Transparency: we explain what we do, source by source.\n• Measurement: every action is tracked over time.\n• Realistic promises: models change constantly, so we commit to a method and measured progress, never a guaranteed rank.\n\nTo start: a four-week pilot audit.'
         }
       ]
     }

@@ -4,22 +4,43 @@
 export const SITE = {
   url: 'https://www.brunierobadia.com',
   name: 'BrunierObadia',
-  legalName: 'BrunierObadia Studios',
+  legalName: 'BRUNIER OBADIA STUDIOS',
+  legalForm: 'Société par Actions Simplifiée (SAS)',
+  shareCapital: '3 000 €',
+  siren: '984 547 919',
+  siret: '984 547 919 00014',
+  rcs: 'Paris B 984 547 919',
+  rcsCity: 'Paris',
+  vatNumber: 'FR 74 984547919',
+  codeApe: '9003A (Création artistique relevant des arts plastiques)',
+  headquarters: "84 rue d'Aboukir, 75002 Paris, France",
+  phone: '+33 1 89 71 33 00',
+  // Directeur de la publication = représentant légal de la société (LCEN, art. 6) : le Président.
+  publicationDirectors: {
+    fr: 'Jonas Obadia, Président',
+    en: 'Jonas Obadia, President',
+  },
+  host: {
+    name: 'Vercel Inc.',
+    address: '440 N Barranca Ave #4133, Covina, CA 91723, États-Unis',
+    phone: '+1 (951) 383-6898',
+    url: 'https://vercel.com',
+  },
   tagline: {
     fr: 'Agence de communication créative, digital performance et brand transformation.',
     en: 'Creative communication, digital performance and brand transformation agency.',
   },
   emails: ['jonasobadia@brunierobadia.com', 'jeanpaulbrunier@brunierobadia.com'],
-  foundingDate: '2022',
-  address: { country: 'FR', locality: 'Paris' },
+  foundingDate: '2024',
+  address: { country: 'FR', locality: 'Paris', postalCode: '75002', streetAddress: "84 rue d'Aboukir" },
 };
 
 // Les projets vivent dans ./projects.js (26 projets extraits de la base du studio).
 export { projects } from './projects.js';
 
 export const about = {
-  fr: "Nous sommes une agence agile, indépendante et pleine d'expérience. Brunier & Obadia réunit un stratège et un créatif d'exception : Jean-Paul Brunier (ancien Président de Publicis Conseil) et Jonas Obadia. Nous maîtrisons toutes les disciplines de la communication créative et décloisonnons les compétences, avec nos pôles complémentaires BrunierObadia Digital Performance (dirigée par Cyrille Douin) et BrunierObadia Brand Transformation (avec Christophe Attelé).",
-  en: "We are an agile, independent, and deeply experienced agency. Brunier & Obadia brings together an exceptional strategist and creative: Jean-Paul Brunier (former President of Publicis Conseil) and Jonas Obadia. We master every discipline of creative communication, complemented by BrunierObadia Digital Performance (led by Cyrille Douin) and BrunierObadia Brand Transformation (with Christophe Attelé).",
+  fr: "Nous sommes une agence agile, indépendante et pleine d'expérience. Brunier & Obadia réunit un stratège et un créatif d'exception : Jean-Paul Brunier (ancien président de Leo Burnett France et dirigeant chez Publicis) et Jonas Obadia. Nous maîtrisons toutes les disciplines de la communication créative et décloisonnons les compétences, avec nos pôles complémentaires BrunierObadia AI Endorsement (avec Tom Cottu) et BrunierObadia Brand Transformation (avec Christophe Attelé).",
+  en: "We are an agile, independent, and deeply experienced agency. Brunier & Obadia brings together an exceptional strategist and creative: Jean-Paul Brunier (former president of Leo Burnett France and Publicis Groupe executive) and Jonas Obadia. We master every discipline of creative communication, complemented by BrunierObadia AI Endorsement (with Tom Cottu) and BrunierObadia Brand Transformation (with Christophe Attelé).",
   stats: [
     { value: '50', label: { fr: "ans d'expérience", en: 'years of experience' } },
     { value: '200', label: { fr: 'marques', en: 'brands' } },
@@ -30,27 +51,27 @@ export const about = {
 
 // 21 secteurs, marques clientes (source: table clients du studio).
 export const clients = [
-  { fr: 'MOBILITÉ', en: 'MOBILITY', brands: ['RENAULT', 'PEUGEOT', 'NISSAN', 'ASTON MARTIN', 'JEEP', 'VALEO'] },
+  { fr: 'MOBILITÉ', en: 'MOBILITY', brands: ['RENAULT', 'PEUGEOT', 'NISSAN', 'ASTON MARTIN', 'JEEP', 'VALEO', 'BMW', 'GENERAL MOTORS', 'CHRYSLER', 'DACIA', 'FIAT', 'ALFA ROMEO', 'ABARTH'] },
   { fr: 'ÉNERGIES', en: 'ENERGIES', brands: ['EDF', 'TOTAL ENERGIES', 'SUEZ'] },
   { fr: 'CONSEIL', en: 'CONSULTING', brands: ['MAZARS'] },
   { fr: 'FINANCE / ASSURANCES', en: 'FINANCE / INSURANCE', brands: ['ALLIANZ', 'MACIF', 'AXA', 'BARCLAYS', 'MILLEIS BANQUE', 'CNP', 'SOCIÉTÉ GÉNÉRALE', 'CRÉDIT AGRICOLE', 'AFER', 'BNP PARIBAS'] },
   { fr: 'COSMÉTIQUES / PARFUMS', en: 'COSMETICS / PERFUMES', brands: ['ACQUA DI PARMA', 'COTY PARFUMS', 'HUGO BOSS', 'DECLÉOR', 'GUERLAIN', 'LANCÔME', 'HELENA RUBINSTEIN', 'VALENTINO'] },
   { fr: 'MÉDIA', en: 'MEDIA', brands: ['LE POINT', 'NRJ', 'TF1', 'FRANCE TELEVISION', 'PRISMA MEDIA', 'MEDIA TRANSPORTS', 'ARCHISTORM', 'NEON', 'TÉLÉ 7 JOURS', 'TÉLÉ LOISIRS', 'VSD', 'GEO', 'FEMME ACTUELLE', "ÇA M'INTERESSE", 'VOICI', 'MARIE-CLAIRE'] },
-  { fr: 'ONG', en: 'NGOS', brands: ['ATD QUART MONDE', 'FÉDÉRATION FRANÇAISE DE RUGBY', 'ARMÉE DE TERRE', 'LE SAMU SOCIAL', 'SIDACTION', 'FONDATION MIMI ULLENS', 'ONU', 'MINISTÈRE DE LA CULTURE', 'MINISTÈRE DU LOGEMENT', 'MINISTÈRE DE LA TRANSITION ÉCO.', 'LES ORPHELINS APPRENTIS', 'OLYMPIQUE LYONNAIS', 'UNESCO'] },
+  { fr: 'ONG', en: 'NGOS', brands: ['ATD QUART MONDE', 'FÉDÉRATION FRANÇAISE DE RUGBY', 'ARMÉE DE TERRE', 'LE SAMU SOCIAL', 'SIDACTION', 'FONDATION MIMI ULLENS', 'ONU', 'MINISTÈRE DE LA CULTURE', 'MINISTÈRE DU LOGEMENT', 'MINISTÈRE DE LA TRANSITION ÉCO.', 'LES ORPHELINS APPRENTIS', 'UNESCO'] },
   { fr: 'SANTÉ', en: 'HEALTH', brands: ['PFIZER', 'SANOFI', 'SANOFI PASTEUR', 'CIALIS', 'PIERRE FABRE', 'VICHY', "L'ORÉAL", 'GILEAD', 'NEXIUM', 'ALWAYS', 'ROCHE', 'JANSSEN', 'HÔPITAUX DE PARIS', 'DOLIPRANE'] },
-  { fr: 'SERVICES', en: 'SERVICES', brands: ['AIR FRANCE', 'TOURISME TUNISIEN', 'ACI', 'LA POSTE', 'INGENICO'] },
+  { fr: 'SERVICES', en: 'SERVICES', brands: ['AIR FRANCE', 'TOURISME TUNISIEN', 'LA POSTE', 'INGENICO', 'WEIGHT WATCHERS', 'INTERMARCHÉ', 'COSTA CROISIÈRES', 'IXINA'] },
   { fr: 'ENSEIGNEMENT', en: 'EDUCATION', brands: ['E-ARTSUP', 'IONIS EDUCATION GROUP', 'EPITECH', 'EPITECH DIGITAL SCHOOL'] },
   { fr: 'TÉLÉCOMMUNICATIONS', en: 'TELECOMMUNICATIONS', brands: ['ALTICE', 'SFR', 'NUMERICABLE', 'CISCO'] },
-  { fr: 'JEUX', en: 'GAMBLING', brands: ['PMU', 'FRANÇAISE DES JEUX'] },
-  { fr: 'SPORTS', en: 'SPORTS', brands: ['PSG', 'FÉDÉRATION FRANÇAISE DE RUGBY', 'NIKE', 'ADIDAS', 'OLYMPIQUE LYONNAIS', 'JORDAN', 'GO SPORT'] },
+  { fr: 'JEUX', en: 'GAMBLING', brands: ['PMU', 'FRANÇAISE DES JEUX', 'BETFAIR'] },
+  { fr: 'SPORTS', en: 'SPORTS', brands: ['PSG', 'FÉDÉRATION FRANÇAISE DE RUGBY', 'NIKE', 'ADIDAS', 'OLYMPIQUE LYONNAIS', 'OL GROUPE', 'JORDAN', 'GO SPORT'] },
   { fr: 'JOAILLERIE', en: 'JEWELRY', brands: ['PIAGET', 'CARTIER', 'BULGARI', 'CHAUMET', 'JAEGER-LECOULTRE'] },
   { fr: 'LUXE', en: 'LUXURY', brands: ['DIOR', 'HERMÈS', 'BALENCIAGA', 'BARBARA BUI', 'CHANEL', 'GIVENCHY', 'MAISON ULLENS'] },
   { fr: 'CULTURE / RECHERCHE', en: 'CULTURE / RESEARCH', brands: ['CNRS', 'NATURAL HISTORY MUSEUM', 'CENTRE POMPIDOU', 'AL THANI COLLECTION'] },
   { fr: 'IMMOBILIER / TRAVAUX PUBLICS', en: 'REAL ESTATE / PUBLIC WORKS', brands: ['ALTAREA COGEDIM', 'LAFARGE', 'DEFACTO', 'VINCI', 'CENTURY 21'] },
-  { fr: 'TECH / ÉQUIPEMENTS', en: 'TECH / APPLIANCES', brands: ['SAMSUNG', 'CISCO', 'ATLANTIC'] },
+  { fr: 'TECH / ÉQUIPEMENTS', en: 'TECH / APPLIANCES', brands: ['SAMSUNG', 'CISCO', 'ATLANTIC', 'APPLE', 'THOMSON', 'ROWENTA'] },
   { fr: 'VINS & SPIRITUEUX', en: 'WINES & SPIRITS', brands: ['MOËT & CHANDON', 'HENNESSY', 'DOM PÉRIGNON'] },
-  { fr: 'CONSOMMATION COURANTE', en: 'CONVENIENCE GOODS', brands: ['SOPALIN', 'LE TRÈFLE'] },
-  { fr: 'ALIMENTATION / BOISSONS', en: 'FOOD / BEVERAGES', brands: ['NESTLÉ', 'DANONE'] },
+  { fr: 'CONSOMMATION COURANTE', en: 'CONVENIENCE GOODS', brands: ['SOPALIN', 'LE TRÈFLE', 'PROCTER & GAMBLE', 'ENERGIZER', 'PHILIP MORRIS'] },
+  { fr: 'ALIMENTATION / BOISSONS', en: 'FOOD / BEVERAGES', brands: ['NESTLÉ', 'DANONE', 'COCA-COLA', "KELLOGG'S", 'YOPLAIT', 'CHARAL', 'UNITED BISCUITS', 'LINDT', 'PETIT NAVIRE', 'LE GAULOIS'] },
 ];
 
 export const offers = [
@@ -98,51 +119,8 @@ export const offers = [
     ]
   },
   {
-    slug: 'performance-digitale',
-    code: 'DISCIPLINE // 02',
-    accent: '#00e5ff',
-    fr: {
-      title: 'Performance digitale',
-      text: 'BrunierObadia Digital Performance, dirigée par Cyrille Douin : acquisition, sites, contenus, mesure.',
-      scope: 'Ingénierie & Écosystèmes Digitaux',
-      lead: 'Cyrille Douin (Associé fondateur)',
-      deliverables: [
-        'Plateformes web headless haute vélocité',
-        'Design Systems Figma to Code',
-        'Stratégies d’acquisition & Activation média',
-        'Audits Core Web Vitals & Vélocité',
-        'Content Factory & Motion design',
-        'Hub de mesure ROI & Analytics propriétaire'
-      ],
-      steps: ['01. Audit technique & Funnel', '02. Architecture & UX chirurgicale', '03. Mesure & Scalabilité'],
-      standard: 'Score 100/100 Google · Temps de réponse < 200ms',
-    },
-    en: {
-      title: 'Digital Performance',
-      text: 'BrunierObadia Digital Performance, led by Cyrille Douin: acquisition, websites, content, measurement.',
-      scope: 'Digital Engineering & Ecosystems',
-      lead: 'Cyrille Douin (Founding Partner)',
-      deliverables: [
-        'High-Velocity Headless Web Platforms',
-        'Figma-to-Code Design Systems',
-        'Acquisition Strategies & Media Activation',
-        'Core Web Vitals Audits & Performance',
-        'Content Factory & Motion Design',
-        'Proprietary ROI & Analytics Hub'
-      ],
-      steps: ['01. Technical & Funnel Audit', '02. Surgical UX & Architecture', '03. Scale & Measurement'],
-      standard: '100/100 Google Score · < 200ms Response Time',
-    },
-    caseSlugs: [
-      'penninghen-creation-site-web',
-      'nissan-x-trail-escapes',
-      'peugeot-futureship',
-      'merci-raymond-pour-des-villes-plus-vertes'
-    ]
-  },
-  {
     slug: 'brand-transformation',
-    code: 'DISCIPLINE // 03',
+    code: 'DISCIPLINE // 02',
     accent: '#ff8a00',
     fr: {
       title: 'Brand transformation',
@@ -185,39 +163,39 @@ export const offers = [
   },
   {
     slug: 'la-marque-dans-les-ia',
-    code: 'DISCIPLINE // 04',
+    code: 'DISCIPLINE // 03',
     accent: '#b800ff',
     fr: {
-      title: 'La marque dans les IA',
-      text: 'Dirigé par Jean-Paul Brunier. Ce que les intelligences génératives disent de votre marque façonne déjà votre réputation : audit de vérité, protection contre les hallucinations, souveraineté et gouvernance de marque face aux IA.',
-      scope: 'Souveraineté & Gouvernance de Marque à l’Ère de l’IA',
-      lead: 'Jean-Paul Brunier (ex-Président de Publicis Conseil)',
+      title: 'AI Endorsement',
+      text: 'Ne soyez pas seulement trouvé par l\'IA. Soyez recommandé. Nous mesurons ce que les IA disent de votre marque et nous la faisons passer de la mention à la recommandation, avec des preuves.',
+      scope: 'De la mention à l\'endorsement dans les réponses des IA',
+      lead: 'Jean-Paul Brunier · Tom Cottu',
       deliverables: [
-        'Audit de vérité de marque : ce que ChatGPT, Perplexity, Gemini et Claude disent de vous',
-        'Stratégie de réputation et de souveraineté générative pour les Comex et directions générales',
-        'Structuration du corpus de vérité et du narratif officiel de la marque (Knowledge Graph & llms.txt)',
-        'Protection contre les hallucinations, amalgames et déformations sémantiques',
-        'Imposition de votre singularité et de votre désirabilité face aux moteurs conversationnels',
-        'Observatoire permanent de citabilité et d’autorité de marque dans les IA'
+        'Audit : ce que ChatGPT, Gemini et Perplexity disent de votre marque et de vos concurrents',
+        'Score d\'endorsement : présence, rang, tonalité, exactitude',
+        'Carte des questions où vous êtes absent et plan d\'action priorisé',
+        'Stratégie : les messages, les preuves et les sources à renforcer',
+        'Activation : sources tierces, contenus de référence, avis et preuves, experts, site et données, plateformes ouvertes',
+        'Suivi : tableau de bord mensuel et comité trimestriel avec votre direction'
       ],
-      steps: ['01. Diagnostic de réputation & cartographie des hallucinations IA', '02. Définition du corpus de vérité et ancrage sémantique', '03. Souveraineté de marque et gouvernance continue'],
-      standard: 'Contrôle et souveraineté du narratif sur 100% des moteurs génératifs majeurs',
+      steps: ['01. Audit', '02. Stratégie', '03. Activation', '04. Suivi'],
+      standard: 'Des progrès mesurés chaque mois, pas un rang garanti',
     },
     en: {
-      title: 'Brands in the Age of AI',
-      text: 'Led by Jean-Paul Brunier. What generative AI says about your brand already shapes your reputation: truth audit, defense against hallucinations, brand sovereignty and boardroom governance in the AI era.',
-      scope: 'Brand Governance & Narrative Sovereignty in the AI Era',
-      lead: 'Jean-Paul Brunier (Former President of Publicis Conseil)',
+      title: 'AI Endorsement',
+      text: 'Don\'t just be found by AI. Be recommended. We measure what AI assistants say about your brand and move it from mention to recommendation, with proof.',
+      scope: 'From mention to endorsement in AI answers',
+      lead: 'Jean-Paul Brunier · Tom Cottu',
       deliverables: [
-        'Brand Truth Audit: analyzing what ChatGPT, Perplexity, Gemini and Claude say about you',
-        'Executive reputation & generative sovereignty strategy for C-suites and boards',
-        'Structuring the official brand truth corpus and narrative grounding (Knowledge Graph & llms.txt)',
-        'Protection against AI hallucinations, semantic dilution and competitor conflation',
-        'Asserting your brand singularity and luxury value across conversational engines',
-        'Ongoing AI citability and brand authority observatory'
+        'Audit: what ChatGPT, Gemini and Perplexity say about your brand and your competitors',
+        'Endorsement score: presence, rank, tone, accuracy',
+        'Map of the questions where you are absent, and a prioritised action plan',
+        'Strategy: the messages, proof and sources to strengthen',
+        'Activation: third-party sources, reference content, reviews and proof, experts, website and data, open platforms',
+        'Monitoring: monthly dashboard and quarterly review with your leadership'
       ],
-      steps: ['01. Brand reputation audit & AI hallucination mapping', '02. Authoritative truth corpus & semantic grounding', '03. Brand sovereignty & executive governance'],
-      standard: 'Narrative sovereignty across all major generative engines',
+      steps: ['01. Audit', '02. Strategy', '03. Activation', '04. Monitoring'],
+      standard: 'Measured progress every month, never a guaranteed rank',
     },
     caseSlugs: [
       'micro-macro-cnrs',

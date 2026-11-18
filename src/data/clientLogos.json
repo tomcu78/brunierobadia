@@ -1,0 +1,455 @@
+{
+ "EDF": {
+  "src": "/logos/clients/edf.svg"
+ },
+ "SUEZ": {
+  "src": "/logos/clients/suez.svg"
+ },
+ "MAZARS": {
+  "src": "/logos/clients/mazars.svg"
+ },
+ "ALLIANZ": {
+  "src": "/logos/clients/allianz.svg"
+ },
+ "MACIF": {
+  "src": "/logos/clients/macif.svg"
+ },
+ "AXA": {
+  "src": "/logos/clients/axa.svg"
+ },
+ "MILLEISBANQUE": {
+  "src": "/logos/clients/milleis-banque.webp"
+ },
+ "CNP": {
+  "src": "/logos/clients/cnp.svg"
+ },
+ "CREDITAGRICOLE": {
+  "src": "/logos/clients/credit-agricole.svg"
+ },
+ "AFER": {
+  "src": "/logos/clients/afer.webp"
+ },
+ "ACQUADIPARMA": {
+  "src": "/logos/clients/acqua-di-parma.webp"
+ },
+ "COTYPARFUMS": {
+  "src": "/logos/clients/coty-parfums.svg"
+ },
+ "HUGOBOSS": {
+  "src": "/logos/clients/hugo-boss.svg"
+ },
+ "DECLEOR": {
+  "src": "/logos/clients/decleor.webp"
+ },
+ "GUERLAIN": {
+  "src": "/logos/clients/guerlain.svg"
+ },
+ "LANCOME": {
+  "src": "/logos/clients/lancome.svg"
+ },
+ "HELENARUBINSTEIN": {
+  "src": "/logos/clients/helena-rubinstein.webp"
+ },
+ "VALENTINO": {
+  "src": "/logos/clients/valentino.svg"
+ },
+ "LEPOINT": {
+  "src": "/logos/clients/le-point.svg"
+ },
+ "NRJ": {
+  "src": "/logos/clients/nrj.webp"
+ },
+ "TF1": {
+  "src": "/logos/clients/tf1.svg"
+ },
+ "FRANCETELEVISION": {
+  "src": "/logos/clients/france-television.svg",
+  "dark": true
+ },
+ "PRISMAMEDIA": {
+  "src": "/logos/clients/prisma-media.svg"
+ },
+ "MEDIATRANSPORTS": {
+  "src": "/logos/clients/media-transports.webp"
+ },
+ "ARCHISTORM": {
+  "src": "/logos/clients/archistorm.webp"
+ },
+ "NEON": {
+  "src": "/logos/clients/neon.svg"
+ },
+ "TELE7JOURS": {
+  "src": "/logos/clients/tele-7-jours.svg"
+ },
+ "TELELOISIRS": {
+  "src": "/logos/clients/tele-loisirs.svg"
+ },
+ "VSD": {
+  "src": "/logos/clients/vsd.png"
+ },
+ "GEO": {
+  "src": "/logos/clients/geo.svg"
+ },
+ "FEMMEACTUELLE": {
+  "src": "/logos/clients/femme-actuelle.webp"
+ },
+ "CAMINTERESSE": {
+  "src": "/logos/clients/ca-m-interesse.webp"
+ },
+ "VOICI": {
+  "src": "/logos/clients/voici.png"
+ },
+ "MARIECLAIRE": {
+  "src": "/logos/clients/marie-claire.svg"
+ },
+ "ATDQUARTMONDE": {
+  "src": "/logos/clients/atd-quart-monde.png"
+ },
+ "FEDERATIONFRANCAISEDERUGBY": {
+  "src": "/logos/clients/federation-francaise-de-rugby.svg"
+ },
+ "ARMEEDETERRE": {
+  "src": "/logos/clients/armee-de-terre.svg"
+ },
+ "LESAMUSOCIAL": {
+  "src": "/logos/clients/le-samu-social.svg"
+ },
+ "SIDACTION": {
+  "src": "/logos/clients/sidaction.svg"
+ },
+ "ONU": {
+  "src": "/logos/clients/onu.svg"
+ },
+ "MINISTEREDELACULTURE": {
+  "src": "/logos/clients/ministere-de-la-culture.webp"
+ },
+ "MINISTEREDULOGEMENT": {
+  "src": "/logos/clients/ministere-du-logement.webp"
+ },
+ "MINISTEREDELATRANSITIONECO": {
+  "src": "/logos/clients/ministere-de-la-transition-eco.svg"
+ },
+ "LESORPHELINSAPPRENTIS": {
+  "src": "/logos/clients/les-orphelins-apprentis.webp"
+ },
+ "OLYMPIQUELYONNAIS": {
+  "src": "/logos/clients/olympique-lyonnais.svg"
+ },
+ "UNESCO": {
+  "src": "/logos/clients/unesco.svg"
+ },
+ "PFIZER": {
+  "src": "/logos/clients/pfizer.svg"
+ },
+ "SANOFI": {
+  "src": "/logos/clients/sanofi.svg"
+ },
+ "SANOFIPASTEUR": {
+  "src": "/logos/clients/sanofi.svg"
+ },
+ "PIERREFABRE": {
+  "src": "/logos/clients/pierre-fabre.png"
+ },
+ "VICHY": {
+  "src": "/logos/clients/vichy.svg"
+ },
+ "GILEAD": {
+  "src": "/logos/clients/gilead.svg"
+ },
+ "NEXIUM": {
+  "src": "/logos/clients/nexium.webp"
+ },
+ "ALWAYS": {
+  "src": "/logos/clients/always.svg",
+  "dark": true
+ },
+ "ROCHE": {
+  "src": "/logos/clients/roche.svg"
+ },
+ "JANSSEN": {
+  "src": "/logos/clients/janssen.png"
+ },
+ "HOPITAUXDEPARIS": {
+  "src": "/logos/clients/hopitaux-de-paris.svg"
+ },
+ "DOLIPRANE": {
+  "src": "/logos/clients/doliprane.webp"
+ },
+ "TOURISMETUNISIEN": {
+  "src": "/logos/clients/tourisme-tunisien.webp"
+ },
+ "LAPOSTE": {
+  "src": "/logos/clients/la-poste.svg"
+ },
+ "INGENICO": {
+  "src": "/logos/clients/ingenico.svg"
+ },
+ "EARTSUP": {
+  "src": "/logos/clients/e-artsup.svg"
+ },
+ "IONISEDUCATIONGROUP": {
+  "src": "/logos/clients/ionis-education-group.svg",
+  "dark": true
+ },
+ "EPITECH": {
+  "src": "/logos/clients/epitech.svg"
+ },
+ "EPITECHDIGITALSCHOOL": {
+  "src": "/logos/clients/epitech-digital-school.svg"
+ },
+ "ALTICE": {
+  "src": "/logos/clients/altice.webp"
+ },
+ "NUMERICABLE": {
+  "src": "/logos/clients/numericable.webp",
+  "dark": true
+ },
+ "PMU": {
+  "src": "/logos/clients/pmu.svg"
+ },
+ "FRANCAISEDESJEUX": {
+  "src": "/logos/clients/francaise-des-jeux.svg"
+ },
+ "PSG": {
+  "src": "/logos/clients/psg.svg"
+ },
+ "GOSPORT": {
+  "src": "/logos/clients/go-sport.png"
+ },
+ "BULGARI": {
+  "src": "/logos/clients/bulgari.svg"
+ },
+ "CHAUMET": {
+  "src": "/logos/clients/chaumet.webp"
+ },
+ "JAEGERLECOULTRE": {
+  "src": "/logos/clients/jaeger-lecoultre.webp"
+ },
+ "BARBARABUI": {
+  "src": "/logos/clients/barbara-bui.jpg"
+ },
+ "GIVENCHY": {
+  "src": "/logos/clients/givenchy.svg"
+ },
+ "MAISONULLENS": {
+  "src": "/logos/clients/maison-ullens.webp",
+  "dark": true
+ },
+ "NATURALHISTORYMUSEUM": {
+  "src": "/logos/clients/natural-history-museum.svg",
+  "dark": true
+ },
+ "ALTHANICOLLECTION": {
+  "src": "/logos/clients/al-thani-collection.svg",
+  "dark": true
+ },
+ "ALTAREACOGEDIM": {
+  "src": "/logos/clients/altarea-cogedim.svg"
+ },
+ "LAFARGE": {
+  "src": "/logos/clients/lafarge.svg"
+ },
+ "DEFACTO": {
+  "src": "/logos/clients/defacto.svg"
+ },
+ "VINCI": {
+  "src": "/logos/clients/vinci.svg"
+ },
+ "CENTURY21": {
+  "src": "/logos/clients/century-21.svg"
+ },
+ "ATLANTIC": {
+  "src": "/logos/clients/atlantic.svg"
+ },
+ "MOETCHANDON": {
+  "src": "/logos/clients/moet-chandon.svg",
+  "dark": true
+ },
+ "HENNESSY": {
+  "src": "/logos/clients/hennessy.webp"
+ },
+ "DOMPERIGNON": {
+  "src": "/logos/clients/dom-perignon.svg",
+  "dark": true
+ },
+ "SOPALIN": {
+  "src": "/logos/clients/sopalin.svg"
+ },
+ "LETREFLE": {
+  "src": "/logos/clients/le-trefle.svg"
+ },
+ "NESTLE": {
+  "src": "/logos/clients/nestle.svg"
+ },
+ "DANONE": {
+  "src": "/logos/clients/danone.webp"
+ },
+ "OLGROUPE": {
+  "src": "/logos/clients/ol-groupe.png"
+ },
+ "HERMES": {
+  "src": "/logos/hermes.svg"
+ },
+ "BALENCIAGA": {
+  "src": "/logos/balenciaga.svg"
+ },
+ "ASTONMARTIN": {
+  "src": "/logos/aston-martin.svg"
+ },
+ "JEEP": {
+  "src": "/logos/jeep.svg"
+ },
+ "CARTIER": {
+  "src": "/logos/cartier.svg"
+ },
+ "DIOR": {
+  "src": "/logos/dior.svg"
+ },
+ "CHANEL": {
+  "src": "/logos/chanel.svg"
+ },
+ "PIAGET": {
+  "src": "/logos/piaget.svg"
+ },
+ "PEUGEOT": {
+  "src": "/logos/peugeot.svg"
+ },
+ "RENAULT": {
+  "src": "/logos/renault.svg"
+ },
+ "NISSAN": {
+  "src": "/logos/nissan.svg"
+ },
+ "VALEO": {
+  "src": "/logos/valeo.svg"
+ },
+ "SAMSUNG": {
+  "src": "/logos/samsung.svg"
+ },
+ "CISCO": {
+  "src": "/logos/cisco.svg"
+ },
+ "SFR": {
+  "src": "/logos/sfr.webp"
+ },
+ "TOTALENERGIES": {
+  "src": "/logos/total-energies.svg"
+ },
+ "SOCIETEGENERALE": {
+  "src": "/logos/societe-generale.svg"
+ },
+ "BNPPARIBAS": {
+  "src": "/logos/bnp-paribas.svg"
+ },
+ "BARCLAYS": {
+  "src": "/logos/barclays.svg"
+ },
+ "CNRS": {
+  "src": "/logos/cnrs.svg"
+ },
+ "CENTREPOMPIDOU": {
+  "src": "/logos/centre-pompidou.svg"
+ },
+ "LOREAL": {
+  "src": "/logos/loreal.svg"
+ },
+ "AIRFRANCE": {
+  "src": "/logos/air-france.svg"
+ },
+ "NIKE": {
+  "src": "/logos/nike.svg"
+ },
+ "ADIDAS": {
+  "src": "/logos/adidas.svg"
+ },
+ "JORDANBRAND": {
+  "src": "/logos/jordan.svg"
+ },
+ "JORDAN": {
+  "src": "/logos/jordan.svg"
+ },
+ "APPLE": {
+  "src": "/logos/clients/apple.svg"
+ },
+ "BMW": {
+  "src": "/logos/clients/bmw.svg"
+ },
+ "COCACOLA": {
+  "src": "/logos/clients/coca-cola.svg"
+ },
+ "KELLOGGS": {
+  "src": "/logos/clients/kellogg-s.svg"
+ },
+ "PROCTERGAMBLE": {
+  "src": "/logos/clients/procter-gamble.svg"
+ },
+ "ROWENTA": {
+  "src": "/logos/clients/rowenta.svg"
+ },
+ "CHARAL": {
+  "src": "/logos/clients/charal.webp"
+ },
+ "CHRYSLER": {
+  "src": "/logos/clients/chrysler.svg"
+ },
+ "DACIA": {
+  "src": "/logos/clients/dacia.svg"
+ },
+ "YOPLAIT": {
+  "src": "/logos/clients/yoplait.jpg"
+ },
+ "ENERGIZER": {
+  "src": "/logos/clients/energizer.svg"
+ },
+ "UNITEDBISCUITS": {
+  "src": "/logos/clients/united-biscuits.svg"
+ },
+ "GENERALMOTORS": {
+  "src": "/logos/clients/general-motors.webp"
+ },
+ "WEIGHTWATCHERS": {
+  "src": "/logos/clients/weight-watchers.webp"
+ },
+ "CIALIS": {
+  "src": "/logos/clients/cialis.png"
+ },
+ "FONDATIONMIMIULLENS": {
+  "src": "/logos/clients/fondation-mimi-ullens.png"
+ },
+ "THOMSON": {
+  "src": "/logos/clients/thomson.webp"
+ },
+ "FIAT": {
+  "src": "/logos/clients/fiat.svg"
+ },
+ "ALFAROMEO": {
+  "src": "/logos/clients/alfa-romeo.webp"
+ },
+ "ABARTH": {
+  "src": "/logos/clients/abarth.svg"
+ },
+ "LINDT": {
+  "src": "/logos/clients/lindt.webp"
+ },
+ "COSTACROISIERES": {
+  "src": "/logos/clients/costa-croisieres.svg"
+ },
+ "INTERMARCHE": {
+  "src": "/logos/clients/intermarche.svg"
+ },
+ "BETFAIR": {
+  "src": "/logos/clients/betfair.svg"
+ },
+ "PHILIPMORRIS": {
+  "src": "/logos/clients/philip-morris.svg"
+ },
+ "IXINA": {
+  "src": "/logos/clients/ixina.svg"
+ },
+ "PETITNAVIRE": {
+  "src": "/logos/clients/petit-navire.webp"
+ },
+ "LEGAULOIS": {
+  "src": "/logos/clients/le-gaulois.webp"
+ }
+}

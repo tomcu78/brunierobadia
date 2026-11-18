@@ -2,10 +2,11 @@
 import Base from '../../../layouts/Base.astro';
 import { projects, ui } from '../../../data/site.js';
 import { abs, localizePath } from '../../../lib/seo.js';
+import { typeKeys, typeFilters } from '../../../lib/projectTypes.js';
 
 const lang = 'en';
 const t = ui[lang];
-const types = [...new Set(projects.flatMap((p) => p.tags_en))].sort();
+const types = typeFilters(projects, lang);
 const clientsList = [...new Set(projects.map((p) => p.client))].sort();
 const breadcrumb = {
   '@context': 'https://schema.org',
@@ -42,8 +43,8 @@ const itemList = {
     <div class="filters" data-filters role="toolbar" aria-label="Filter projects">
       <button type="button" class="chip is-on" data-filter="all">All <em>{projects.length}</em></button>
       {types.map((ty) => (
-        <button type="button" class="chip" data-filter={ty}>
-          {ty} <em>{projects.filter((p) => p.tags_en.includes(ty)).length}</em>
+        <button type="button" class="chip" data-filter={ty.key}>
+          {ty.label} <em>{ty.count}</em>
         </button>
       ))}
     </div>
@@ -53,7 +54,7 @@ const itemList = {
       {projects.map((p, i) => (
         <a
           class="work"
-          data-tags={p.tags_en.join('|')}
+          data-tags={typeKeys(p).join('|')}
           data-images={JSON.stringify(p.allImages || [p.image, ...(p.gallery || [])])}
           href={localizePath(`/projets/${p.slug}`, lang)}
         >

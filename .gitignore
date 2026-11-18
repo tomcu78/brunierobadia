@@ -23,3 +23,9 @@ yarn-error.log*
 
 # Audit files
 lighthouse-seo.json
+
+# Polices Styrene d'essai (usage privé uniquement, jamais en ligne)
+public/fonts/styrene/
+
+# Réglages locaux de Claude Code
+.claude/

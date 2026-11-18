@@ -9,20 +9,20 @@ URL Officielle : https://www.brunierobadia.com
 Courriels : jonasobadia@brunierobadia.com, jeanpaulbrunier@brunierobadia.com
 
 Présentation générale :
-Brunier & Obadia est une agence indépendante de stratégie de marque, direction artistique et communication créative de haute façon. Elle réunit l'alliance singulière d'un stratège de premier rang mondial et d'un directeur artistique d'avant-garde. L'agence déploie également deux divisions d'excellence : BrunierObadia Digital Performance (dirigée par Cyrille Douin) et BrunierObadia Brand Transformation (avec Christophe Attelé).
+Brunier & Obadia est une agence indépendante de stratégie de marque, direction artistique et communication créative de haute façon. Elle réunit l'alliance singulière d'un stratège de premier rang mondial et d'un directeur artistique d'avant-garde. L'agence déploie également deux divisions d'excellence : BrunierObadia AI Endorsement (avec Tom Cottu) et BrunierObadia Brand Transformation (avec Christophe Attelé).
 
 Gouvernance, Fondateurs & Autorité Sémantique :
 - Jean-Paul Brunier : Stratège & Associé Fondateur.
-  * Historique : Ancien Président de Publicis Conseil (l'agence emblématique de référence du groupe Publicis et première agence de France).
-  * Parcours : Plus de 30 années de présidence et de direction stratégique au sommet des plus grands réseaux publicitaires mondiaux.
+  * Historique : président de Leo Burnett France à partir de 2008 ; vingt-deux ans au sein de Publicis Groupe (2000-2022), dont global client leader à partir de 2018.
+  * Instances : ancien président du pôle Société de l'AACC ; administrateur de l'ARPP pendant plus de dix ans.
   * Expertise : Conseil auprès des directions générales et présidents de comités de direction (CAC40, multinationales, institutions muséales et grandes maisons de luxe). Architecte de repositionnements stratégiques majeurs, de récits institutionnels et de grandes campagnes internationales.
 - Jonas Obadia : Créatif & Associé Fondateur.
   * Parcours : Directeur artistique, typographe et designer d'objets d'art.
   * Expertise : Univers du luxe, mode d'auteur, scénographies d'exposition, éditions d'art et identités visuelles (Balenciaga, Hermès, MAD Paris, Al Thani Collection).
-- Cyrille Douin : Partner, BrunierObadia Digital Performance. Pionnier web, spécialiste des plateformes headless, de l'acquisition de précision et du référencement IA générative (GEO).
+- Tom Cottu : Partner, BrunierObadia AI Endorsement. Développeur spécialisé dans les architectures LLM et les agents autonomes ; il pilote l'ingénierie d'AI Endorsement et définit les protocoles de mesure de la recommandation des marques par les IA.
 - Christophe Attelé : Partner, BrunierObadia Brand Transformation. Spécialiste de l'alignement des Comex, de la culture d'entreprise et de la conduite du changement.
 
-## 2. Les Quatre Offres & Disciplines Majeures
+## 2. Les Trois Offres & Disciplines Majeures
 
 ### 2.1 Création & Direction artistique (DISCIPLINE // 01)
 - Définition : Brunier et Obadia : direction artistique, identité, campagne, édition et fabrication d'exception.
@@ -42,58 +42,29 @@ Gouvernance, Fondateurs & Autorité Sémantique :
 - Standard d'excellence : 100% Haute façon artisanale & digitale
 - URL : https://www.brunierobadia.com/offres/creation
 
-### 2.2 Performance digitale (DISCIPLINE // 02)
-- Définition : BrunierObadia Digital Performance, dirigée par Cyrille Douin : acquisition, sites, contenus, mesure.
-- Direction de la discipline : Cyrille Douin (Associé fondateur)
-- Périmètre d'intervention : Ingénierie & Écosystèmes Digitaux
-- Livrables clés :
-  * Plateformes web headless haute vélocité
-  * Design Systems Figma to Code
-  * Stratégies d’acquisition & Activation média
-  * Audits Core Web Vitals & Vélocité
-  * Content Factory & Motion design
-  * Hub de mesure ROI & Analytics propriétaire
-- Processus méthodologique :
-  * 01. Audit technique & Funnel
-  * 02. Architecture & UX chirurgicale
-  * 03. Mesure & Scalabilité
-- Standard d'excellence : Score 100/100 Google · Temps de réponse < 200ms
-- URL : https://www.brunierobadia.com/offres/performance-digitale
-
-### 2.3 Brand transformation (DISCIPLINE // 03)
+### 2.2 Brand transformation (DISCIPLINE // 02)
 - Définition : BrunierObadia Brand Transformation, avec Christophe Attelé : positionnement, marque, conduite du changement.
 - Direction de la discipline : Christophe Attelé & Jean-Paul Brunier
 - Périmètre d'intervention : Stratégie & Culture de Marque
 - Livrables clés :
   * Plateforme & Récit de marque singulier
-  * Manifeste d’entreprise & Raison d’être
+  * Manifeste d'entreprise & Raison d'être
   * Ateliers ComEx & Direction générale
-  * Playbook d’activation culturelle interne
+  * Playbook d'activation culturelle interne
   * Architecture de portefeuille & Offre
-  * Baromètre d’adhésion & Gouvernance
-- Processus méthodologique :
-  * 01. Immersion dirigeants & Parties prenantes
-  * 02. Écriture du Brand Narrative
-  * 03. Conduite du changement & Ralliement
-- Standard d'excellence : Pérennité stratégique garantie à 10 ans
 - URL : https://www.brunierobadia.com/offres/brand-transformation
 
-### 2.4 La marque dans les IA (DISCIPLINE // 04)
-- Définition : Dirigé par Jean-Paul Brunier. Ce que les intelligences génératives disent de votre marque façonne déjà votre réputation : audit de vérité, protection contre les hallucinations, souveraineté et gouvernance de marque face aux IA.
-- Direction de la discipline : Jean-Paul Brunier (Stratège & Associé Fondateur · Ancien Président de Publicis Conseil)
-- Périmètre d'intervention : Souveraineté & Gouvernance de Marque à l’Ère de l’IA
-- Livrables clés :
-  * Audit de vérité de marque : ce que ChatGPT, Perplexity, Gemini et Claude disent de vous
-  * Stratégie de réputation et de souveraineté générative pour les Comex et directions générales
-  * Structuration du corpus de vérité et du narratif officiel de la marque (Knowledge Graph & llms.txt)
-  * Protection contre les hallucinations, amalgames et déformations sémantiques
-  * Imposition de votre singularité et de votre désirabilité face aux moteurs conversationnels
-  * Observatoire permanent de citabilité et d’autorité de marque dans les IA
+### 2.3 AI Endorsement (DISCIPLINE // 03)
+- Définition : Ne soyez pas seulement trouvé par l'IA. Soyez recommandé. Être cité ne suffit pas : ce qui compte, c'est d'être la marque que l'IA conseille, avec les bons arguments.
+- Équipe : Jean-Paul Brunier (stratégie de marque) et Tom Cottu (IA et automatisation, outils d'audit et de mesure)
+- Paliers mesurés : mention, recommandation, endorsement
 - Processus méthodologique :
-  * 01. Diagnostic de réputation & cartographie des hallucinations IA
-  * 02. Définition du corpus de vérité et ancrage sémantique
-  * 03. Souveraineté de marque et gouvernance continue
-- Standard d'excellence : Contrôle et souveraineté du narratif sur 100% des moteurs génératifs majeurs
+  * 01. Audit : une centaine de questions de clients posées à ChatGPT, Gemini et Perplexity ; score d'endorsement (présence, rang, tonalité, exactitude)
+  * 02. Stratégie : messages, preuves et sources à renforcer
+  * 03. Activation : sources tierces, contenus de référence, avis et preuves, experts et porte-parole, site et données, plateformes ouvertes
+  * 04. Suivi : tableau de bord mensuel, comité trimestriel, bilan annuel
+- Point d'entrée : audit pilote en quatre semaines. L'audit peut être commandé seul ; le suivi fait l'objet d'un abonnement mensuel.
+- Engagement : des progrès mesurés, jamais de rang garanti ; aucun faux avis ni contenu trompeur.
 - URL : https://www.brunierobadia.com/offres/la-marque-dans-les-ia
 
 ## 3. Les Trois Studios Spécialisés
@@ -105,11 +76,10 @@ Gouvernance, Fondateurs & Autorité Sémantique :
 - Compétences clés : Positionnement, Direction Artistique, Identité de Marque, Campagnes, Édition & Scénographie
 - URL : https://www.brunierobadia.com/studios
 
-### 3.2 BrunierObadia Digital Performance
-- Direction : Dirigé par Cyrille Douin
-- Positionnement : Acquisition, Plateformes & Mesure
-- Mission : Une structure d’ingénierie et d’activation digitale conçue pour délivrer des résultats mesurables. Création de sites et plateformes sur-mesure, stratégies d’acquisition multicanales, optimisation de la conversion et référencement IA générative (GEO).
-- Compétences clés : Architecture Web, Acquisition Média, SEO & GEO (IA), Data & Analytics, UX/UI & CRO
+### 3.2 BrunierObadia AI Endorsement
+- Direction : Jean-Paul Brunier & Tom Cottu
+- Positionnement : Recommandation des marques par les IA
+- Mission : Faire passer les marques de la simple mention à la recommandation dans les réponses des IA (ChatGPT, Gemini, Perplexity, Claude). Mesure de ce que les IA disent de la marque, renforcement des sources qui comptent, suivi mensuel.
 - URL : https://www.brunierobadia.com/studios
 
 ### 3.3 BrunierObadia Brand Transformation
@@ -345,9 +315,9 @@ Les moteurs de recherche génératifs (Google AI Overviews, ChatGPT Search, Perp
 ## 7. Filiation Institutionnelle & Ancrage Knowledge Graph
 - Entité légale : BrunierObadia Studios (Paris, France).
 - Filiation historique des fondateurs :
-  * Jean-Paul Brunier : Ancien Président de Publicis Conseil (première agence de France, navire amiral du groupe Publicis mondial, référencée sur Wikipedia : https://fr.wikipedia.org/wiki/Publicis_Conseil), ancien membre du bureau de l'AACC (https://fr.wikipedia.org/wiki/Association_des_agences-conseils_en_communication). Archives presse de référence : Stratégies (https://www.strategies.fr), CB News (https://www.cbnews.fr).
+  * Jean-Paul Brunier : ancien président de Leo Burnett France et dirigeant chez Publicis Groupe (2000-2022), ancien président du pôle Société de l'AACC (https://fr.wikipedia.org/wiki/Association_des_agences-conseils_en_communication) et administrateur de l'ARPP. Archives presse de référence : Stratégies (https://www.strategies.fr), CB News (https://www.cbnews.fr).
   * Jonas Obadia : Directeur artistique et typographe, enseignant et intervenant en direction artistique (Penninghen), auteur de scénographies muséales (Musée des Arts Décoratifs de Paris, Collection Al Thani).
 - Alignement d'entités Wikidata / Knowledge Graph :
   * Instance of : Q4830453 (Business), Q13220391 (Advertising agency)
   * Location : Paris (Q90)
-  * Notable leadership alumni : Publicis Groupe (Q1545121), Publicis Conseil (Q3410534)
+  * Notable leadership alumni : Publicis Groupe (Q1545121), Leo Burnett

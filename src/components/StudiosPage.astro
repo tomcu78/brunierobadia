@@ -1,0 +1,458 @@
+---
+// Page « Le studio » (FR / EN) : présenter le studio et les personnes, pas les offres.
+//  1. en-tête : un stratège et un créatif ;
+//  2. le manifeste et les chiffres entre filets ;
+//  3. Jean-Paul Brunier, sur bande bordeaux : portrait, biographie, parcours daté, tribunes (faits sourcés, voir
+//     05_Equipe/02_Jean-Paul-Brunier_presence-web.md) ;
+//  4. Jonas Obadia : biographie et projets signature ;
+//  4 à 6. Jonas Obadia, Tom Cottu, Christophe Attelé : chacun présenté comme Jean-Paul (portrait, texte, détail) ;
+//  6. la méthode.
+// Chaque personne porte un identifiant (#jean-paul-brunier…) repris par les données structurées du site.
+import { localizePath } from '../lib/seo.js';
+import { projects } from '../data/site.js';
+
+const { lang } = Astro.props;
+const P = (slug) => projects.find((p) => p.slug === slug);
+const T = {
+  fr: {
+    kicker: 'Le studio · Paris',
+    title: 'Un stratège et un créatif.',
+    lead: 'Brunier & Obadia réunit Jean-Paul Brunier, stratège, et Jonas Obadia, directeur de création, que plus de trente ans séparent. Un studio léger, à Paris, où ceux que vous rencontrez sont ceux qui font.',
+    statement: 'Nous décloisonnons les métiers : la stratégie, la création et la fabrication sont pensées ensemble, par les associés eux-mêmes, du premier rendez-vous au dernier détail.',
+    stats: [['50', 'ans d’expérience cumulée'], ['200+', 'marques accompagnées'], ['21', 'secteurs']],
+    jp: {
+      kicker: 'Co-fondateur · Stratégie',
+      name: 'Jean-Paul Brunier',
+      role: 'Stratège, ancien président de Leo Burnett France',
+      bio: [
+        'Jean-Paul Brunier a fait toute sa carrière dans la communication. Pendant vingt-deux ans au sein de Publicis Groupe, il a présidé Leo Burnett France à partir de 2008, avant de devenir global client leader du groupe.',
+        'Figure de la profession, il a présidé le pôle Société de l’AACC, l’association des agences-conseils en communication, et siégé plus de dix ans au conseil d’administration de l’ARPP, l’autorité de régulation professionnelle de la publicité. Il signe régulièrement des tribunes sur la publicité et les marques.',
+        'Co-fondateur de BrunierObadia, il conseille directions générales et comités exécutifs sur leur stratégie de marque.',
+      ],
+      pathTitle: 'Parcours',
+      path: [
+        ['2000 – 2022', 'Publicis Groupe'],
+        ['2008', 'Président de Leo Burnett France'],
+        ['2011', 'Président du pôle Société de l’AACC'],
+        ['2012 –', 'Administrateur de l’ARPP'],
+        ['2018', 'Global client leader, Publicis Groupe'],
+        ['Aujourd’hui', 'Co-fondateur de BrunierObadia'],
+      ],
+      pressTitle: 'Il écrit',
+      alt: 'Portrait de Jean-Paul Brunier',
+    },
+    jonas: {
+      kicker: 'Co-fondateur · Création',
+      name: 'Jonas Obadia',
+      role: 'Directeur de création, président de Brunier Obadia Studios',
+      bio: [
+        'Directeur artistique formé au design graphique et à la typographie, Jonas Obadia conçoit identités, éditions, scénographies et campagnes pour des maisons comme Hermès, Balenciaga, le Musée des Arts décoratifs ou la collection Al Thani.',
+        'Il tient la création de bout en bout, du premier croquis au bon à tirer : chaque choix de forme, de caractère ou de papier a une raison.',
+      ],
+      focus: 'Direction artistique · typographie · édition · scénographie',
+      worksTitle: 'Projets signature',
+    },
+    christophe: {
+      kicker: 'Partner · Brand Transformation',
+      name: 'Christophe Attelé',
+      role: 'Stratégie et transformation des organisations',
+      bio: [
+        'Ancien dirigeant d’entreprise, diplômé d’un MBA, Christophe Attelé a construit son parcours entre marketing, communication et transformation.',
+        'Spécialiste de la transformation culturelle des grandes organisations, il relie stratégie d’entreprise, engagement des équipes et force de la marque : faire de la marque le moteur du changement, du comité de direction jusqu’aux équipes.',
+      ],
+      focus: 'Comités de direction · culture d’entreprise · conduite du changement',
+      extraTitle: 'Ce qu’il apporte',
+      extra: [
+        ['Aligner la direction', 'Une conviction partagée au sommet, traduite en principes d’action pour toute l’entreprise.'],
+        ['Écrire la marque', 'Plateforme, raison d’être et récit : ce que l’entreprise portera pendant dix ans.'],
+        ['Faire vivre le changement', 'Ateliers, rituels de management et mesure de l’adhésion, au quotidien.'],
+      ],
+    },
+    tom: {
+      kicker: 'Partner · AI Endorsement',
+      name: 'Tom Cottu',
+      role: 'Ingénieur IA, responsable d’AI Endorsement',
+      bio: [
+        'Tom Cottu a fait de la programmation le cœur de son parcours. Il quitte le cursus scolaire classique à 17 ans, obtient seul un Bac +2 en développement web puis un Bac +3 en développement d’applications, et se lance en freelance à 20 ans.',
+        'En 2023, il bascule dans l’intelligence artificielle et conçoit ses propres agents autonomes. En testant le référencement de sites, il fait un constat : les utilisateurs posent désormais leurs questions aux IA. Il se consacre dès lors au GEO, la visibilité des marques dans les réponses des IA.',
+        'Chez BrunierObadia, il pilote l’ingénierie d’AI Endorsement et les protocoles qui mesurent ce que les IA disent des marques.',
+      ],
+      focus: 'Architectures LLM · agents autonomes · GEO · mesure',
+      toolsTitle: 'Ce qu’il construit',
+      tools: [
+        ['GEO Monitor', 'Ce que ChatGPT, Gemini et Perplexity disent de la marque : présence, recommandation, concurrents, sources citées.'],
+        ['GEO Qualifier', 'La lisibilité du site par Google et les robots des IA : un score sur 100 et le plan de corrections.'],
+        ['GEO Press', 'La présence de la marque dans la presse en ligne : jours de présence, part de voix, ton.'],
+      ],
+    },
+    methodKicker: 'Notre façon de travailler',
+    method: [
+      { title: 'Les associés, en personne', text: 'Pas de couches hiérarchiques ni d’équipes juniors interposées.' },
+      { title: 'Stratégie et création, ensemble', text: 'La stratégie prend forme dès le premier croquis ; chaque choix de design a une raison.' },
+      { title: 'Des formes qui durent', text: 'Des identités et des objets pensés pour traverser le temps, pas pour suivre la tendance.' },
+    ],
+  },
+  en: {
+    kicker: 'The studio · Paris',
+    title: 'A strategist and a creative.',
+    lead: 'Brunier & Obadia brings together Jean-Paul Brunier, strategist, and Jonas Obadia, creative director, more than thirty years apart. A light studio in Paris, where the people you meet are the people who do the work.',
+    statement: 'We break down silos: strategy, creation and making are thought through together, by the partners themselves, from the first meeting to the last detail.',
+    stats: [['50', 'years of combined experience'], ['200+', 'brands'], ['21', 'sectors']],
+    jp: {
+      kicker: 'Co-founder · Strategy',
+      name: 'Jean-Paul Brunier',
+      role: 'Strategist, former president of Leo Burnett France',
+      bio: [
+        'Jean-Paul Brunier has spent his whole career in communication. Over twenty-two years at Publicis Groupe, he led Leo Burnett France from 2008, before becoming a global client leader for the group.',
+        'A leading figure of the industry, he chaired the Society committee of the AACC, the French association of communication agencies, and sat for more than ten years on the board of the ARPP, the advertising self-regulatory authority. He regularly writes opinion pieces on advertising and brands.',
+        'Co-founder of BrunierObadia, he advises executive boards and leadership teams on their brand strategy.',
+      ],
+      pathTitle: 'Career',
+      path: [
+        ['2000 – 2022', 'Publicis Groupe'],
+        ['2008', 'President, Leo Burnett France'],
+        ['2011', 'Chair of the AACC Society committee'],
+        ['2012 –', 'Board member, ARPP'],
+        ['2018', 'Global client leader, Publicis Groupe'],
+        ['Today', 'Co-founder of BrunierObadia'],
+      ],
+      pressTitle: 'He writes',
+      alt: 'Portrait of Jean-Paul Brunier',
+    },
+    jonas: {
+      kicker: 'Co-founder · Creation',
+      name: 'Jonas Obadia',
+      role: 'Creative director, president of Brunier Obadia Studios',
+      bio: [
+        'An art director trained in graphic design and typography, Jonas Obadia creates identities, books, scenography and campaigns for houses such as Hermès, Balenciaga, the Musée des Arts décoratifs and the Al Thani Collection.',
+        'He holds the creative work from first sketch to final proof: every choice of form, typeface or paper has a reason.',
+      ],
+      focus: 'Art direction · typography · publishing · scenography',
+      worksTitle: 'Signature projects',
+    },
+    christophe: {
+      kicker: 'Partner · Brand Transformation',
+      name: 'Christophe Attelé',
+      role: 'Strategy and organisational transformation',
+      bio: [
+        'A former company executive with an MBA, Christophe Attelé has built his career across marketing, communication and transformation.',
+        'A specialist in the cultural transformation of large organisations, he connects corporate strategy, team engagement and brand strength: making the brand the engine of change, from the board to the teams.',
+      ],
+      focus: 'Executive boards · corporate culture · change management',
+      extraTitle: 'What he brings',
+      extra: [
+        ['Aligning leadership', 'A shared conviction at the top, turned into principles of action for the whole company.'],
+        ['Writing the brand', 'Platform, purpose and narrative: what the company will carry for ten years.'],
+        ['Bringing change to life', 'Workshops, management rituals and buy-in measurement, every day.'],
+      ],
+    },
+    tom: {
+      kicker: 'Partner · AI Endorsement',
+      name: 'Tom Cottu',
+      role: 'AI engineer, head of AI Endorsement',
+      bio: [
+        'Tom Cottu made programming the core of his path. He left the standard school track at 17, earned a two-year degree in web development and a three-year degree in application development on his own, and went freelance at 20.',
+        'In 2023 he moved fully into artificial intelligence and built his own autonomous agents. While testing how websites rank, he saw the shift: people now ask their questions to AI assistants. He has focused on GEO ever since, the visibility of brands in AI answers.',
+        'At BrunierObadia, he leads the engineering of AI Endorsement and the protocols that measure what AI says about brands.',
+      ],
+      focus: 'LLM architectures · autonomous agents · GEO · measurement',
+      toolsTitle: 'What he builds',
+      tools: [
+        ['GEO Monitor', 'What ChatGPT, Gemini and Perplexity say about the brand: presence, recommendation, competitors, cited sources.'],
+        ['GEO Qualifier', 'How readable the site is for Google and AI crawlers: a score out of 100 and the fix plan.'],
+        ['GEO Press', 'The brand’s presence in online press: days of presence, share of voice, tone.'],
+      ],
+    },
+    methodKicker: 'How we work',
+    method: [
+      { title: 'The partners, in person', text: 'No layers of hierarchy, no junior teams in between.' },
+      { title: 'Strategy and creation, together', text: 'Strategy takes shape from the first sketch; every design choice has a reason.' },
+      { title: 'Forms that last', text: 'Identities and objects designed to stand the test of time, not to follow trends.' },
+    ],
+  },
+}[lang];
+
+// tribunes signées (sources publiques, liens sortants : ils attestent la parole de Jean-Paul Brunier)
+const PRESS = [
+  { year: '2025', media: 'Influencia', title: 'Marketing et communication des marques : la mort du benchmark ?', url: 'https://www.influencia.net/articles/marketing-et-communication-des-marques-la-mort-du-benchmark' },
+  { year: '2022', media: 'Atlantico', title: 'Ces technologies de pointe qui permettent de prédire le succès d’une publicité', url: 'https://atlantico.fr/article/decryptage/ces-technologies-de-pointe-qui-permettent-de-predire-le-succes-d-une-publicite-audience-consommateurs-clients-reussite-opinion-tests-jean-paul-brunier' },
+  { year: '2015', media: 'Atlantico', title: 'Pub pendant les programmes pour enfants : l’impossible débat (avec Serge Tisseron)', url: 'https://atlantico.fr/article/decryptage/pub-pendant-les-programmes-pour-les-enfants-petits-consommateurs-ou-petites-victimes-l-impossible-debat-entre-psys-et-publicitaires-jean-paul-brunier-serge-tisseron' },
+  { year: '2011', media: 'Atlantico', title: 'Nous sommes tous des fils de pub ! (Cannes Lions 2011)', url: 'https://atlantico.fr/article/decryptage/publicite-cannes-lion-leo-burnett' },
+];
+const WORKS = ['hermes-maison-hermes-les-podiums', 'balenciaga-global-retail-meeting-2023', 'mad-paris-metal-design', 'al-thani-collection-comment-saisir-une-passion-eclectique'].map(P).filter(Boolean);
+const nameOf = (p) => (lang === 'en' ? p.name_en || p.name_fr : p.name_fr);
+const pad = (i) => String(i + 1).padStart(2, '0');
+---
+<header class="st-hero">
+  <p class="label">{T.kicker}</p>
+  <h1>{T.title}</h1>
+  <p class="st-lead">{T.lead}</p>
+</header>
+
+<section class="st-intro" data-st-reveal>
+  <p class="st-statement">{T.statement}</p>
+  <div class="st-stats">
+    {T.stats.map(([v, l]) => <div><b>{v}</b><span>{l}</span></div>)}
+  </div>
+</section>
+
+<!-- Jean-Paul Brunier -->
+<section class="st-jp" id="jean-paul-brunier" data-st-reveal>
+  <figure class="st-portrait">
+    <img src="/equipe/jean-paul-brunier.webp" alt={T.jp.alt} width="500" height="500" loading="lazy" decoding="async" />
+  </figure>
+  <div class="st-jp-copy">
+    <p class="st-kicker">{T.jp.kicker}</p>
+    <h2 class="st-name">{T.jp.name}</h2>
+    <p class="st-role">{T.jp.role}</p>
+    <div class="st-bio">{T.jp.bio.map((b) => <p>{b}</p>)}</div>
+  </div>
+  <div class="st-jp-path">
+    <p class="st-kicker">{T.jp.pathTitle}</p>
+    <ol class="st-path">
+      {T.jp.path.map(([d, t], i) => <li style={`--i:${i}`}><span>{d}</span><b>{t}</b></li>)}
+    </ol>
+  </div>
+  <div class="st-jp-press">
+    <p class="st-kicker">{T.jp.pressTitle}</p>
+    <ul class="st-press">
+      {PRESS.map((a) => (
+        <li><a href={a.url} target="_blank" rel="noopener"><span>{a.year} · {a.media}</span><b>{a.title}</b><i class="arw arw--diag" aria-hidden="true"></i></a></li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<!-- Jonas Obadia -->
+<section class="st-person" id="jonas-obadia" data-st-reveal>
+  <figure class="st-photo st-photo--card"><img src="/equipe/jonas-obadia.webp" alt="Jonas Obadia Studio, Art Direction" width="450" height="450" loading="lazy" decoding="async" /></figure>
+  <div class="st-person-copy">
+    <p class="st-kicker">{T.jonas.kicker}</p>
+    <h2 class="st-name">{T.jonas.name}</h2>
+    <p class="st-role">{T.jonas.role}</p>
+    <div class="st-bio">{T.jonas.bio.map((b) => <p>{b}</p>)}</div>
+    <p class="st-focus">{T.jonas.focus}</p>
+  </div>
+  <div class="st-person-extra">
+    <div class="st-works">
+      <p class="st-kicker">{T.jonas.worksTitle}</p>
+      <ul>
+        {WORKS.map((p, i) => (
+          <li style={`--i:${i}`}>
+            <a href={localizePath(`/projets/${p.slug}`, lang)}>
+              <span class="st-work-media"><img src={p.image.replace('.webp', '-800w.webp')} alt={`${p.client} – ${nameOf(p)}`} width="800" height="533" loading="lazy" decoding="async" /></span>
+              <span class="st-work-client">{p.client}</span>
+              <span class="st-work-name">{nameOf(p)}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Tom Cottu -->
+<section class="st-person" id="tom-cottu" data-st-reveal>
+  <figure class="st-photo"><img src="/equipe/tom-cottu.webp" alt="Portrait de Tom Cottu" width="800" height="800" loading="lazy" decoding="async" /></figure>
+  <div class="st-person-copy">
+    <p class="st-kicker">{T.tom.kicker}</p>
+    <h2 class="st-name">{T.tom.name}</h2>
+    <p class="st-role">{T.tom.role}</p>
+    <div class="st-bio">{T.tom.bio.map((b) => <p>{b}</p>)}</div>
+    <p class="st-focus">{T.tom.focus}</p>
+  </div>
+  <div class="st-person-extra">
+    <div class="st-tools">
+      <p class="st-kicker">{T.tom.toolsTitle}</p>
+      <ol>
+        {T.tom.tools.map(([n, d], i) => (
+          <li style={`--i:${i}`}>
+            <span class="st-num">{pad(i)}</span>
+            <h3>{n}</h3>
+            <p>{d}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- Christophe Attelé -->
+<section class="st-person" id="christophe-attele" data-st-reveal>
+  <figure class="st-photo st-photo--orb" aria-hidden="true"><img src="/brand/sphere-rose-jour.webp" alt="" width="480" height="480" loading="lazy" decoding="async" /></figure>
+  <div class="st-person-copy">
+    <p class="st-kicker">{T.christophe.kicker}</p>
+    <h2 class="st-name">{T.christophe.name}</h2>
+    <p class="st-role">{T.christophe.role}</p>
+    <div class="st-bio">{T.christophe.bio.map((b) => <p>{b}</p>)}</div>
+    <p class="st-focus">{T.christophe.focus}</p>
+  </div>
+  <div class="st-person-extra">
+    <div class="st-tools">
+      <p class="st-kicker">{T.christophe.extraTitle}</p>
+      <ol>
+        {T.christophe.extra.map(([n, d], i) => (
+          <li style={`--i:${i}`}>
+            <span class="st-num">{pad(i)}</span>
+            <h3>{n}</h3>
+            <p>{d}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- Méthode -->
+<section class="st-method" data-st-reveal>
+  <p class="st-kicker">{T.methodKicker}</p>
+  <ol>
+    {T.method.map((m, i) => (
+      <li style={`--i:${i}`}>
+        <span class="st-num">{pad(i)}</span>
+        <h3>{m.title}</h3>
+        <p>{m.text}</p>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<script>
+  const init = () => {
+    const els = document.querySelectorAll('[data-st-reveal]:not(.is-in)');
+    if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) { els.forEach((el) => el.classList.add('is-in')); return; }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -15% 0px' });
+    els.forEach((el) => { el.classList.add('is-pending'); io.observe(el); });
+  };
+  document.addEventListener('astro:page-load', init);
+</script>
+
+<style>
+  section.st-intro, section.st-jp, section.st-jonas, section.st-partners, section.st-method { border: 0; font-family: var(--sans); position: relative; }
+  .st-hero h1 { font-family: var(--sans); font-size: clamp(2.4rem, 1.2rem + 4.4vw, 5.4rem); letter-spacing: -0.05em; line-height: 0.95; margin: 14px 0 0; }
+  .st-lead { margin: 26px 0 0 !important; max-width: 58ch; font-size: clamp(15px, 1.15vw, 17px); line-height: 1.45; }
+  .st-kicker { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin: 0 0 18px; }
+  .st-title { font-family: var(--sans); font-weight: 400; font-size: clamp(30px, 3.2vw, 46px); letter-spacing: -0.04em; line-height: 1; max-width: 18ch; margin: 0; }
+  .st-num { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; color: var(--muted); margin-bottom: 14px; }
+  .st-name { font-family: var(--sans); font-weight: 400; font-size: clamp(40px, 4.6vw, 72px); letter-spacing: -0.05em; line-height: 0.95; margin: 0; }
+  .st-role { margin: 14px 0 0; font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bordeaux); }
+  .st-bio { margin-top: 28px; max-width: 52ch; }
+  .st-bio p { margin: 0 0 14px; font-size: clamp(15px, 1.12vw, 17px); line-height: 1.5; color: #2b2b2b; text-wrap: pretty; }
+
+  /* 2. manifeste et chiffres */
+  .st-intro { padding: clamp(24px, 3vw, 48px) 0 clamp(100px, 10vw, 170px) !important; }
+  .st-statement { max-width: 30ch; margin: 0; font-size: clamp(24px, 2.4vw, 36px); letter-spacing: -0.035em; line-height: 1.15; }
+  .st-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(48px, 5vw, 72px); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+  .st-stats div { padding: 28px 28px 30px 0; border-right: 1px solid var(--line); }
+  .st-stats div + div { padding-left: 28px; }
+  .st-stats div:last-child { border-right: 0; }
+  .st-stats b { display: block; font-weight: 700; font-size: clamp(38px, 3.4vw, 49px); letter-spacing: -0.04em; line-height: 1; }
+  .st-stats span { display: block; margin-top: 10px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+  /* 3. Jean-Paul Brunier : bande bordeaux */
+  .st-jp {
+    border-image: conic-gradient(var(--bordeaux) 0 0) fill 0 // 0 100vmax !important;
+    color: #fff;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-areas: 'photo copy' 'path press';
+    gap: clamp(48px, 5vw, 88px) clamp(32px, 6vw, 112px);
+    padding: clamp(90px, 9vw, 150px) 0 !important;
+    scroll-margin-top: calc(var(--head-h) + 20px);
+  }
+  .st-jp .st-kicker { color: rgba(255, 255, 255, 0.55); }
+  .st-jp .st-name { color: #fff; }
+  .st-jp .st-role { color: #ff8f8f; }
+  .st-jp .st-bio p { color: rgba(255, 255, 255, 0.86); }
+  .st-portrait { grid-area: photo; margin: 0; align-self: start; max-width: 460px; overflow: hidden; }
+  .st-portrait img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; filter: grayscale(1) contrast(1.05); transition: scale 1600ms cubic-bezier(.16, 1, .3, 1); }
+  .st-jp-copy { grid-area: copy; align-self: center; }
+  .st-jp-path { grid-area: path; }
+  .st-jp-press { grid-area: press; }
+  .st-path, .st-press { list-style: none; margin: 0; padding: 0; border-top: 1px solid rgba(255, 255, 255, 0.4); }
+  .st-path li { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: 16px; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.14); }
+  .st-path span { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; color: rgba(255, 255, 255, 0.55); padding-top: 2px; }
+  .st-path b { font-weight: 400; font-size: clamp(14px, 1.05vw, 16px); line-height: 1.35; color: #fff; }
+  .st-press a { display: grid; grid-template-columns: minmax(0, 1fr) 15px; gap: 6px 16px; padding: 14px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.14); color: #fff; text-decoration: none; }
+  .st-press span { grid-column: 1; font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); }
+  .st-press b { grid-column: 1; font-weight: 400; font-size: clamp(14px, 1.05vw, 16px); line-height: 1.35; transition: color 300ms ease; }
+  .st-press .arw { grid-column: 2; grid-row: 1 / 3; align-self: center; width: 15px; color: rgba(255, 255, 255, 0.7); transition: transform 300ms cubic-bezier(.16, 1, .3, 1); }
+  .st-press a:hover b { color: #ffb3b3; }
+  .st-press a:hover .arw { transform: translate(3px, -3px); }
+
+  /* 4. Jonas Obadia */
+  .st-jonas { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 112px); align-items: start; padding: clamp(100px, 10vw, 170px) 0 0 !important; scroll-margin-top: calc(var(--head-h) + 20px); }
+  .st-focus { margin: 22px 0 0; font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .st-works ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(20px, 2.4vw, 36px) clamp(16px, 2vw, 28px); }
+  .st-works a { display: block; color: inherit; text-decoration: none; }
+  .st-work-media { display: block; overflow: hidden; aspect-ratio: 3 / 2; background: #ebe9e2; margin-bottom: 12px; }
+  .st-work-media img { display: block; width: 100%; height: 100%; object-fit: cover; transition: scale 1200ms cubic-bezier(.16, 1, .3, 1), filter 600ms ease; }
+  .st-works a:hover img { scale: 1.04; }
+  .st-works ul:has(a:hover) a:not(:hover) img { filter: grayscale(1); }
+  .st-work-client { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .st-work-name { display: block; font-size: clamp(16px, 1.25vw, 19px); letter-spacing: -0.04em; line-height: 1.15; transition: color 300ms ease; }
+  .st-works a:hover .st-work-name { color: var(--bordeaux); }
+
+  /* 5. les partenaires */
+  .st-partners { padding: clamp(100px, 10vw, 170px) 0 0 !important; }
+  .st-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(48px, 5vw, 80px) clamp(32px, 5vw, 96px); margin-top: clamp(48px, 5vw, 80px); }
+  .st-grid article { border-top: 1px solid var(--ink); padding-top: 22px; scroll-margin-top: calc(var(--head-h) + 20px); }
+  .st-grid h3 { font-family: var(--sans); font-weight: 400; font-size: clamp(26px, 2.4vw, 36px); letter-spacing: -0.045em; line-height: 1; margin: 0; }
+  .st-pbio { margin: 20px 0 0; max-width: 46ch; font-size: clamp(14px, 1.05vw, 16px); line-height: 1.45; color: #2b2b2b; }
+
+  /* 5 bis. Tom Cottu */
+  section.st-tom { border: 0; font-family: var(--sans); position: relative; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 112px); align-items: start; padding: clamp(100px, 10vw, 170px) 0 0 !important; scroll-margin-top: calc(var(--head-h) + 20px); }
+  .st-tools ol { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+  .st-tools li { display: grid; grid-template-columns: 3em minmax(0, 1fr); column-gap: 16px; padding: 22px 0 24px; border-bottom: 1px solid var(--line); }
+  .st-tools .st-num { grid-row: 1 / 3; margin: 6px 0 0; }
+  .st-tools h3 { font-family: var(--sans); font-weight: 400; font-size: clamp(22px, 2vw, 30px); letter-spacing: -0.05em; line-height: 1.05; margin: 0 0 8px; }
+  .st-tools li p { margin: 0; max-width: 46ch; font-size: clamp(14px, 1.05vw, 16px); line-height: 1.45; color: #2b2b2b; }
+
+  /* 4–6. Jonas, Tom, Christophe : même présentation que Jean-Paul (portrait, puis texte et détail à droite) */
+  section.st-person { border: 0; font-family: var(--sans); position: relative; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-areas: 'photo copy' 'photo extra'; gap: clamp(40px, 4vw, 64px) clamp(32px, 6vw, 112px); align-items: start; padding: clamp(100px, 10vw, 170px) 0 0 !important; scroll-margin-top: calc(var(--head-h) + 20px); }
+  .st-photo { grid-area: photo; position: sticky; top: calc(var(--head-h) + 40px); margin: 0; max-width: 460px; aspect-ratio: 1; overflow: hidden; background: #f2efeb; }
+  .st-photo img { display: block; width: 100%; height: 100%; object-fit: cover; transition: scale 1600ms cubic-bezier(.16, 1, .3, 1); }
+  .st-photo--card { background: #fff; box-shadow: inset 0 0 0 1px var(--line); }
+  .st-photo--orb { display: grid; place-items: center; }
+  .st-photo--orb img { width: 62%; height: auto; object-fit: contain; animation: st-spin 60s linear infinite; }
+  @keyframes st-spin { to { rotate: 360deg; } }
+  .st-person-copy { grid-area: copy; }
+  .st-person-extra { grid-area: extra; }
+  .st-person.is-pending .st-photo img { clip-path: inset(100% 0 0 0); scale: 1.1; }
+  .st-person.is-in .st-photo img { clip-path: inset(0 0 0 0); scale: 1; transition: clip-path 1400ms cubic-bezier(.77, 0, .18, 1), scale 1800ms cubic-bezier(.16, 1, .3, 1); }
+
+  /* 6. méthode */
+  .st-method { padding: clamp(100px, 10vw, 170px) 0 clamp(40px, 4vw, 64px) !important; }
+  .st-method ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--ink); }
+  .st-method li { padding: 24px clamp(20px, 2.4vw, 40px) 30px 0; }
+  .st-method li + li { padding-left: clamp(20px, 2.4vw, 40px); border-left: 1px solid var(--line); }
+  .st-method h3 { font-family: var(--sans); font-weight: 400; font-size: clamp(20px, 1.7vw, 24px); letter-spacing: -0.05em; line-height: 1.1; margin: 0 0 10px; }
+  .st-method li p { margin: 0; max-width: 32ch; font-size: clamp(13px, 1vw, 15px); line-height: 1.4; color: #2b2b2b; }
+
+  /* apparitions */
+  .is-pending :is(.st-statement, .st-stats, .st-kicker, .st-title, .st-name, .st-role, .st-bio, .st-focus) { opacity: 0; translate: 0 22px; }
+  .is-in :is(.st-statement, .st-stats, .st-kicker, .st-title, .st-name, .st-role, .st-bio, .st-focus) { opacity: 1; translate: 0 0; transition: opacity 1000ms ease, translate 1200ms cubic-bezier(.16, 1, .3, 1); }
+  .is-in :is(.st-stats, .st-name, .st-title) { transition-delay: 100ms; }
+  .is-in :is(.st-role) { transition-delay: 180ms; }
+  .is-in :is(.st-bio, .st-focus) { transition-delay: 260ms; }
+  .st-jp.is-pending .st-portrait img { clip-path: inset(100% 0 0 0); scale: 1.1; }
+  .st-jp.is-in .st-portrait img { clip-path: inset(0 0 0 0); scale: 1; transition: clip-path 1400ms cubic-bezier(.77, 0, .18, 1), scale 1800ms cubic-bezier(.16, 1, .3, 1); }
+  .is-pending :is(.st-path li, .st-press li, .st-works li, .st-grid article, .st-method li, .st-tools li) { opacity: 0; translate: 0 16px; }
+  .is-in :is(.st-path li, .st-press li, .st-works li, .st-grid article, .st-method li, .st-tools li) { opacity: 1; translate: 0 0; transition: opacity 900ms ease, translate 1100ms cubic-bezier(.16, 1, .3, 1); transition-delay: calc(300ms + var(--i, 0) * 90ms); }
+
+  @media (max-width: 900px) {
+    .st-stats { grid-template-columns: minmax(0, 1fr); }
+    .st-stats div, .st-stats div + div { padding: 22px 0; border-right: 0; }
+    .st-stats div + div { border-top: 1px solid var(--line); }
+    .st-jp { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'photo' 'copy' 'path' 'press'; }
+    .st-portrait { max-width: 360px; }
+    .st-jonas, section.st-tom, .st-grid, .st-method ol { grid-template-columns: minmax(0, 1fr); }
+    section.st-person { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'photo' 'copy' 'extra'; }
+    .st-photo { position: static; max-width: 320px; }
+    .st-method li, .st-method li + li { padding: 22px 0; border-left: 0; }
+    .st-method li + li { border-top: 1px solid var(--line); }
+  }
+  @media (max-width: 560px) { .st-works ul { grid-template-columns: minmax(0, 1fr); } }
+</style>

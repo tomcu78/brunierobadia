@@ -1,0 +1,604 @@
+---
+// Corps de la page « AI Endorsement ». Une page qui vend, dans l'esprit de la marque (bordeaux, boules, Styrene serré) :
+//  1. la démonstration : une vue de GEO Monitor (notre outil de mesure, dont elle reprend l'interface) qui interroge
+//     les trois IA (ChatGPT, Gemini, Perplexity), aujourd'hui puis avec AI Endorsement ;
+//  2. l'échelle : les trois boules grandissent de la mention à l'endorsement ;
+//  3. l'argument : votre site pèse 5 à 10 % de ce que citent les IA, le reste est votre réputation (notre métier) ;
+//  4. nos trois logiciels (GEO Monitor, GEO Qualifier, GEO Press) et qui s'en occupe ;
+//  5. l'offre d'entrée : l'audit pilote en quatre semaines, ce que l'on reçoit, et le bouton.
+// Logos des IA : ceux de GEO Monitor, utilisés tels quels pour désigner les services (marques de leurs détenteurs).
+import { localizePath } from '../lib/seo.js';
+const { lang } = Astro.props;
+
+const ENGINES = [
+  { name: 'ChatGPT', icon: '/brand/engines/openai.svg' },
+  { name: 'Gemini', icon: '/brand/engines/gemini.svg' },
+  { name: 'Perplexity', icon: '/brand/engines/perplexity.svg' },
+];
+
+const T = {
+  fr: {
+    demoKicker: 'GEO Monitor · notre outil de mesure',
+    demoTitle: 'Ce que les IA disent de vous. Mesuré.',
+    demoBefore: 'Cent questions de vos clients, posées chaque mois à',
+    demoAfter: 'Vous voyez où vous êtes cité, recommandé ou ignoré, face à vos concurrents.',
+    and: 'et',
+    tabs: ['Aujourd’hui', 'Avec AI Endorsement'],
+    client: 'votre-marque.fr',
+    scoreLabel: 'Score d’endorsement',
+    meta: ['Citations sur 100 questions', '3 IA · mesure mensuelle'],
+    sub: 'questions où l’IA vous cite',
+    states: [
+      { score: 18, engines: [[14, 'Mentionnée', 'mid'], [6, 'Mentionnée', 'mid'], [21, 'Recommandée 2 fois', 'mid']] },
+      { score: 82, engines: [[71, 'Recommandée', 'good'], [64, 'Recommandée', 'good'], [83, 'Citée comme référence', 'good']] },
+    ],
+    qLabel: 'Question posée',
+    questions: ['Quelle banque privée me conseilles-tu à Paris ?', 'Quel cabinet choisir pour repositionner notre marque ?', 'Quelle maison pour un cadeau d’exception ?', 'Qui recommander pour un audit de marque ?'],
+    progLabel: 'questions analysées',
+    asking: 'interroge…',
+    log: (n) => `Q100/100 · ${n} réponses analysées`,
+    logScore: 'Score d’endorsement',
+    note: 'Illustration. ChatGPT, Gemini et Perplexity sont des marques de leurs détenteurs respectifs.',
+    ladderKicker: 'Ce que nous visons',
+    ladderTitle: 'Trois marches. Nous vous faisons monter, puis nous vous y tenons.',
+    ladder: [
+      { name: 'Mention', text: 'La marque apparaît, parmi d’autres.' },
+      { name: 'Recommandation', text: 'L’IA la suggère comme une bonne option.' },
+      { name: 'Endorsement', text: 'L’IA la présente comme la référence.' },
+    ],
+    stat: '5–10 %',
+    statTitle: 'C’est le poids de votre site dans ce que citent les IA.',
+    statText: 'Le reste, c’est votre réputation : la presse, les avis, les experts. Faire parler d’une marque, c’est notre métier depuis cinquante ans. Nous y ajoutons la mesure et la technique des modèles d’IA.',
+    statSource: 'McKinsey, 2025',
+    toolsKicker: 'Nos outils',
+    toolsTitle: 'Trois logiciels, développés par nous.',
+    toolsText: 'Pas d’outil du marché revendu : nous mesurons avec nos propres logiciels, conçus et maintenus par Tom Cottu.',
+    tools: [
+      { name: 'GEO Monitor', text: 'Ce que ChatGPT, Gemini et Perplexity répondent quand vos clients posent leurs questions.', get: ['Présence et rang', 'Recommandation face aux concurrents', 'Sources citées par les IA'] },
+      { name: 'GEO Qualifier', text: 'Ce que Google et les robots des IA peuvent lire de votre site, et ce qui les en empêche.', get: ['Score de lisibilité sur 100', 'Accès des robots des IA', 'Plan de corrections'] },
+      { name: 'GEO Press', text: 'La place de votre marque dans la presse en ligne, l’une des sources que les IA citent le plus.', get: ['Jours de présence', 'Part de voix', 'Tonalité'] },
+    ],
+    teamKicker: 'Qui s’en occupe',
+    team: [
+      { name: 'Tom Cottu', role: 'Partner · ingénierie et mesure', img: '/equipe/tom-cottu.webp', id: 'tom-cottu' },
+      { name: 'Jean-Paul Brunier', role: 'Co-fondateur · stratégie de marque', img: '/equipe/jean-paul-brunier.webp', id: 'jean-paul-brunier' },
+    ],
+    teamMore: 'Le studio',
+    offerKicker: 'Pour commencer',
+    offerTitle: 'Un audit pilote. Quatre semaines. Des réponses claires.',
+    offerItems: [
+      { name: 'Le diagnostic', text: 'Ce que les trois IA disent de vous et de vos concurrents, sur cent questions de vos clients.', engines: true },
+      { name: 'Votre score', text: 'Présence, rang, tonalité, exactitude : où vous en êtes, face à qui.', score: [['Concurrent A', 64], ['Vous', 41, true], ['Concurrent B', 23]] },
+      { name: 'Le plan', text: 'Les messages, preuves et sources à renforcer, dans l’ordre où les traiter.', plan: [['Presse économique', 15], ['Avis clients', 12], ['Pages expertes du site', 14]], from: 41, goal: 'Objectif' },
+    ],
+    offerNext: 'Ensuite, si vous le souhaitez : activation et suivi mensuel de votre score. Jamais de faux avis, aucun rang promis.',
+    offerCta: 'Demander mon audit',
+  },
+  en: {
+    demoKicker: 'GEO Monitor · our measurement tool',
+    demoTitle: 'What AI says about you. Measured.',
+    demoBefore: 'A hundred of your customers’ questions, asked every month to',
+    demoAfter: 'You see where you are cited, recommended or ignored, against your competitors.',
+    and: 'and',
+    tabs: ['Today', 'With AI Endorsement'],
+    client: 'your-brand.com',
+    scoreLabel: 'Endorsement score',
+    meta: ['Citations across 100 questions', '3 AIs · monthly measurement'],
+    sub: 'questions where the AI cites you',
+    states: [
+      { score: 18, engines: [[14, 'Mentioned', 'mid'], [6, 'Mentioned', 'mid'], [21, 'Recommended twice', 'mid']] },
+      { score: 82, engines: [[71, 'Recommended', 'good'], [64, 'Recommended', 'good'], [83, 'Cited as the reference', 'good']] },
+    ],
+    qLabel: 'Question asked',
+    questions: ['Which private bank would you recommend in Paris?', 'Which firm should we choose to reposition our brand?', 'Which house for an exceptional gift?', 'Who would you recommend for a brand audit?'],
+    progLabel: 'questions analysed',
+    asking: 'asking…',
+    log: (n) => `Q100/100 · ${n} answers analysed`,
+    logScore: 'Endorsement score',
+    note: 'Illustration. ChatGPT, Gemini and Perplexity are trademarks of their respective owners.',
+    ladderKicker: 'What we aim for',
+    ladderTitle: 'Three steps. We move you up, then keep you there.',
+    ladder: [
+      { name: 'Mention', text: 'The brand appears, among others.' },
+      { name: 'Recommendation', text: 'The AI suggests it as a good option.' },
+      { name: 'Endorsement', text: 'The AI presents it as the reference.' },
+    ],
+    stat: '5–10%',
+    statTitle: 'That is how much your website weighs in what AI assistants cite.',
+    statText: 'The rest is your reputation: the press, reviews, experts. Getting a brand talked about has been our craft for fifty years. We add measurement and technical expertise in AI models.',
+    statSource: 'McKinsey, 2025',
+    toolsKicker: 'Our tools',
+    toolsTitle: 'Three pieces of software, built by us.',
+    toolsText: 'No resold market tool: we measure with our own software, designed and maintained by Tom Cottu.',
+    tools: [
+      { name: 'GEO Monitor', text: 'What ChatGPT, Gemini and Perplexity answer when your customers ask their questions.', get: ['Presence and rank', 'Recommendation against competitors', 'Sources cited by the AI'] },
+      { name: 'GEO Qualifier', text: 'What Google and AI crawlers can read on your site, and what stops them.', get: ['Readability score out of 100', 'AI crawler access', 'Fix plan'] },
+      { name: 'GEO Press', text: 'Your brand’s place in online press, one of the sources AI cites most.', get: ['Days of presence', 'Share of voice', 'Tone'] },
+    ],
+    teamKicker: 'Who runs it',
+    team: [
+      { name: 'Tom Cottu', role: 'Partner · engineering and measurement', img: '/equipe/tom-cottu.webp', id: 'tom-cottu' },
+      { name: 'Jean-Paul Brunier', role: 'Co-founder · brand strategy', img: '/equipe/jean-paul-brunier.webp', id: 'jean-paul-brunier' },
+    ],
+    teamMore: 'The studio',
+    offerKicker: 'To start',
+    offerTitle: 'A pilot audit. Four weeks. Clear answers.',
+    offerItems: [
+      { name: 'The diagnosis', text: 'What the three AI assistants say about you and your competitors, across a hundred of your customers’ questions.', engines: true },
+      { name: 'Your score', text: 'Presence, rank, tone, accuracy: where you stand, and against whom.', score: [['Competitor A', 64], ['You', 41, true], ['Competitor B', 23]] },
+      { name: 'The plan', text: 'The messages, proof and sources to strengthen, in the order to tackle them.', plan: [['Business press', 15], ['Customer reviews', 12], ['Expert pages on your site', 14]], from: 41, goal: 'Target' },
+    ],
+    offerNext: 'Then, if you wish: activation and monthly tracking of your score. Never fake reviews, no rank promised.',
+    offerCta: 'Request my audit',
+  },
+}[lang];
+const ORBS = ['/brand/sphere-rose-jour.webp', '/brand/sphere-corail-jour.webp', '/brand/sphere-rouge-jour.webp'];
+const pad = (i) => String(i + 1).padStart(2, '0');
+const s0 = T.states[0];
+// données transmises au script (textes de la console compris)
+const gmData = {
+  states: T.states,
+  names: ENGINES.map((e) => e.name),
+  logs: ENGINES.map(() => T.log(100)),
+  logScore: T.logScore,
+  labels: T.tabs,
+  questions: T.questions,
+  asking: T.asking,
+};
+---
+<div class="oai">
+  <!-- 1. La démonstration : une vue de GEO Monitor -->
+  <section class="oai-demo" data-oai-reveal>
+    <div class="oai-demo-copy">
+      <p class="oai-kicker">{T.demoKicker}</p>
+      <h2 class="oai-title">{T.demoTitle}</h2>
+      <p class="oai-text">
+        {T.demoBefore}{' '}
+        {ENGINES.map((e, i) => (
+          <>
+            <span class="oai-eng"><img src={e.icon} alt="" width="16" height="16" />{e.name}</span>{i < ENGINES.length - 2 ? ', ' : i === ENGINES.length - 2 ? ` ${T.and} ` : '. '}
+          </>
+        ))}
+        {T.demoAfter}
+      </p>
+    </div>
+
+    <div class="gm-wrap">
+    <figure class="gm" data-gm data-gm-data={JSON.stringify(gmData)}>
+      <div class="gm-head">
+        <span>GEO Monitor</span>
+        <span class="gm-state" data-state>{T.tabs[0]}</span>
+      </div>
+      <div class="gm-q">
+        <span class="gm-q-label">{T.qLabel}</span>
+        <span class="gm-q-text"><span data-q>{T.questions[0]}</span><i class="gm-caret" aria-hidden="true"></i></span>
+      </div>
+      <div class="gm-prog" aria-hidden="true">
+        <span class="gm-bar"><i data-prog></i></span>
+        <span class="gm-count"><b data-count>0</b>/100 {T.progLabel}</span>
+      </div>
+      <div class="gm-score">
+        <b data-score>{s0.score}</b>
+        <span>{T.scoreLabel}<br />/100</span>
+      </div>
+      <ul class="gm-rows">
+        {ENGINES.map((e, i) => (
+          <li data-row>
+            <img src={e.icon} alt="" width="18" height="18" />
+            <span class="gm-name">{e.name}<small data-status>{s0.engines[i][1]}</small></span>
+            <span class="gm-dots" aria-hidden="true">
+              {Array.from({ length: 20 }, (_, k) => <i class={k < Math.round(s0.engines[i][0] / 5) ? 'on' : ''} style={`--k:${k}`}></i>)}
+            </span>
+            <b data-val>{s0.engines[i][0]}</b>
+          </li>
+        ))}
+      </ul>
+    </figure>
+    <p class="gm-note">{T.note}</p>
+    </div>
+  </section>
+
+  <!-- 2. L'échelle -->
+  <section class="oai-ladder" data-oai-reveal>
+    <p class="oai-kicker">{T.ladderKicker}</p>
+    <h2 class="oai-title">{T.ladderTitle}</h2>
+    <ol>
+      {T.ladder.map((s, i) => (
+        <li style={`--i:${i}`}>
+          <div class="oai-stage" aria-hidden="true">
+            <span class="oai-shadow"></span>
+            <span class="oai-orb"><img src={ORBS[i]} alt="" width="480" height="480" loading="lazy" decoding="async" /></span>
+          </div>
+          <span class="oai-num">{pad(i)}</span>
+          <h3>{s.name}</h3>
+          <p>{s.text}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- 3. L'argument, sur bande bordeaux -->
+  <section class="oai-stat" data-oai-reveal>
+    <img class="oai-stat-orb" src="/brand/sphere-rouge.svg" alt="" width="892" height="892" loading="lazy" aria-hidden="true" />
+    <p class="oai-big">{T.stat}</p>
+    <div class="oai-stat-copy">
+      <h2>{T.statTitle}</h2>
+      <p>{T.statText}</p>
+      <span class="oai-kicker">{T.statSource}</span>
+    </div>
+  </section>
+
+  <!-- 3 bis. Nos outils -->
+  <section class="oai-tools" data-oai-reveal>
+    <div class="oai-tools-head">
+      <div>
+        <p class="oai-kicker">{T.toolsKicker}</p>
+        <h2 class="oai-title">{T.toolsTitle}</h2>
+      </div>
+      <p class="oai-text">{T.toolsText}</p>
+    </div>
+    <ol>
+      {T.tools.map((t, i) => (
+        <li style={`--i:${i}`}>
+          <span class="oai-num">{pad(i)}</span>
+          <h3>{t.name}</h3>
+          <p>{t.text}</p>
+          <ul class="oai-viz">{t.get.map((g) => <li><span>{g}</span></li>)}</ul>
+        </li>
+      ))}
+    </ol>
+    <div class="oai-team">
+      <p class="oai-kicker">{T.teamKicker}</p>
+      <ul>
+        {T.team.map((m) => (
+          <li>
+            <a href={localizePath('/studios', lang) + '#' + m.id}>
+              <img src={m.img} alt={m.name} width="120" height="120" loading="lazy" decoding="async" />
+              <span><b>{m.name}</b><small>{m.role}</small></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <a class="oai-more" href={localizePath('/studios', lang)}>{T.teamMore}<i class="arw arw--right" aria-hidden="true"></i></a>
+    </div>
+  </section>
+
+  <!-- 4. L'offre d'entrée -->
+  <section class="oai-offer" data-oai-reveal>
+    <p class="oai-kicker">{T.offerKicker}</p>
+    <h2 class="oai-title">{T.offerTitle}</h2>
+    <ol>
+      {T.offerItems.map((it, i) => (
+        <li style={`--i:${i}`}>
+          <span class="oai-num">{pad(i)}</span>
+          <h3>{it.name}</h3>
+          <p>{it.text}</p>
+          {it.engines && (
+            <ul class="oai-viz oai-logos">
+              {ENGINES.map((e) => <li><img src={e.icon} alt="" width="18" height="18" /><span>{e.name}</span></li>)}
+            </ul>
+          )}
+          {it.score && (
+            <ul class="oai-viz" aria-hidden="true">
+              {it.score.map(([name, v, me]) => (
+                <li class={me ? 'is-me' : ''}>
+                  <span>{name}</span>
+                  <span class="oai-mini">{Array.from({ length: 10 }, (_, k) => <i class={k < Math.round(v / 10) ? 'on' : ''} style={`--k:${k}`}></i>)}</span>
+                  <b>{v}</b>
+                </li>
+              ))}
+            </ul>
+          )}
+          {it.plan && (() => {
+            // chaque action rapporte des points ; ensemble, elles mènent le score actuel (gris) à l'objectif (rouge)
+            const base = Math.round(it.from / 10);
+            const goal = it.from + it.plan.reduce((n, [, g]) => n + g, 0);
+            const gained = Math.round(goal / 10) - base;
+            return (
+              <ol class="oai-viz" aria-hidden="true">
+                {it.plan.map(([name, g], k) => (
+                  <li>
+                    <span>{pad(k)} · {name}</span>
+                    <b class="oai-gain">+{g}</b>
+                  </li>
+                ))}
+                <li class="is-me">
+                  <span>{it.goal}</span>
+                  <span class="oai-mini">{Array.from({ length: 10 }, (_, k) => <i class={k < base ? 'on' : k < base + gained ? 'on is-gain' : ''} style={`--k:${k}`}></i>)}</span>
+                  <b>{goal}</b>
+                </li>
+              </ol>
+            );
+          })()}
+        </li>
+      ))}
+    </ol>
+    <div class="oai-offer-foot">
+      <p>{T.offerNext}</p>
+      <a class="oai-btn" href={localizePath('/contact', lang)}>
+        <span>{T.offerCta}</span><i class="arw arw--diag" aria-hidden="true"></i>
+      </a>
+    </div>
+  </section>
+</div>
+
+<script>
+  const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  // Vue GEO Monitor : l'outil au travail, piloté par un seul fil (requestAnimationFrame).
+  //  1. « Aujourd'hui » : l'état de départ, posé ;
+  //  2. l'analyse : une question de client s'écrit, la barre des questions avance de 0 à 100, chaque IA passe
+  //     d'« interroge… » à son verdict, ses points (un point = cinq questions où elle vous cite) se remplissent un à un,
+  //     le score monte ;
+  //  3. « Avec AI Endorsement » : temps d'arrêt sur le résultat ; puis retour en douceur, et ainsi de suite.
+  function initMonitor(root) {
+    if (root.dataset.ready) return;
+    root.dataset.ready = '1';
+    const D = JSON.parse(root.dataset.gmData);
+    const A = D.states[0], B = D.states[1];
+    const rows = [...root.querySelectorAll('[data-row]')].map((r) => ({ el: r, val: r.querySelector('[data-val]'), st: r.querySelector('[data-status]'), dots: [...r.querySelectorAll('.gm-dots i')], n: -1, v: -1, s: '' }));
+    const scoreEl = root.querySelector('[data-score]'), stateEl = root.querySelector('[data-state]');
+    const qEl = root.querySelector('[data-q]'), progEl = root.querySelector('[data-prog]'), countEl = root.querySelector('[data-count]');
+    const clamp = (v) => Math.min(1, Math.max(0, v));
+    const inOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+    const HOLD_A = 2600, RUN = 4200, HOLD_B = 4200, BACK = 1400, CYCLE = HOLD_A + RUN + HOLD_B + BACK;
+    let label = -1, qi = -1, qText = '', t0 = 0, raf = 0, visible = false, last = '';
+
+    const setLabel = (i) => {
+      if (i === label) return;
+      label = i;
+      root.classList.toggle('is-after', i === 1);
+      stateEl.classList.add('is-swap');
+      setTimeout(() => { stateEl.textContent = D.labels[i]; stateEl.classList.remove('is-swap'); }, 260);
+    };
+    // p : avancée de l'analyse (0 = aujourd'hui, 1 = avec AI Endorsement) ; asking : l'analyse est en cours
+    const paint = (p, asking, elapsedRun) => {
+      const score = Math.round(A.score + (B.score - A.score) * p);
+      if (scoreEl.textContent !== String(score)) scoreEl.textContent = String(score);
+      const c = Math.round(100 * clamp(asking ? elapsedRun / RUN : p));
+      if (countEl.textContent !== String(c)) countEl.textContent = String(c);
+      progEl.style.transform = `scaleX(${(c / 100).toFixed(3)})`;
+      rows.forEach((r, k) => {
+        // chaque IA répond à son tour : sa part de l'analyse est décalée
+        const pk = clamp((p - k * 0.1) / 0.8);
+        const v = Math.round(A.engines[k][0] + (B.engines[k][0] - A.engines[k][0]) * pk);
+        if (v !== r.v) { r.v = v; r.val.textContent = String(v); }
+        const n = Math.round(v / 5);
+        if (n !== r.n) { r.n = n; r.dots.forEach((d, j) => d.classList.toggle('on', j < n)); }
+        const st = asking && pk > 0 && pk < 1 ? D.asking : (pk >= 1 ? B.engines[k][1] : A.engines[k][1]);
+        if (st !== r.s) { r.s = st; r.st.textContent = st; r.el.classList.toggle('is-asking', st === D.asking); }
+      });
+    };
+    // la question s'écrit lettre à lettre, une nouvelle toutes les ~1,3 s pendant l'analyse
+    const typeQ = (elapsedRun) => {
+      const per = RUN / D.questions.length, i = Math.min(D.questions.length - 1, Math.floor(elapsedRun / per));
+      const full = D.questions[i], shown = full.slice(0, Math.ceil(full.length * clamp((elapsedRun - i * per) / (per * 0.55))));
+      if (i !== qi || shown !== qText) { qi = i; qText = shown; qEl.textContent = shown; }
+    };
+    const frame = (now) => {
+      raf = visible ? requestAnimationFrame(frame) : 0;
+      const t = (now - t0) % CYCLE;
+      let phase;
+      if (t < HOLD_A) { phase = 'a'; setLabel(0); paint(0, false, 0); }
+      else if (t < HOLD_A + RUN) { phase = 'run'; const e = t - HOLD_A; typeQ(e); paint(inOut(clamp(e / RUN)), true, e); }
+      else if (t < HOLD_A + RUN + HOLD_B) { phase = 'b'; setLabel(1); paint(1, false, RUN); }
+      else { phase = 'back'; const e = t - HOLD_A - RUN - HOLD_B; setLabel(0); paint(1 - inOut(clamp(e / BACK)), false, 0); }
+      if (phase !== last) { root.classList.toggle('is-running', phase === 'run'); last = phase; }
+    };
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const io = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      if (visible && !raf) { if (!t0) t0 = performance.now() - HOLD_A + 900; raf = requestAnimationFrame(frame); }
+    }, { rootMargin: '0px 0px -15% 0px' });
+    io.observe(root);
+    document.addEventListener('astro:before-swap', () => { visible = false; io.disconnect(); }, { once: true });
+  }
+
+  const init = () => {
+    document.querySelectorAll('[data-gm]').forEach(initMonitor);
+    const els = document.querySelectorAll('[data-oai-reveal]:not(.is-in)');
+    if (!els.length) return;
+    if (!('IntersectionObserver' in window) || reduce()) { els.forEach((el) => el.classList.add('is-in')); return; }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -15% 0px' });
+    els.forEach((el) => { el.classList.add('is-pending'); io.observe(el); });
+  };
+  document.addEventListener('astro:page-load', init);
+</script>
+
+<style>
+  .oai {
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --rule: #e3e3dc;
+    --brique: #a43636;
+    font-family: var(--sans);
+  }
+  .oai section { border: 0; position: relative; }
+  .oai p { margin: 0; text-wrap: pretty; }
+  .oai h2, .oai h3 { font-family: var(--sans); font-weight: 400; margin: 0; }
+  .oai-kicker { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin: 0 0 18px !important; }
+  .oai-title { font-size: clamp(32px, 3.6vw, 52px); letter-spacing: -0.045em; line-height: 0.98; max-width: 16ch; }
+  .oai-text { margin-top: 28px !important; max-width: 430px; font-size: clamp(15px, 1.15vw, 17px); line-height: 1.55; color: #2b2b2b; }
+  .oai-num { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; color: var(--muted); margin-bottom: 12px; }
+  /* nom d'IA dans le texte, précédé de son logo */
+  .oai-eng { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; font-weight: 500; color: var(--ink); }
+  .oai-eng img { width: 15px; height: 15px; }
+
+  /* 1. La démonstration */
+  .oai-demo-copy { padding-top: clamp(0px, 2vw, 32px); }
+  .oai-demo { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 112px); align-items: start; padding: clamp(24px, 3vw, 48px) 0 clamp(80px, 8vw, 130px); }
+
+  /* Vue GEO Monitor, dans la direction artistique de la marque : pas de carte, des filets, Styrene et mono,
+     et des rangées de points rouges, comme les trois points du logo */
+  .gm-wrap { min-width: 0; }
+  .gm { margin: 0; min-width: 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+  .gm-head { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0 0; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+  .gm-state { color: var(--ink); transition: opacity 300ms ease, color 300ms ease; }
+  .gm-state.is-swap { opacity: 0; }
+  .gm.is-after .gm-state { color: var(--bordeaux); }
+  .gm-score { display: flex; align-items: flex-end; gap: 16px; padding: clamp(18px, 2vw, 28px) 0 clamp(26px, 3vw, 40px); }
+  .gm-score b { font-weight: 700; font-size: clamp(84px, 9vw, 136px); letter-spacing: -0.06em; line-height: 0.8; font-variant-numeric: tabular-nums; min-width: 2.1ch; }
+  .gm.is-after .gm-score b { color: var(--bordeaux); transition: color 900ms ease; }
+  .gm-score span { padding-bottom: 4px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; line-height: 1.7; text-transform: uppercase; color: var(--muted); }
+  .gm-rows { list-style: none; margin: 0; padding: 0; }
+  .gm-rows li { display: grid; grid-template-columns: 18px minmax(0, 12em) minmax(0, 1fr) 2.4em; align-items: center; gap: 16px; padding: 16px 0; border-top: 1px solid var(--rule); }
+  .gm-rows img { width: 18px; height: 18px; }
+  .gm-name { font-size: clamp(15px, 1.15vw, 17px); letter-spacing: -0.03em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .gm-dots { display: grid; grid-template-columns: repeat(20, 1fr); gap: 4px; max-width: 260px; justify-self: end; width: 100%; }
+  .gm-dots i { display: block; aspect-ratio: 1; border-radius: 50%; background: #ebe9e2; transition: background 240ms ease, scale 240ms ease; }
+  .gm-dots i.on { animation: gm-pop 360ms cubic-bezier(.2, 1.6, .4, 1); }
+  @keyframes gm-pop { from { scale: 0.4; } to { scale: 1; } }
+  .gm-name small { display: block; margin-top: 4px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); transition: color 300ms ease; }
+  .gm.is-after .gm-name small { color: var(--bordeaux); }
+  .gm-rows li.is-asking .gm-name small { color: var(--ink); animation: gm-blink 900ms ease-in-out infinite; }
+  @keyframes gm-blink { 50% { opacity: 0.35; } }
+  .gm-q { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 16px 0 0; }
+  .gm-q-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+  .gm-q-text { min-height: 1.4em; font-size: clamp(15px, 1.15vw, 17px); letter-spacing: -0.02em; line-height: 1.35; color: var(--ink); }
+  .gm-caret { display: inline-block; width: 1px; height: 1em; margin-left: 2px; vertical-align: -0.12em; background: var(--ink); opacity: 0; }
+  .gm.is-running .gm-caret { animation: gm-blink 700ms steps(1) infinite; opacity: 1; }
+  .gm-prog { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 14px 0 0; }
+  .gm-bar { position: relative; height: 2px; background: #ebe9e2; overflow: hidden; }
+  .gm-bar i { position: absolute; inset: 0; background: #ff4a4a; transform: scaleX(0); transform-origin: 0 50%; }
+  .gm-count { font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .gm-count b { font-weight: 400; color: var(--ink); display: inline-block; min-width: 3ch; text-align: right; }
+  .gm-dots i.on { background: #ff4a4a; }
+  .gm-rows b { font-family: var(--mono); font-weight: 400; font-size: 13px; text-align: right; font-variant-numeric: tabular-nums; }
+  .gm-note { margin-top: 14px !important; font-family: var(--mono); font-size: 8px; letter-spacing: 0.08em; line-height: 1.5; color: #6b6b6b; }
+
+  /* 2. L'échelle */
+  .oai-ladder { padding: 0 0 clamp(110px, 11vw, 180px); }
+  .oai-ladder ol { list-style: none; margin: clamp(48px, 6vw, 96px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 4vw, 72px); }
+  .oai-ladder h3 { font-size: clamp(20px, 1.7vw, 24px); letter-spacing: -0.06em; line-height: 1.1; margin-bottom: 8px; }
+  .oai-ladder li p { font-size: clamp(13px, 1vw, 15px); line-height: 1.35; color: #2b2b2b; max-width: 26ch; }
+  .oai-ladder li:last-child h3 { color: var(--bordeaux); }
+  .oai-stage {
+    --s: calc(clamp(84px, 9vw, 150px) * (1 + var(--i) * 0.55));
+    position: relative;
+    height: calc(clamp(84px, 9vw, 150px) * 2.1 + 40px);
+    margin-bottom: clamp(24px, 2.6vw, 40px);
+    border-bottom: 1px solid var(--ink);
+  }
+  .oai-orb { position: absolute; left: 0; bottom: 22px; width: var(--s); aspect-ratio: 1; animation: oai-float calc(6s + var(--i) * 1.6s) ease-in-out calc(var(--i) * -1.3s) infinite; }
+  .oai-orb img { display: block; width: 100%; height: 100%; animation: oai-spin calc(40s + var(--i) * 14s) linear infinite; }
+  .oai-shadow { position: absolute; left: calc(var(--s) * 0.12); bottom: 12px; width: calc(var(--s) * 0.76); height: 14px; border-radius: 50%; background: radial-gradient(closest-side, rgba(81, 0, 0, 0.18), transparent); animation: oai-shadow calc(6s + var(--i) * 1.6s) ease-in-out calc(var(--i) * -1.3s) infinite; }
+  @keyframes oai-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -18px; } }
+  @keyframes oai-shadow { 0%, 100% { scale: 1; opacity: 1; } 50% { scale: 0.78; opacity: 0.55; } }
+  @keyframes oai-spin { to { rotate: 360deg; } }
+
+  /* 3. L'argument : bande bordeaux, boule rouge vivante */
+  .oai-stat {
+    border-image: conic-gradient(var(--bordeaux) 0 0) fill 0 // 0 100vmax !important;
+    color: #fff;
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    gap: clamp(32px, 5vw, 96px);
+    align-items: end;
+    padding: clamp(90px, 9vw, 150px) 0;
+    overflow: clip;
+    overflow-clip-margin: 100vmax;
+    isolation: isolate;
+  }
+  .oai-stat-orb { position: absolute; z-index: -1; left: clamp(160px, 22vw, 360px); top: 50%; width: clamp(260px, 30vw, 460px); translate: 0 -50%; mix-blend-mode: screen; opacity: 0.9; pointer-events: none; animation: oai-spin 60s linear infinite; }
+  .oai-big { font-weight: 700; white-space: nowrap; font-size: clamp(76px, 11vw, 168px); letter-spacing: -0.06em; line-height: 0.85; }
+  .oai-stat-copy h2 { font-size: clamp(22px, 2vw, 30px); letter-spacing: -0.04em; line-height: 1.08; color: #fff; max-width: 22ch; }
+  .oai-stat-copy p { margin: 22px 0 26px !important; max-width: 420px; font-size: clamp(14px, 1.05vw, 16px); line-height: 1.4; color: rgba(255, 255, 255, 0.82); }
+  .oai-stat .oai-kicker { color: rgba(255, 255, 255, 0.5); margin: 0 !important; }
+
+  /* 3 bis. Nos outils, puis l'équipe */
+  .oai-tools { padding: clamp(110px, 11vw, 180px) 0 0; }
+  .oai-tools-head { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 112px); align-items: end; }
+  .oai-tools-head .oai-text { margin-top: 0 !important; }
+  .oai-tools > ol { list-style: none; margin: clamp(48px, 5vw, 80px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--ink); }
+  .oai-tools > ol > li { padding: 28px clamp(20px, 2.4vw, 40px) 34px 0; }
+  .oai-tools > ol > li + li { padding-left: clamp(20px, 2.4vw, 40px); border-left: 1px solid var(--rule); }
+  .oai-tools h3 { font-size: clamp(22px, 2vw, 30px); letter-spacing: -0.05em; line-height: 1.05; margin-bottom: 10px; }
+  .oai-tools li p { font-size: clamp(13px, 1vw, 15px); line-height: 1.4; color: #2b2b2b; max-width: 32ch; }
+  .oai-tools .oai-viz li { grid-template-columns: minmax(0, 1fr); color: var(--ink); }
+  .oai-team { display: flex; align-items: center; gap: clamp(20px, 3vw, 48px); flex-wrap: wrap; margin-top: clamp(40px, 4vw, 64px); padding-top: 28px; border-top: 1px solid var(--rule); }
+  .oai-team .oai-kicker { margin: 0 !important; }
+  .oai-team ul { list-style: none; margin: 0; padding: 0; display: flex; gap: clamp(20px, 3vw, 48px); flex-wrap: wrap; }
+  .oai-team a { display: flex; align-items: center; gap: 14px; color: inherit; text-decoration: none; }
+  .oai-team img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; filter: grayscale(1); transition: filter 400ms ease; }
+  .oai-team a:hover img { filter: none; }
+  .oai-team b { display: block; font-weight: 400; font-size: 17px; letter-spacing: -0.03em; }
+  .oai-team small { display: block; margin-top: 3px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .oai-team a:hover b { color: var(--bordeaux); }
+  .oai-more { margin-left: auto; display: inline-flex; align-items: center; gap: 10px; padding-bottom: 5px; border-bottom: 1px solid var(--ink); font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+  .oai-more .arw { width: 15px; transition: transform 300ms var(--ease); }
+  .oai-more:hover { color: var(--bordeaux); border-color: var(--bordeaux); }
+  .oai-more:hover .arw { transform: translateX(4px); }
+
+  /* 4. L'offre d'entrée */
+  .oai-offer { padding: clamp(100px, 10vw, 160px) 0 clamp(40px, 4vw, 64px); }
+  .oai-offer .oai-title { max-width: 18ch; }
+  .oai-offer > ol { list-style: none; margin: clamp(48px, 5vw, 80px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--ink); }
+  .oai-offer > ol > li { padding: 28px clamp(20px, 2.4vw, 40px) 34px 0; position: relative; }
+  .oai-offer > ol > li + li { padding-left: clamp(20px, 2.4vw, 40px); border-left: 1px solid var(--rule); }
+  .oai-offer h3 { font-size: clamp(20px, 1.7vw, 24px); letter-spacing: -0.06em; line-height: 1.1; margin-bottom: 10px; }
+  .oai-offer li p { font-size: clamp(13px, 1vw, 15px); line-height: 1.4; color: #2b2b2b; max-width: 32ch; }
+  /* mini-illustrations des trois livrables : mêmes filets, même mono, mêmes points rouges que GEO Monitor */
+  .oai-viz { list-style: none; margin: 22px 0 0; padding: 0; max-width: 320px; border-bottom: 1px solid var(--rule); }
+  .oai-viz li { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 9px 0; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .oai-viz li > span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .oai-viz li.is-me { color: var(--ink); }
+  .oai-viz li:has(b) { grid-template-columns: minmax(0, 1fr) auto 2em; }
+  .oai-viz b { font-weight: 400; text-align: right; font-variant-numeric: tabular-nums; }
+  .oai-logos li { grid-template-columns: 18px minmax(0, 1fr); }
+  .oai-logos img { width: 16px; height: 16px; }
+  .oai-mini { display: flex; gap: 3px; }
+  .oai-mini i { width: 7px; height: 7px; border-radius: 50%; background: #ebe9e2; }
+  .oai-mini i.on { background: #a8a59c; }
+  .oai-viz li.is-me .oai-mini i.on { background: #ff4a4a; }
+  /* objectif du plan : le score actuel en gris, les points gagnés en rouge */
+  .oai-viz li.is-me .oai-mini i.on:not(.is-gain):has(~ i.is-gain) { background: #a8a59c; }
+  .oai-gain { grid-column: 3; color: #ff4a4a; }
+  .oai-offer.is-pending:not(.is-in) .oai-mini i.on { background: #ebe9e2; }
+  .oai-offer.is-in .oai-mini i { transition: background 300ms ease calc(0.9s + var(--k) * 45ms); }
+  .oai-offer-foot { display: flex; justify-content: space-between; align-items: center; gap: 32px; flex-wrap: wrap; padding-top: 32px; border-top: 1px solid var(--rule); }
+  .oai-offer-foot p { max-width: 520px; font-size: 14px; line-height: 1.4; color: var(--muted); }
+  .oai-btn { display: inline-flex; align-items: center; justify-content: space-between; gap: 14px; min-width: 230px; height: 46px; padding: 0 20px; background: var(--brique); border: 1px solid var(--brique); color: #fff; font-family: var(--sans-a); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: background 220ms ease, border-color 220ms ease, color 220ms ease; }
+  .oai-btn .arw { width: 17px; height: auto; transition: transform 220ms var(--ease); }
+  .oai-btn:hover { background: var(--bordeaux); border-color: var(--bordeaux); color: #fff; }
+  .oai-btn:hover .arw { transform: translate(2px, -2px); }
+
+  /* Apparitions */
+  .is-pending :is(.oai-kicker, .oai-title, .oai-text, .gm, .gm-note, .oai-big, .oai-stat-copy, .oai-offer-foot, .oai-team) { opacity: 0; translate: 0 24px; }
+  .is-in :is(.oai-kicker, .oai-title, .oai-text, .gm, .gm-note, .oai-big, .oai-stat-copy, .oai-offer-foot, .oai-team) { opacity: 1; translate: 0 0; transition: opacity 1000ms ease, translate 1200ms var(--ease); }
+  .is-in :is(.oai-title, .oai-stat-copy) { transition-delay: 90ms; }
+  .is-in :is(.oai-text, .gm, .gm-note, .oai-offer-foot) { transition-delay: 200ms; }
+  .is-pending .oai-orb img { scale: 0; }
+  .is-in .oai-orb img { scale: 1; transition: scale 1.4s cubic-bezier(0.16, 1.2, 0.3, 1) calc(0.3s + var(--i) * 0.28s); }
+  .is-pending .oai-shadow { opacity: 0; }
+  .is-pending:is(.oai-ladder, .oai-offer, .oai-tools) > ol > li > :not(.oai-stage) { opacity: 0; translate: 0 14px; }
+  .is-in:is(.oai-ladder, .oai-offer, .oai-tools) > ol > li > :not(.oai-stage) { opacity: 1; translate: 0 0; transition: opacity 0.9s ease, translate 0.9s var(--ease); transition-delay: calc(0.4s + var(--i) * 0.2s); }
+  .oai-ladder.is-in > ol > li > :not(.oai-stage) { transition-delay: calc(0.55s + var(--i) * 0.28s); }
+  .oai-stat.is-pending .oai-stat-orb { opacity: 0; scale: 0.7; }
+  .oai-stat.is-in .oai-stat-orb { opacity: 0.9; scale: 1; transition: opacity 1.6s ease, scale 2s var(--ease); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .oai-orb, .oai-orb img, .oai-shadow, .oai-stat-orb { animation: none; }
+  }
+  @media (max-width: 1000px) {
+    .oai-demo, .oai-stat { grid-template-columns: minmax(0, 1fr); }
+    .oai-demo-copy { position: static; padding-top: 0; }
+    .oai-stat-orb { left: auto; right: -12%; top: 22%; }
+  }
+  @media (max-width: 760px) {
+    .oai-offer > ol, .oai-tools > ol, .oai-tools-head { grid-template-columns: 1fr; }
+    .oai-tools > ol > li, .oai-tools > ol > li + li { padding: 24px 0; border-left: 0; }
+    .oai-tools > ol > li + li { border-top: 1px solid var(--rule); }
+    .oai-more { margin-left: 0; }
+    .oai-offer > ol > li, .oai-offer > ol > li + li { padding: 24px 0; border-left: 0; }
+    .oai-offer > ol > li + li { border-top: 1px solid var(--rule); }
+  }
+  @media (max-width: 640px) {
+    .oai-ladder ol { grid-template-columns: 1fr; gap: 56px; }
+    .oai-stage { --s: calc(80px * (1 + var(--i) * 0.45)); height: calc(var(--s) + 48px); margin-bottom: 24px; }
+    .oai-btn { width: 100%; }
+    .gm-rows li { grid-template-columns: 18px minmax(0, 1fr) 2.4em; row-gap: 12px; }
+    .gm-dots { grid-column: 2 / 4; grid-row: 2; max-width: none; }
+  }
+</style>

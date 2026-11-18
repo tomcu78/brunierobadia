@@ -1,0 +1,196 @@
+---
+// Page Clients (FR / EN), dans la direction artistique de l'accueil : pas de pastilles ni de cartes.
+//  1. les chiffres entre filets, comme « 50 / 200+ / 21 » ;
+//  2. le mur des maisons emblématiques (logos), relié aux études de cas quand il y en a une ;
+//  3. l'index complet : toutes les marques, secteur par secteur.
+import { clients, projects, totalBrands } from '../data/site.js';
+import { iconicBrands } from '../data/clientsWall.js';
+import logos from '../data/clientLogos.json';
+import { rankOf } from '../data/clientRank.js';
+import { localizePath } from '../lib/seo.js';
+
+const { lang } = Astro.props;
+const en = lang === 'en';
+const T = en
+  ? {
+      kicker: 'Clients',
+      title: 'Fifty years of creation with the greatest houses.',
+      lead: 'From Hermès leather goods to Samsung electronics, from Aston Martin to the CNRS, BrunierObadia shapes the expression of the most demanding brands.',
+      stats: [[totalBrands, 'brands'], [clients.length, 'sectors'], [50, 'years of experience']],
+      wall: 'Iconic houses',
+      index: 'Our clients',
+      indexText: 'A red dot marks a case study.',
+      filter: 'Sort by sector',
+      all: 'All',
+      endTitle: 'Your brand has a story. Let’s give it scale.',
+      endText: 'Talk directly with Jonas Obadia and Jean-Paul Brunier.',
+      cta: 'Contact the partners',
+    }
+  : {
+      kicker: 'Clients',
+      title: 'Cinquante ans de création avec les plus grandes maisons.',
+      lead: 'De la maroquinerie d’Hermès à l’électronique de Samsung, d’Aston Martin au CNRS, BrunierObadia façonne l’expression des marques les plus exigeantes.',
+      stats: [[totalBrands, 'marques'], [clients.length, 'secteurs'], [50, 'ans d’expérience']],
+      wall: 'Maisons emblématiques',
+      index: 'Nos clients',
+      indexText: 'Un point rouge signale une étude de cas.',
+      filter: 'Trier par secteur',
+      all: 'Tous',
+      endTitle: 'Votre marque a une histoire. Donnons-lui de l’envergure.',
+      endText: 'Échangez directement avec Jonas Obadia et Jean-Paul Brunier.',
+      cta: 'Contacter les associés',
+    };
+
+// marque → étude de cas (logos du mur, puis client des projets)
+const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[’']/g, "'").toUpperCase().trim();
+const caseOf = new Map();
+for (const p of projects) if (!caseOf.has(norm(p.client))) caseOf.set(norm(p.client), p.slug);
+for (const b of iconicBrands) if (b.projectSlug) caseOf.set(norm(b.name), b.projectSlug);
+// clé de logo : lettres et chiffres seuls, sans accents (« L'ORÉAL » → « LOREAL »)
+const key = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+// ordre de la vue générale : les plus grandes entreprises et maisons d'abord (taille, notoriété mondiale), puis le reste
+const rank = rankOf;
+// chaque marque une seule fois, avec la liste de ses secteurs (pour le tri)
+const sectorId = (sec) => key(sec.fr).toLowerCase();
+const all = new Map();
+clients.forEach((sec, order) => sec.brands.forEach((name) => {
+  // deux marques au logo identique (Sanofi, Sanofi Pasteur) n'en font qu'une dans la grille
+  const k = logos[key(name)]?.src || key(name);
+  if (!all.has(k)) all.set(k, { name, sectors: [], order: all.size });
+  all.get(k).sectors.push(sectorId(sec));
+}));
+const brands = [...all.values()].sort((a, b) => rank(a.name) - rank(b.name) || a.order - b.order);
+const href = (slug) => localizePath(`/projets/${slug}`, lang);
+---
+<!-- le bandeau bordeaux des pages intérieures demande l'en-tête en premier enfant de .wrap : pas de conteneur -->
+<header class="client-hero-head cl-hero">
+    <p class="label">{T.kicker}</p>
+    <h1>{T.title}</h1>
+    <p class="cl-lead">{T.lead}</p>
+</header>
+
+  <div class="cl-stats">
+    {T.stats.map(([v, l]) => (
+      <div><b>{v}</b><span>{l}</span></div>
+    ))}
+  </div>
+
+  <section class="cl-sec" data-clients>
+    <h2 class="cl-h2">{T.index} <sup>({totalBrands})</sup></h2>
+    <div class="cl-filters" role="toolbar" aria-label={T.filter}>
+      <button type="button" class="cl-f is-on" data-f="all">{T.all} <em>{brands.length}</em></button>
+      {clients.map((sec) => (
+        <button type="button" class="cl-f" data-f={sectorId(sec)}>{sec[lang].charAt(0) + sec[lang].slice(1).toLowerCase()} <em>{sec.brands.length}</em></button>
+      ))}
+    </div>
+    <ul class="cl-grid">
+      {brands.map((b, i) => {
+        const slug = caseOf.get(norm(b.name));
+        const logo = logos[key(b.name)];
+        const inner = logo
+          ? <img src={logo.src} alt={b.name} title={b.name} loading={i < 24 ? 'eager' : 'lazy'} decoding="async" class={logo.dark ? 'is-light' : ''} />
+          : <span class="cl-name">{b.name}</span>;
+        return (
+          <li data-s={b.sectors.join(' ')} class={slug ? 'has-case' : ''} style={`--i:${i}`}>
+            {slug ? <a href={href(slug)} aria-label={b.name}>{inner}</a> : inner}
+          </li>
+        );
+      })}
+    </ul>
+    <p class="cl-note">{T.indexText}</p>
+  </section>
+
+  <script>
+    // tri par secteur : on garde la même grille, on masque ce qui n'est pas dans le secteur choisi
+    const init = () => {
+      const root = document.querySelector('[data-clients]');
+      if (!root || root.dataset.ready) return;
+      root.dataset.ready = '1';
+      const items = [...root.querySelectorAll('.cl-grid li')];
+      root.querySelector('.cl-filters').addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-f]');
+        if (!btn) return;
+        root.querySelectorAll('.cl-f').forEach((b) => b.classList.toggle('is-on', b === btn));
+        const f = btn.dataset.f;
+        let n = 0;
+        items.forEach((li) => {
+          const show = f === 'all' || li.dataset.s.split(' ').includes(f);
+          li.hidden = !show;
+          if (show) li.style.setProperty('--i', String(n++));
+        });
+        root.classList.remove('is-sorting'); void root.offsetWidth; root.classList.add('is-sorting');
+      });
+    };
+    document.addEventListener('astro:page-load', init);
+  </script>
+
+  <section class="cl-end">
+    <h2>{T.endTitle}</h2>
+    <p>{T.endText}</p>
+    <a class="cl-btn" href={localizePath('/contact', lang)}><span>{T.cta}</span><i class="arw arw--right" aria-hidden="true"></i></a>
+  </section>
+
+<style>
+  .cl-stats, .cl-sec, .cl-end { font-family: var(--sans); }
+  section.cl-sec, section.cl-end { border: 0; }
+  .cl-hero h1 { font-family: var(--sans); font-size: clamp(2.2rem, 1.2rem + 3.6vw, 4.6rem); letter-spacing: -0.045em; line-height: 0.98; max-width: 16ch; margin: 14px 0 0; }
+  .cl-lead { margin: 26px 0 0 !important; max-width: 56ch; font-size: clamp(15px, 1.15vw, 17px); line-height: 1.45; }
+
+  /* chiffres : même cadre que l'accueil */
+  .cl-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) 1fr; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+  .cl-stats div { padding: 28px 28px 30px 0; border-right: 1px solid var(--line); }
+  .cl-stats div + div { padding-left: 28px; }
+  .cl-stats b { display: block; font-weight: 700; font-size: clamp(38px, 3.4vw, 49px); letter-spacing: -0.04em; line-height: 1; }
+  .cl-stats span { display: block; margin-top: 10px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+  .cl-sec { padding-top: clamp(96px, 10vw, 160px) !important; }
+  .cl-h2 { font-family: var(--sans); font-weight: 400; text-align: center; font-size: clamp(19px, 1.6vw, 23px); letter-spacing: -0.051em; line-height: 1; margin: 0; }
+  .cl-h2 sup { font-family: var(--mono); font-size: 8px; letter-spacing: 0.08em; vertical-align: top; margin-left: 2px; color: var(--muted); }
+  .cl-note { text-align: center; margin: 14px 0 0; font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+  /* tous les clients : une seule grande grille, les plus grands d'abord ; tri par secteur en mots soulignés */
+  .cl-filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px; margin: clamp(32px, 3vw, 44px) auto 0; max-width: 1100px; }
+  .cl-f { font: inherit; font-family: var(--sans); font-size: 14px; letter-spacing: -0.03em; color: var(--muted); background: none; border: 0; border-bottom: 1px solid transparent; padding: 0 0 3px; cursor: pointer; transition: color 200ms ease, border-color 200ms ease; }
+  .cl-f em { font-style: normal; font-family: var(--mono); font-size: 8px; letter-spacing: 0.08em; vertical-align: top; margin-left: 2px; }
+  .cl-f:hover { color: var(--ink); }
+  .cl-f.is-on { color: var(--ink); border-bottom-color: #ff4a4a; }
+  .cl-grid { list-style: none; margin: clamp(40px, 4vw, 64px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .cl-grid li { position: relative; display: grid; place-items: center; height: clamp(92px, 9vw, 140px); padding: 0 16%; overflow: hidden; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: #fff; transition: background 300ms ease; }
+  .cl-grid li[hidden] { display: none; }
+  .cl-grid li > a { display: grid; place-items: center; width: 100%; height: 100%; }
+  .cl-grid img { width: auto; height: auto; max-width: 100%; max-height: clamp(28px, 3.2vw, 50px); object-fit: contain; filter: grayscale(1); opacity: 0.7; transition: filter 400ms ease, opacity 400ms ease, transform 500ms cubic-bezier(.16, 1, .3, 1); }
+  .cl-grid img.is-light { filter: brightness(0); opacity: 0.62; }
+  .cl-grid li:hover { background: #faf9f5; }
+  .cl-grid li:hover img { filter: none; opacity: 1; transform: scale(1.04); }
+  .cl-grid li:hover img.is-light { filter: brightness(0); }
+  .cl-grid li.has-case::after { content: ''; position: absolute; top: 12px; right: 12px; width: 5px; height: 5px; border-radius: 50%; background: #ff4a4a; }
+  .cl-name { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-align: center; color: #2b2b2b; }
+  .cl-sec > .cl-note { margin-top: 18px; }
+  /* au tri, les logos réapparaissent en cascade */
+  .is-sorting .cl-grid li:not([hidden]) { animation: cl-in 600ms cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(min(var(--i), 24) * 18ms); }
+  @keyframes cl-in { from { opacity: 0; transform: translateY(8px); } }
+  @media (prefers-reduced-motion: reduce) { .is-sorting .cl-grid li { animation: none; } }
+
+  /* fin */
+  .cl-end { padding: clamp(96px, 10vw, 160px) 0 clamp(24px, 3vw, 48px) !important; }
+  .cl-end h2 { font-family: var(--sans); font-weight: 400; font-size: clamp(30px, 3vw, 43px); letter-spacing: -0.035em; line-height: 1; max-width: 20ch; margin: 0; }
+  .cl-end p { margin: 22px 0 0; font-size: 16px; color: #2b2b2b; }
+  .cl-btn { display: inline-flex; align-items: center; justify-content: space-between; gap: 14px; min-width: 260px; height: 41px; margin-top: 28px; padding: 0 20px; border: 1px solid var(--ink); color: var(--ink); font-family: var(--sans-a); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: background 220ms ease, color 220ms ease; }
+  .cl-btn .arw { width: 17px; transition: transform 220ms ease; }
+  .cl-btn:hover { background: var(--ink); color: #fff; }
+  .cl-btn:hover .arw { transform: translateX(3px); }
+
+  @media (max-width: 900px) {
+    .cl-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .cl-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 560px) {
+    .cl-stats div { padding: 20px 10px 22px 0; }
+    .cl-stats div + div { padding-left: 12px; }
+    .cl-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .cl-grid li { padding: 0 12%; height: 84px; }
+    .cl-grid img { max-height: 28px; }
+    .cl-filters { justify-content: flex-start; gap: 8px 16px; }
+    .cl-btn { width: 100%; }
+  }
+</style>

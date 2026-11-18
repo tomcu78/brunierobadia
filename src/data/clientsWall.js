@@ -164,7 +164,7 @@ export const iconicBrands = [
   {
     id: 'sfr',
     name: 'SFR',
-    logo: '/logos/sfr.svg',
+    logo: '/logos/sfr.webp',
     sector_fr: 'Télécommunications & Fibre',
     sector_en: 'Telecommunications & Fiber',
     category: 'tech',

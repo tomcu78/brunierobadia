@@ -1,6 +1,7 @@
 ---
 // Enveloppe commune: SEO technique + données structurées + navigation.
 import { ClientRouter } from 'astro:transitions';
+import '@fontsource/ibm-plex-mono/400.css';
 import '../styles/global.css';
 import { SITE, ui } from '../data/site.js';
 import { localizePath, abs } from '../lib/seo.js';
@@ -14,13 +15,14 @@ const {
   image = lang === 'en' ? '/assets/og-en.png' : '/assets/og.png',
   jsonLd = [],
   noindex = false,
+  isHome = false,
 } = Astro.props;
 
 const t = ui[lang];
 const canonical = abs(localizePath(path, lang));
 const altFr = abs(localizePath(path, 'fr'));
 const altEn = abs(localizePath(path, 'en'));
-const pageTitle = title ? `${title}  –  ${SITE.name}` : `${SITE.name}  –  ${SITE.tagline[lang]}`;
+const pageTitle = title ? `${title} – ${SITE.name}` : `${SITE.name} – ${SITE.tagline[lang]}`;
 const ogImage = image.startsWith('http') ? image : abs(image);
 const home = localizePath('/', lang);
 const nav = [
@@ -43,14 +45,22 @@ const org = {
   description: SITE.tagline.fr,
   foundingDate: SITE.foundingDate,
   email: SITE.emails,
-  address: { '@type': 'PostalAddress', addressLocality: 'Paris', addressCountry: 'FR' },
+  telephone: SITE.phone,
+  vatID: SITE.vatNumber,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: SITE.address.streetAddress,
+    postalCode: SITE.address.postalCode,
+    addressLocality: SITE.address.locality,
+    addressCountry: SITE.address.country,
+  },
   areaServed: ['FR', 'Worldwide'],
   knowsAbout: [
     'Communication créative',
     'Direction artistique',
     'Performance digitale',
     'Brand transformation',
-    'La marque dans les IA (Brand in AI & Generative Reputation)',
+    'AI Endorsement (recommandation des marques par les IA)',
     'Édition de luxe',
     'Architecture de marque'
   ],
@@ -64,44 +74,60 @@ const org = {
     'https://www.linkedin.com/company/brunier-obadia/',
     'https://github.com/tomcu78/brunierobadia'
   ],
+  // fondateurs et associés : faits sourcés (05_Equipe/02_Jean-Paul-Brunier_presence-web.md), identifiants stables
+  // repris par la page Le studio (#jean-paul-brunier, #jonas-obadia…)
   founder: [
     {
       '@type': 'Person',
+      '@id': abs('/studios') + '#jean-paul-brunier',
       name: 'Jean-Paul Brunier',
-      jobTitle: 'Stratège & Associé Fondateur · Ancien Président de Publicis Conseil',
-      description: 'Ancien Président de Publicis Conseil. Stratège de marque, conseiller auprès des comités de direction et directions générales du CAC40, d’institutions culturelles et de maisons de luxe.',
-      sameAs: [
-        'https://fr.wikipedia.org/wiki/Publicis_Conseil',
-        'https://fr.wikipedia.org/wiki/Association_des_agences-conseils_en_communication',
-        'https://www.strategies.fr/actualites/agences/104118W/jean-paul-brunier-quitte-publicis-conseil.html',
-        'https://www.cbnews.fr/agences/image-jean-paul-brunier-quitte-publicis-conseil-28526'
+      jobTitle: 'Co-fondateur et stratège, BrunierObadia · Ancien président de Leo Burnett France',
+      description: 'Président de Leo Burnett France à partir de 2008, vingt-deux ans chez Publicis Groupe (2000-2022), puis global client leader du groupe. Ancien président du pôle Société de l’AACC et administrateur de l’ARPP. Co-fondateur de BrunierObadia.',
+      image: abs('/equipe/jean-paul-brunier.jpg'),
+      url: abs('/studios') + '#jean-paul-brunier',
+      worksFor: { '@id': abs('/') + '#organization' },
+      alumniOf: [
+        { '@type': 'Organization', name: 'Leo Burnett France' },
+        { '@type': 'Organization', name: 'Publicis Groupe', sameAs: 'https://fr.wikipedia.org/wiki/Publicis_Groupe' }
       ],
-      alumniOf: {
-        '@type': 'Organization',
-        name: 'Publicis Conseil',
-        alternateName: 'Publicis Groupe',
-        sameAs: 'https://fr.wikipedia.org/wiki/Publicis_Conseil'
-      },
-      knowsAbout: ['Stratégie de marque', 'Gouvernance d’entreprise', 'Conseil de direction Comex', 'Campagnes mondiales']
+      memberOf: [
+        { '@type': 'Organization', name: 'AACC – Association des agences-conseils en communication', sameAs: 'https://fr.wikipedia.org/wiki/Association_des_agences-conseils_en_communication' },
+        { '@type': 'Organization', name: 'ARPP – Autorité de régulation professionnelle de la publicité', sameAs: 'https://fr.wikipedia.org/wiki/Autorit%C3%A9_de_r%C3%A9gulation_professionnelle_de_la_publicit%C3%A9' }
+      ],
+      sameAs: [
+        'https://www.linkedin.com/in/jean-paul-brunier-b8b7321',
+        'https://atlantico.fr/author/jean-paul-brunier-1500532',
+        'https://www.crunchbase.com/person/jean-paul-brunier'
+      ],
+      knowsAbout: ['Stratégie de marque', 'Publicité', 'Conseil aux directions générales', 'Régulation de la publicité', 'Communication responsable']
     },
     {
       '@type': 'Person',
+      '@id': abs('/studios') + '#jonas-obadia',
       name: 'Jonas Obadia',
-      jobTitle: 'Directeur Créatif & Associé Fondateur',
-      description: 'Directeur artistique, créateur d’univers visuels et typographe d’art pour des marques emblématiques (Hermès, Balenciaga, MAD Paris, Collection Al Thani).',
-      knowsAbout: ['Direction artistique', 'Haute façon graphique', 'Typographie sur-mesure', 'Édition d’art', 'Scénographie']
+      jobTitle: 'Co-fondateur et directeur de création, président de Brunier Obadia Studios',
+      description: 'Directeur artistique formé au design graphique et à la typographie : identités, éditions, scénographies et campagnes pour Hermès, Balenciaga, le Musée des Arts décoratifs (MAD Paris) et la collection Al Thani.',
+      url: abs('/studios') + '#jonas-obadia',
+      worksFor: { '@id': abs('/') + '#organization' },
+      knowsAbout: ['Direction artistique', 'Typographie', 'Édition d’art', 'Identité visuelle', 'Scénographie']
     }
   ],
   employee: [
+    { '@id': abs('/studios') + '#jean-paul-brunier' },
+    { '@id': abs('/studios') + '#jonas-obadia' },
     {
       '@type': 'Person',
-      name: 'Jean-Paul Brunier',
-      jobTitle: 'Stratège & Associé Fondateur · Ancien Président de Publicis Conseil',
-      alumniOf: { '@type': 'Organization', name: 'Publicis Conseil' }
+      '@id': abs('/studios') + '#tom-cottu',
+      name: 'Tom Cottu',
+      jobTitle: 'Partner AI Endorsement · ingénieur IA',
+      description: 'Développeur spécialisé dans les architectures LLM et les agents autonomes. Pilote l’ingénierie d’AI Endorsement chez BrunierObadia et ses outils de mesure (GEO Monitor, GEO Qualifier, GEO Press).',
+      url: abs('/studios') + '#tom-cottu',
+      image: abs('/equipe/tom-cottu.jpg'),
+      sameAs: ['https://www.linkedin.com/in/tom-cottu-881017359/'],
+      worksFor: { '@id': abs('/') + '#organization' },
+      knowsAbout: ['Generative Engine Optimization (GEO)', 'Architectures LLM', 'Agents autonomes', 'Visibilité des marques dans les IA']
     },
-    { '@type': 'Person', name: 'Jonas Obadia', jobTitle: 'Directeur Créatif & Associé Fondateur' },
-    { '@type': 'Person', name: 'Cyrille Douin', jobTitle: 'Associé Fondateur Digital Performance' },
-    { '@type': 'Person', name: 'Christophe Attelé', jobTitle: 'Associé Brand Transformation' },
+    { '@type': 'Person', '@id': abs('/studios') + '#christophe-attele', name: 'Christophe Attelé', jobTitle: 'Partner Brand Transformation' },
   ],
 };
 const website = {
@@ -145,9 +171,11 @@ const website = {
   <meta name="twitter:title" content={pageTitle} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImage} />
-  <meta name="theme-color" content="#ffffff" />
+  <meta name="theme-color" content="#510000" />
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="preload" href="/fonts/Aeroport-monospaced.ttf" as="font" type="font/ttf" crossorigin />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
   <ClientRouter />
 
   <script type="application/ld+json" set:html={JSON.stringify(org)} />
@@ -156,14 +184,10 @@ const website = {
 </head>
 <body>
   <a class="skip-link" href="#main">Aller au contenu</a>
-  <header class="site-head">
+  <header class:list={["site-head", { "site-head--home": isHome }]}>
     <div class="bar">
       <a class="brand" href={home} aria-label={SITE.legalName}>
-        <img src="/assets/logo-transparent.png" alt={SITE.name} width="38" height="38" class="brand-logo" />
-        <span class="brand-name">
-          <span class="brand-line">Brunier</span>
-          <span class="brand-line">obadia</span>
-        </span>
+        <img src="/brand/logo.svg" alt={SITE.name} width="107" height="57" class="brand-logo" />
       </a>
       <nav class="main-nav" aria-label={lang === 'fr' ? 'Navigation principale' : 'Main navigation'}>
         {nav.map((item) => (
@@ -189,8 +213,8 @@ const website = {
       <div class="wrap">
         <div class="foot-grid">
           <div>
-            <p class="label" style="margin:0 0 10px">{lang === 'fr' ? 'Agence de communication créative' : 'Creative communication agency'}</p>
-            <p style="max-width:34ch;color:var(--muted);font-size:.9rem">{lang === 'fr' ? "50 ans d'expérience, plus de 200 marques." : '50 years of experience, over 200 brands.'}</p>
+            <p class="foot-col-title foot-kicker">{lang === 'fr' ? 'Agence de communication créative' : 'Creative communication agency'}</p>
+            <p class="foot-tagline">{lang === 'fr' ? "50 ans d'expérience, plus de 200 marques." : '50 years of experience, over 200 brands.'}</p>
           </div>
           <div>
             <p class="foot-col-title">{lang === 'fr' ? 'Navigation' : 'Navigation'}</p>
@@ -205,9 +229,8 @@ const website = {
             <p class="foot-col-title">{t.nav.offres}</p>
             <ul>
               <li><a href={localizePath('/offres/creation', lang)}>{lang === 'fr' ? 'Création' : 'Creation'}</a></li>
-              <li><a href={localizePath('/offres/performance-digitale', lang)}>{lang === 'fr' ? 'Performance digitale' : 'Digital performance'}</a></li>
-              <li><a href={localizePath('/offres/brand-transformation', lang)}>{lang === 'fr' ? 'Brand transformation' : 'Brand transformation'}</a></li>
-              <li><a href={localizePath('/offres/la-marque-dans-les-ia', lang)}>{lang === 'fr' ? 'La marque dans les IA' : 'Brands in AI'}</a></li>
+              <li><a href={localizePath('/offres/brand-transformation', lang)}>Brand transformation</a></li>
+              <li><a href={localizePath('/offres/la-marque-dans-les-ia', lang)}>AI Endorsement</a></li>
             </ul>
           </div>
           <div>
@@ -222,9 +245,24 @@ const website = {
           <div class="foot-legal-links">
             <a href={localizePath('/mentions-legales', lang)}>{lang === 'fr' ? 'Mentions légales' : 'Legal notice'}</a>
             <span aria-hidden="true">·</span>
-            <a href={localizePath('/confidentialite', lang)}>{lang === 'fr' ? 'Confidentialité' : 'Privacy policy'}</a>
+            <a href={localizePath('/confidentialite', lang)}>{lang === 'fr' ? 'Confidentialité & RGPD' : 'Privacy policy & GDPR'}</a>
+            <span aria-hidden="true">·</span>
+            <a href={localizePath('/cgu', lang)}>{lang === 'fr' ? 'CGU' : 'Terms of use'}</a>
           </div>
         </div>
+        <details class="foot-legal">
+          <summary>{lang === 'fr' ? 'Informations légales' : 'Legal information'}</summary>
+          <dl>
+            <div><dt>{lang === 'fr' ? 'Société' : 'Company'}</dt><dd>{SITE.legalName}</dd></div>
+            <div><dt>{lang === 'fr' ? 'Forme' : 'Legal form'}</dt><dd>{SITE.legalForm}, {lang === 'fr' ? 'au capital de' : 'share capital'} {SITE.shareCapital}</dd></div>
+            <div><dt>{lang === 'fr' ? 'Siège' : 'Registered office'}</dt><dd>{SITE.headquarters}</dd></div>
+            <div><dt>RCS</dt><dd>{SITE.rcs}</dd></div>
+            <div><dt>SIRET</dt><dd>{SITE.siret}</dd></div>
+            <div><dt>{lang === 'fr' ? 'TVA intracom.' : 'EU VAT'}</dt><dd>{SITE.vatNumber}</dd></div>
+            <div><dt>{lang === 'fr' ? 'Publication' : 'Publisher'}</dt><dd>{SITE.publicationDirectors[lang]}</dd></div>
+            <div><dt>{lang === 'fr' ? 'Hébergement' : 'Hosting'}</dt><dd>{SITE.host.name}, {SITE.host.address}</dd></div>
+          </dl>
+        </details>
       </div>
     </footer>
 
@@ -306,5 +344,11 @@ const website = {
       document.addEventListener('DOMContentLoaded', initWorksCarousels);
       document.addEventListener('astro:page-load', initWorksCarousels);
     </script>
+  <script>
+    // transition par la boule entre l'accueil et les offres (essai : Création)
+    import '../scripts/ball-transition.js';
+    // défilement lissé sur tout le site
+    import '../scripts/smooth-scroll.js';
+  </script>
 </body>
 </html>

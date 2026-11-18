@@ -1,0 +1,1616 @@
+---
+// Page d'accueil « One pager » — reproduction de la maquette Figma
+// JOSPARIS BRUNIER OBADIA (frame ONE PAGER, 5400 px = 3,75 × 1440 px).
+// Toutes les cotes sont exprimées en --u (1 px de la maquette à 1440 px de large).
+import { SITE, projects, offers, about } from '../data/site.js';
+import clientLogos from '../data/clientLogos.json';
+import { rankOf } from '../data/clientRank.js';
+import sharp from 'sharp';
+import { clients } from '../data/site.js';
+import fs from 'node:fs';
+import path from 'node:path';
+
+// Hauteur optique de chaque logo : plus il est large, plus il est bas, pour une surface visuelle égale
+const logoH = (file) => {
+  try {
+    const svg = fs.readFileSync(path.join(process.cwd(), 'public', file), 'utf8');
+    const [, , w, h] = svg.match(/viewBox="([^"]+)"/)[1].trim().split(/[\s,]+/).map(Number);
+    return Math.round(Math.max(15, Math.min(40, Math.sqrt(1300 / (w / h)))));
+  } catch { return 24; }
+};
+import { localizePath } from '../lib/seo.js';
+
+const { lang = 'fr' } = Astro.props;
+const fr = lang === 'fr';
+const L = (p) => localizePath(p, lang);
+
+const T = fr
+  ? {
+      h1a: 'Créer des marques.',
+      h1b: 'En bousculer d’autres.',
+      sub: ['Branding, création', 'direction artistique.'],
+      desc: "L'alliance singulière d'un stratège et d'un créatif. Nous concevons des marques remarquables, de la définition de leur singularité jusqu'à l'exécution de leurs campagnes, plateformes et objets éditoriaux.",
+      cta1: "Parler d'un projet",
+      cta2: 'Explorer le portfolio',
+      projects: 'Nos projets',
+      clients: 'Marques & Maisons accompagnées',
+      offers: 'Nos trois offres',
+      kicker: "L'agence",
+      studios: 'Les Studios',
+      meet: "Rencontrer l'équipe",
+      discover: 'Découvrir les Studios & nos associés',
+    }
+  : {
+      h1a: 'Creating brands.',
+      h1b: 'Shaking up others.',
+      sub: ['Branding, creation', 'art direction.'],
+      desc: 'The rare union of a strategist and a creative director. We shape remarkable brands, from defining what makes them singular to executing their campaigns, platforms and editorial objects.',
+      cta1: 'Start a project',
+      cta2: 'Explore portfolio',
+      projects: 'Our projects',
+      clients: 'Selected Clients & Houses',
+      offers: 'Our three practices',
+      kicker: 'The agency',
+      studios: 'The Studios',
+      meet: 'Meet the team',
+      discover: 'Discover the Studios & our partners',
+    };
+
+// Collage « Nos projets » : position, taille et couleur de fond exactes des 8 blocs de la maquette
+// (ordre = ordre d'empilement du fichier Figma). x, y, w, h en --u.
+const slots = [
+  { x: 54.7, y: 0, w: 369.9, h: 280.3, bg: '#B9B2B2' },
+  { x: 794.1, y: 635.5, w: 588.5, h: 445.9, bg: '#D9D9D9' },
+  { x: 157.1, y: 817.9, w: 445.9, h: 588.5, bg: '#D9D9D9' },
+  { x: 504.5, y: 134.4, w: 310.7, h: 435.7, bg: '#615757' },
+  { x: 658.1, y: 1175, w: 435.7, h: 310.7, bg: '#615757' },
+  { x: 85.9, y: 471.5, w: 495.7, h: 311.2, bg: '#E9B1B1' },
+  { x: 859.2, y: 134.4, w: 495.7, h: 311.2, bg: '#E9B1B1' },
+  { x: 378.4, y: 1408, w: 415.7, h: 292.5, bg: '#FFDADA' },
+  // projets de grandes marques ajoutés à la suite, dans l'esprit du collage (formats et alternance de la maquette)
+  { x: 830, y: 1640, w: 520, h: 293, bg: '#D9D9D9' },          // Société Générale
+  { x: 120, y: 1900, w: 440, h: 311, bg: '#E9B1B1' },          // Peugeot
+  { x: 600, y: 2160, w: 495, h: 278, bg: '#B9B2B2' },          // Aston Martin
+];
+// projets du collage : les huit de la maquette, puis trois grandes marques
+const PICK = [...projects.slice(0, 8), ...['societe-generale-ensemble-tout-se-joue', 'peugeot-futureship', 'aston-martin-db4-60-ans'].map((slug) => projects.find((p) => p.slug === slug))].filter(Boolean);
+// Collage « Nos projets » (ordinateur) : la composition horizontale du Figma est gardée (chaque carte à sa place,
+// à gauche, au centre ou à droite, avec sa taille d'origine agrandie de 15 % autour de son centre), mais chaque
+// projet a sa propre marche (dans l'ordre de lecture de la maquette) : les centres des cartes sont espacés
+// régulièrement, un seul projet passe au centre à la fois, et chacun y reste le même temps, le temps de lire son nom.
+const STEP = 300, GROW = 1;                                    // images à la taille de la maquette, marches serrées : rendu proche du Figma
+const JITTER = [0, 8, -7, 8, 20, 8, -7, 4, -6, 8, -4];             // léger décalage ; MAD Paris (5e) plus d'espace avant lui : son nom restait trop peu de temps              // très léger décalage : l'esprit collage, sans déséquilibrer le rythme
+const order0 = slots.map((s, i) => i).sort((a, b) => slots[a].y - slots[b].y || slots[a].x - slots[b].x);
+const collage0 = slots.map((s, i) => {
+  const k = order0.indexOf(i);
+  const g = PICK[i]?.slug?.startsWith('hermes') ? 0.8 : GROW;      // Hermès (portrait très haut) : plus petit
+  const w = s.w * g, h = s.h * g;
+  const cx = 720 + (s.x + s.w / 2 - 720) * 0.82;                // composition resserrée vers le centre de la page
+  const x = Math.min(1440 - 40 - w, Math.max(40, cx - w / 2));
+  return { ...s, k, x, w, h, y: k * STEP + (JITTER[k] ?? 0) - h / 2, p: PICK[i] };   // la marche fixe le CENTRE de la carte
+}).map((s, _, all) => ({ ...s, y: s.y - Math.min(...all.map((o) => o.y)) })).filter((s) => s.p);
+// place du nom de chaque projet, calculée UNE fois ici et jamais changée ensuite : à côté de l'image si la place est
+// libre, sinon dessous ou au-dessus ; jamais sur une autre carte (marge comprise), jamais sur le titre
+const CAP_W = 300, CAP_H = 150, M = 14;
+const MV = 70;                                                 // marge verticale : les cartes bougent avec le parallaxe (jusqu'à ~80)
+const hit = (a, b) => a[0] < b[0] + b[2] + M && b[0] - M < a[0] + a[2] && a[1] < b[1] + b[3] + MV && b[1] - MV < a[1] + a[3];
+const collageH = Math.max(...collage0.map((s) => s.y + s.h)) + 40;
+const placed = [];                                            // noms déjà placés : ils restent affichés, ils ne doivent pas se chevaucher
+const capOf = {};
+[...collage0].sort((a, b) => a.k - b.k).forEach((s) => {
+  const i = collage0.indexOf(s);
+  const cands = {
+    right: [s.x + s.w + 28, s.y + s.h - CAP_H, CAP_W, CAP_H],
+    left: [s.x - 28 - CAP_W, s.y + s.h - CAP_H, CAP_W, CAP_H],
+    'right-top': [s.x + s.w + 28, s.y, CAP_W, CAP_H],
+    'left-top': [s.x - 28 - CAP_W, s.y, CAP_W, CAP_H],
+    'right-mid': [s.x + s.w + 28, s.y + s.h / 2 - CAP_H / 2, CAP_W, CAP_H],
+    'left-mid': [s.x - 28 - CAP_W, s.y + s.h / 2 - CAP_H / 2, CAP_W, CAP_H],
+    below: [s.x, s.y + s.h + 20, CAP_W + 60, CAP_H],
+    'below-r': [s.x + s.w - CAP_W - 60, s.y + s.h + 20, CAP_W + 60, CAP_H],
+    above: [s.x, s.y - CAP_H - 20, CAP_W + 60, CAP_H],
+  };
+  const isLast = s.k === collage0.length - 1;                   // à droite du dernier : la sphère
+  const tall = s.h > 440;                                       // carte haute : le nom à mi-hauteur, à côté (dessous, il sortirait de l'écran)
+  const order = isLast ? ['left', 'left-mid', 'left-top', 'below', 'below-r']
+    : tall ? ['right-mid', 'left-mid', 'right', 'left', 'right-top', 'left-top', 'below', 'below-r', 'above']
+    : ['right', 'left', 'right-top', 'left-top', 'right-mid', 'left-mid', 'below', 'below-r', 'above'];
+  const cap = order.find((k) => {
+    const c = cands[k];
+    return c[0] >= 10 && c[0] + c[2] <= 1430 && c[1] > 40 && !collage0.some((o, j) => j !== i && hit(c, [o.x, o.y, o.w, o.h])) && !placed.some((p) => hit(c, p));
+  }) || 'below';
+  placed.push(cands[cap]);
+  capOf[i] = cap;
+});
+const collage = collage0.map((s, i) => ({ ...s, cap: capOf[i] }));
+// la hauteur du collage inclut le nom placé sous la dernière carte (sinon il collerait à la section suivante)
+const collageBottom = Math.max(collageH, ...collage0.map((s, i) => (capOf[i]?.startsWith('below') ? s.y + s.h + 20 + CAP_H : s.y + s.h)));
+const byK = [...collage].sort((a, b) => a.k - b.k);
+// trait d'encre (coordonnées de la maquette) : une courbe d'un centre de carte au suivant, dans l'ordre de lecture,
+// puis le tour de la sphère finale, posée dans l'espace libre en bas à droite du collage
+const ctr = (s) => [s.x + s.w / 2, s.y + s.h / 2];
+const SPHERE = { x: 1262, y: 1395, r: 118 };
+const inkSegs = byK.slice(1).map((s, j) => {
+  const [x0, y0] = ctr(byK[j]), [x1, y1] = ctr(s);
+  const dx = x1 - x0, dy = y1 - y0, bow = (j % 2 ? 1 : -1) * 0.28;
+  return `M${x0.toFixed(1)} ${y0.toFixed(1)} C${(x0 + dx * 0.25 - dy * bow).toFixed(1)} ${(y0 + dy * 0.25 + dx * bow).toFixed(1)} ${(x0 + dx * 0.75 - dy * bow).toFixed(1)} ${(y0 + dy * 0.75 + dx * bow).toFixed(1)} ${x1.toFixed(1)} ${y1.toFixed(1)}`;
+});
+const inkRing = (() => {
+  const [x0, y0] = ctr(byK[byK.length - 1]), R = SPHERE.r * 1.08, sx = SPHERE.x - R, sy = SPHERE.y;
+  let d = `M${x0.toFixed(1)} ${y0.toFixed(1)} C${(x0 + 160).toFixed(1)} ${(y0 + 120).toFixed(1)} ${(sx - 120).toFixed(1)} ${(sy + 40).toFixed(1)} ${sx.toFixed(1)} ${sy.toFixed(1)}`;
+  d += ` A${R.toFixed(1)} ${R.toFixed(1)} 0 1 1 ${(SPHERE.x + R).toFixed(1)} ${sy.toFixed(1)} A${R.toFixed(1)} ${R.toFixed(1)} 0 1 1 ${sx.toFixed(1)} ${sy.toFixed(1)}`;
+  return d;
+})();
+// Boule de chaque projet = son offre (données des offres) : rouge = Création, rose = Brand transformation,
+// corail = AI Endorsement. Un projet cité par plusieurs offres va à la plus spécifique (la dernière de la liste).
+// Index des boules : 0 corail, 1 rose, 2 rouge.
+const BALL_OF_OFFER = { creation: 2, 'brand-transformation': 1, 'la-marque-dans-les-ia': 0 };
+const ballOf = (slug) => {
+  const hits = offers.filter((o) => o.slug in BALL_OF_OFFER && o.caseSlugs?.includes(slug));
+  return hits.length ? BALL_OF_OFFER[hits[hits.length - 1].slug] : -1;
+};
+// Chorégraphie d'apparition : un mouvement par carte + profondeur (vitesse d'arrivée)
+const MOVES = Array(slots.length).fill('orb'); // entrée en cercle, depuis la couleur de l'offre du projet
+// couleur et nom de l'offre de chaque projet (0 corail, 1 rose, 2 rouge ; -1 : aucune offre → bordeaux)
+const ORB_COLOR = ['#e73530', '#e20066', '#960003'];
+const offerOf = (slug) => offers.filter((o) => o.slug in BALL_OF_OFFER && o.caseSlugs?.includes(slug)).pop();
+// origine du cercle : un coin différent par carte
+const ORIGINS = [['0%', '100%'], ['100%', '0%'], ['100%', '100%'], ['0%', '0%']];
+const DEPTHS = [0.35, 0.95, 0.55, 1.25, 0.7, 0.45, 1.05, 0.8, 0.6, 0.9, 0.5];
+// vitesse de parallaxe relative (négatif = la carte remonte moins vite que la page, positif = plus vite)
+const SPEEDS = [0.4, 0.6, -0.25, 0.9, 0.15, -0.45, 0.7, -0.1, 0.3, -0.3, 0.2]; // carte 1 (Balenciaga) : vitesse positive, elle reste toujours sous sa place → jamais collée au hero
+
+// Bandeau de logos : tous les clients qui ont un logo, les plus grands d'abord, répartis en alternance sur les deux
+// rangées pour que chacune commence par de très grandes marques (Samsung, Nike… puis Chanel, L'Oréal…).
+const keyOf = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+const seenLogo = new Set();
+const ranked = [...new Set(clients.flatMap((c) => c.brands))]
+  .filter((b) => clientLogos[keyOf(b)] && !seenLogo.has(clientLogos[keyOf(b)].src) && seenLogo.add(clientLogos[keyOf(b)].src))
+  .sort((a, b) => rankOf(a) - rankOf(b));
+// hauteur d'affichage selon les proportions du logo : un logo large est plus bas, un logo carré plus haut
+const marquee = await Promise.all(ranked.map(async (b) => {
+  const lg = clientLogos[keyOf(b)];
+  let lh = 24, w = 100, h = 40;
+  try {
+    ({ width: w, height: h } = await sharp(path.join(process.cwd(), 'public', lg.src)).metadata());
+    lh = Math.round(Math.max(15, Math.min(40, Math.sqrt(1300 / (w / h)))));
+  } catch {}
+  return { name: b, src: lg.src, dark: !!lg.dark, lh, w, h };
+}));
+const rowA = marquee.filter((_, i) => i % 2 === 0);
+const rowB = marquee.filter((_, i) => i % 2 === 1);
+
+const stats = about.stats.slice(0, 3);
+---
+<div class="op">
+  <!-- HERO bordeaux -->
+  <section class="op-hero">
+    <div class="op-frame op-hero-in" data-hero>
+      <img class="op-sphere op-sphere--corail" data-sphere="0.6" style="--s:0" src="/brand/sphere-corail-560.webp" srcset="/brand/sphere-corail-400.webp 400w, /brand/sphere-corail-560.webp 560w, /brand/sphere-corail.webp 800w" sizes="(max-width: 820px) min(44vw, 200px), 17vw" alt="" width="640" height="640" fetchpriority="high" />
+      <img class="op-sphere op-sphere--rose" data-sphere="1" style="--s:1" src="/brand/sphere-rose-560.webp" srcset="/brand/sphere-rose-400.webp 400w, /brand/sphere-rose-560.webp 560w, /brand/sphere-rose.webp 800w" sizes="(max-width: 820px) min(44vw, 200px), 17vw" alt="" width="640" height="640" fetchpriority="high" />
+      <img class="op-sphere op-sphere--rouge" data-sphere="1.4" style="--s:2" src="/brand/sphere-rouge.svg" alt="" width="892" height="892" />
+
+      <h1 class="op-title">
+        <span class="op-title-a"><span style="--l:0">{T.h1a}</span></span>
+        <span class="op-title-a"><span style="--l:1">{T.h1b}</span></span>
+        <span class="op-title-b"><span style="--l:2">{T.sub[0]}</span></span>
+        <span class="op-title-b"><span style="--l:3">{T.sub[1]}</span></span>
+      </h1>
+      <p class="op-desc">{T.desc}</p>
+      <div class="op-actions">
+        <a class="op-btn op-btn--fill" href={L('/contact')}>
+          <span>{T.cta1}</span><i class="arw arw--diag" aria-hidden="true"></i>
+        </a>
+        <a class="op-btn op-btn--line" href={L('/projets')}>
+          <span>{T.cta2}</span><i class="arw arw--right" aria-hidden="true"></i>
+        </a>
+      </div>
+      <span class="op-hero-rule" aria-hidden="true"></span>
+      <img class="op-hero-chevron" src="/brand/chevron-hero.svg" alt="" width="4" height="9" />
+    </div>
+  </section>
+  {/* entrée du hero lancée dès que le hero est dans la page (sans attendre l'initialisation du reste) : même animation,
+      elle commence plus tôt */}
+  <script is:inline>(function(){var r=document.querySelector('.op');if(r)requestAnimationFrame(function(){requestAnimationFrame(function(){r.classList.add('is-ready');});});})();</script>
+
+  <!-- NOS PROJETS : collage -->
+  <section class="op-projects">
+    <div class="op-frame">
+      <h2 class="op-h2 op-projects-title" data-reveal="chars">
+        <a href={L('/projets')} aria-label={T.projects}>
+          {T.projects.split('').map((ch, i) => <span class="op-ch" aria-hidden="true" style={`--c:${i}`}>{ch === ' ' ? '\u00a0' : ch}</span>)}
+        </a>
+        <span class="op-count" aria-hidden="true">({String(collage.length).padStart(2, '0')})</span>
+      </h2>
+      <div class="op-pin" data-pin style={`--n:${collage.length}`}>
+      <div class="op-stage" data-stage>
+      <div class="op-cam" data-cam>
+      <div class="op-collage" data-collage style={`--ch:${(collageBottom + 30).toFixed(1)}`}>
+        <svg class="op-ink" data-ink viewBox={`0 0 1440 ${collageH}`} preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          {inkSegs.map((d) => <path d={d} />)}
+          <path class="op-ink-ring" d={inkRing} />
+        </svg>
+        <div class="op-globe" data-globe aria-hidden="true" style={`--gx:${SPHERE.x};--gy:${SPHERE.y};--gr:${SPHERE.r}`}></div>
+        {collage.map((s, i) => (
+          <div class={`op-slot mv-${MOVES[i]} cap-${s.cap}`} data-slot data-ball={ballOf(s.p.slug)} style={`--x:${s.x};--y:${s.y};--w:${s.w};--h:${s.h};--bg:${s.bg};--i:${i};--d:${DEPTHS[i]};--sp:${SPEEDS[i]};--k:${s.k ?? i};--rd:${i % 2 ? -1 : 1};--orb:${ballOf(s.p.slug) >= 0 ? ORB_COLOR[ballOf(s.p.slug)] : '#510000'};--ox:${ORIGINS[i % 4][0]};--oy:${ORIGINS[i % 4][1]}`}>
+          <a
+            class="op-card"
+            href={L(`/projets/${s.p.slug}`)}
+            data-card
+            data-label={fr ? 'Voir le projet' : 'View project'}
+          >
+            <span class="op-card-orb" aria-hidden="true"></span>
+            <span class="op-card-media">
+              <span class="op-card-inner">
+              <img
+                src={s.p.image}
+                srcset={`${s.p.image.replace('.webp', '-800w.webp')} 800w, ${s.p.image.replace('.webp', '-1200w.webp')} 1200w, ${s.p.image.replace('.webp', '-1440w.webp')} 1440w, ${s.p.image} 1920w`}
+                sizes={`(max-width: 820px) 100vw, ${(Math.max(s.w, s.h * 1.24 * 1.5) * 1.08 / 14.4).toFixed(1)}vw`}
+                alt={`${s.p.client} – ${fr ? s.p.name_fr : s.p.name_en}`}
+                width="1920"
+                height="1280"
+                loading="lazy"
+                decoding="async"
+              />
+              {s.p.video && (
+                <video
+                  data-card-video
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                  width="1920"
+                  height="1280"
+                  aria-hidden="true"
+                >
+                  <source src={s.p.video} type="video/webm" />
+                </video>
+              )}
+              </span>
+            </span>
+            <span class="op-card-strips" aria-hidden="true"></span>
+            <span class="op-card-shade" aria-hidden="true"></span>
+            <span class="op-card-veil" aria-hidden="true"></span>
+            <span class="op-trace op-trace--t" aria-hidden="true"></span><span class="op-trace op-trace--r" aria-hidden="true"></span><span class="op-trace op-trace--b" aria-hidden="true"></span><span class="op-trace op-trace--l" aria-hidden="true"></span>
+            <span class="op-card-type" aria-hidden="true"><span>{s.p.client}</span></span>
+            <span class="op-card-index" aria-hidden="true">{String(i + 1).padStart(2, '0')}<i>/{String(collage.length).padStart(2, '0')}</i></span>
+            <span class="op-card-meta">
+              <b>{s.p.client}</b>
+              <span>{fr ? s.p.name_fr : s.p.name_en}</span>
+            </span>
+            <img class="op-card-chevron" src="/brand/chevron-up.svg" alt="" width="13" height="6" />
+          </a>
+          <span class="op-cap" aria-hidden="true">
+            <span class="op-cap-l"><span class="op-cap-k">{[offerOf(s.p.slug)?.[fr ? 'fr' : 'en'].title, fr ? s.p.sector_fr : s.p.sector_en].filter(Boolean).join(' · ')}<i>{String(s.k + 1).padStart(2, '0')} / {String(collage.length).padStart(2, '0')}</i></span></span>
+            <span class="op-cap-l"><b>{(() => { let c = 0; return s.p.client.split(' ').map((word) => <span class="op-cap-w">{[...word].map((ch) => <span class="op-cap-ch" style={`--c:${c++}`}>{ch}</span>)}</span>); })()}</b></span>
+            <span class="op-cap-l"><span class="op-cap-n">{fr ? s.p.name_fr : s.p.name_en}</span></span>
+          </span>
+          </div>
+        ))}
+      </div>
+      </div>
+      <div class="op-credits" data-credits aria-hidden="true">
+        {byK.map((s) => (
+          <div class="op-credit" data-credit>
+            <span class="op-credit-k"><i>{String(s.k + 1).padStart(2, '0')}</i> / {String(collage.length).padStart(2, '0')}<em>{[offerOf(s.p.slug)?.[fr ? 'fr' : 'en'].title, fr ? s.p.sector_fr : s.p.sector_en].filter(Boolean).join(' · ')}</em></span>
+            <b>{(() => { let c = 0; return s.p.client.split(' ').map((word) => <span class="op-credit-w">{[...word].map((ch) => <span class="op-credit-ch" style={`--c:${c++}`}>{ch}</span>)}</span>); })()}</b>
+            <span class="op-credit-n">{fr ? s.p.name_fr : s.p.name_en}</span>
+          </div>
+        ))}
+        <div class="op-credit op-credit--end" data-credit>
+          <span class="op-credit-k"><i>{String(collage.length).padStart(2, '0')}</i> {fr ? 'projets' : 'projects'}</span>
+          <b><a href={L('/projets')} tabindex="-1">{fr ? 'Tous les projets' : 'All projects'}</a></b>
+        </div>
+        <span class="op-credits-bar" aria-hidden="true">{byK.map(() => <i />)}</span>
+      </div>
+      </div>
+      </div>
+    </div>
+    <span class="op-rule op-rule--a" aria-hidden="true"></span>
+  </section>
+
+  <!-- MARQUES & MAISONS -->
+  <section class="op-clients">
+    <h2 class="op-h2" data-reveal>{T.clients}</h2>
+    <div class="op-marquee">
+      <div class="op-track">
+        {[...rowA, ...rowA].map((b, i) => (
+          <span class="op-logo" title={b.name} style={`--lh:${b.lh}`}><img src={b.src} alt={i < rowA.length ? b.name : ''} class={b.dark ? 'is-light' : ''} width={b.w} height={b.h} style={`aspect-ratio:${b.w}/${b.h}`} loading="lazy" decoding="async" /></span>
+        ))}
+      </div>
+    </div>
+    <div class="op-marquee op-marquee--b">
+      <div class="op-track">
+        {[...rowB, ...rowB].map((b, i) => (
+          <span class="op-logo" title={b.name} style={`--lh:${b.lh}`}><img src={b.src} alt={i < rowB.length ? b.name : ''} class={b.dark ? 'is-light' : ''} width={b.w} height={b.h} style={`aspect-ratio:${b.w}/${b.h}`} loading="lazy" decoding="async" /></span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- NOS TROIS OFFRES -->
+  <section class="op-offers">
+    <div class="op-frame">
+      <h2 class="op-h2" data-reveal>{T.offers}</h2>
+      <ul class="op-offer-list">
+        {offers.map((o) => (
+          <li data-reveal="row">
+            <a class="op-offer" href={L(`/offres/${o.slug}`)}>
+              <h3>{o[lang].title}</h3>
+              <p>{o[lang].text}</p>
+              <img class="op-offer-go" src="/brand/icon-offer-arrow.svg" alt="" width="17" height="19" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- LES STUDIOS -->
+  <section class="op-studios">
+    <div class="op-frame op-studios-in">
+      <div class="op-studios-head" data-reveal>
+        <div>
+          <p class="op-kicker">{T.kicker}</p>
+          <h2 class="op-studios-title">{T.studios}</h2>
+        </div>
+        <a class="op-kicker op-meet" href={L('/studios')}>{T.meet} →</a>
+      </div>
+      <p class="op-studios-text" data-reveal>{about[lang]}</p>
+      <div class="op-stats" data-reveal="stats">
+        {stats.map((s) => (
+          <div class="op-stat">
+            <div>
+              <b><span data-count={s.value}>{s.value}</span>{s.value === '200' ? '+' : ''}</b>
+              <span>{s.label[lang]}</span>
+            </div>
+          </div>
+        ))}
+        <div class="op-stat op-stat--empty" aria-hidden="true"></div>
+      </div>
+      <a class="op-btn op-btn--ink" href={L('/studios')}>
+        <span>{T.discover}</span><i class="arw arw--right" aria-hidden="true"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- Signature jaune flottante : suit le défilement après « Nos projets » -->
+  <a class="op-sig" href={L('/studios')} aria-label="BrunierObadia Studios" data-sig>
+    <img class="op-sig-trio" src="/brand/sphere-jaune-256.webp" alt="" width="256" height="260" loading="lazy" decoding="async" />
+    <img class="op-sig-logo" src="/brand/signature-logo.svg" alt="" width="705" height="714" loading="lazy" />
+  </a>
+</div>
+
+<script>
+  import { initArtistMotion } from '../scripts/artist-motion.js';
+  import { initProjectsFx } from '../scripts/projects-fx.js';
+  import { initCollageDepth } from '../scripts/collage-depth.js';
+
+  // Parallaxe multi-couches du collage « Nos projets »
+  // - chaque carte a sa profondeur : vitesse, rotation et inclinaison propres
+  // - l'image glisse à contre-sens dans son cadre
+  // - la souris incline le collage en 3D, couche par couche
+  // - révélation en rideau à l'entrée, curseur « Voir le projet »
+  let cleanup = null;
+
+  function init() {
+    cleanup?.();
+    const collage = document.querySelector('[data-collage]');
+    if (!collage) return;
+    const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduce = reduceMotion();
+    const cards = [...collage.querySelectorAll('[data-card]')];
+    const cursor = collage.querySelector('[data-cursor]');
+    const root = collage.closest('.op');
+    const hero = root?.querySelector('[data-hero]');
+    let spheres = [...(root?.querySelectorAll('[data-sphere]') || [])].map((el) => ({ el, d: Number(el.dataset.sphere) || 1 }));
+
+    // Tracé de la sphère rouge : les 900 traits du vecteur Figma se dessinent, rendu final identique
+    const drawRouge = async () => {
+      const img = root?.querySelector('.op-sphere--rouge');
+      if (!img) return;
+      try {
+        const txt = await fetch(img.getAttribute('src')).then((r) => r.text());
+        const svg = document.importNode(new DOMParser().parseFromString(txt, 'image/svg+xml').documentElement, true);
+        for (const { name, value } of [...img.attributes]) {
+          if (!['src', 'width', 'height', 'alt', 'fetchpriority', 'loading'].includes(name)) svg.setAttribute(name, value);
+        }
+        svg.setAttribute('aria-hidden', 'true');
+        svg.removeAttribute('width'); svg.removeAttribute('height');
+        img.replaceWith(svg);
+        const entry = spheres.find((sp) => sp.el === img);
+        if (entry) entry.el = svg;
+        const vb = svg.viewBox.baseVal;
+        const cx = vb.x + vb.width / 2, cy = vb.y + vb.height / 2;
+        const paths = [...svg.querySelectorAll('path')];
+        paths.forEach((p) => {
+          const L = p.getTotalLength();
+          const b = p.getBBox();
+          const ang = (Math.atan2(b.y + b.height / 2 - cy, b.x + b.width / 2 - cx) + Math.PI) / (Math.PI * 2);
+          p.style.strokeDasharray = `${L} ${L}`;
+          p.style.strokeDashoffset = String(L);
+          p.style.transition = `stroke-dashoffset 1500ms cubic-bezier(.65,0,.35,1) ${Math.round(500 + ang * 1300 + Math.random() * 350)}ms`;
+        });
+        svg.classList.add('op-sphere--drawn');
+        requestAnimationFrame(() => requestAnimationFrame(() => paths.forEach((p) => { p.style.strokeDashoffset = '0'; })));
+        setTimeout(() => {
+          // tracé terminé : on remplace le SVG par l'image haute qualité du même vecteur (traits fins nets, sans grain)
+          const im = document.createElement('img');
+          for (const { name, value } of [...svg.attributes]) {
+            if (!['viewBox', 'xmlns', 'fill', 'aria-hidden', 'width', 'height'].includes(name)) im.setAttribute(name, value);
+          }
+          im.alt = ''; im.width = 800; im.height = 800; im.decoding = 'async';
+          im.src = '/brand/sphere-rouge-raster.webp';
+          const swap = () => { svg.replaceWith(im); const e2 = spheres.find((sp) => sp.el === svg); if (e2) e2.el = im; };
+          (im.decode ? im.decode() : Promise.resolve()).then(swap, swap);
+        }, 4000);
+      } catch {
+        img.classList.add('op-sphere--fallback');
+      }
+    };
+
+    // Signature jaune flottante : visible après « Nos projets », mot en clair sur les fonds bordeaux
+    const sig = root?.querySelector('[data-sig]');
+    const projectsSec = root?.querySelector('.op-projects');
+    let sigGeo = null, sigRaf = 0, sigOn = null, sigDark = null;
+    const sigMeasure = () => {
+      if (!sig || !projectsSec) return null;
+      const y = scrollY;
+      const pr = projectsSec.getBoundingClientRect();
+      return {
+        projectsBottom: pr.bottom + y,
+        sigH: sig.offsetHeight,
+        dark: [...document.querySelectorAll('.op-offers, .site-foot')].map((el) => { const r = el.getBoundingClientRect(); return [r.top + y, r.bottom + y]; }),
+      };
+    };
+    const sigUpdate = () => {
+      sigRaf = 0;
+      sigGeo ??= sigMeasure();
+      if (!sigGeo) return;
+      const y = scrollY, vh = innerHeight;
+      const on = sigGeo.projectsBottom - y < vh * 0.85;
+      const probe = y + vh - sigGeo.sigH * 0.35 - 16;
+      const dark = sigGeo.dark.some(([a, b]) => a < probe && b > probe);
+      if (on !== sigOn) { sigOn = on; sig.classList.toggle('is-on', on); }
+      if (dark !== sigDark) { sigDark = dark; sig.classList.toggle('on-dark', dark); }
+    };
+    const updateSig = () => { if (!sigRaf) sigRaf = requestAnimationFrame(sigUpdate); };
+    const sigReset = () => { sigGeo = null; updateSig(); };
+    const sigRo = new ResizeObserver(sigReset);
+    sigRo.observe(document.body);
+    addEventListener('scroll', updateSig, { passive: true });
+    updateSig();
+
+    // Bandeaux de logos : défilement continu, jamais mis en pause (Safari ne relançait l'animation qu'au survol)
+
+    // Entrée du hero
+    requestAnimationFrame(() => requestAnimationFrame(() => root?.classList.add('is-ready')));
+
+    // Compteurs 50 / 200 / 21
+    const countUp = (el) => {
+      const end = Number(el.dataset.count) || 0;
+      const t0 = performance.now();
+      const step = (t) => {
+        const k = Math.min(1, (t - t0) / 1800);
+        el.textContent = String(Math.round(end * (1 - Math.pow(2, -10 * k))));
+        if (k < 1) requestAnimationFrame(step); else el.textContent = String(end);
+      };
+      el.textContent = '0';
+      requestAnimationFrame(step);
+    };
+
+    // Apparitions au défilement
+    const rio = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-in');
+        if (e.target.dataset.reveal === 'stats' && !reduceMotion()) e.target.querySelectorAll('[data-count]').forEach(countUp);
+        rio.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -12% 0px' });
+    root?.querySelectorAll('[data-reveal]').forEach((el) => rio.observe(el));
+
+    // Décodage anticipé : chaque photo est chargée et décodée hors du fil principal
+    // bien avant d'arriver à l'écran, pour qu'aucun décodage ne bloque l'apparition.
+    const decoded = new Map();
+    const preDecode = (card) => {
+      if (decoded.has(card)) return decoded.get(card);
+      const img = card.querySelector('.op-card-media img');
+      if (!img) return Promise.resolve();
+      img.loading = 'eager';
+      const p = (img.decode ? img.decode() : Promise.resolve()).catch(() => {});
+      decoded.set(card, p);
+      return p;
+    };
+    const dio = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { preDecode(e.target); dio.unobserve(e.target); } });
+    }, { rootMargin: '150% 0px 150% 0px' });
+    // lancé une fois la page chargée : les photos du collage ne concurrencent pas l'affichage du hero,
+    // et sont toujours décodées bien avant qu'on arrive à elles
+    const startDecode = () => cards.forEach((c) => dio.observe(c));
+    if (document.readyState === 'complete') startDecode(); else addEventListener('load', startDecode, { once: true });
+
+    // Vidéos des cartes : une seule joue à la fois (la plus visible), les autres montrent leur image.
+    // Plusieurs vidéos décodées en même temps faisaient tomber la fluidité sur les machines modestes.
+    const cardVideos = [...collage.querySelectorAll('video[data-card-video]')];
+    let vio = null;
+    if (cardVideos.length && !reduce) {
+      const seen = new Map();
+      vio = new IntersectionObserver((entries) => {
+        entries.forEach((e) => seen.set(e.target, e.isIntersecting ? e.intersectionRatio : 0));
+        let best = null, bestR = 0.1;
+        seen.forEach((r, v) => { if (r > bestR) { best = v; bestR = r; } });
+        cardVideos.forEach((v) => { if (v === best) v.play().catch(() => {}); else if (!v.paused) v.pause(); });
+      }, { threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] });
+      cardVideos.forEach((v) => {
+        v.addEventListener('playing', () => v.classList.add('is-playing'), { once: true });
+        vio.observe(v);
+      });
+    }
+
+    const io = { disconnect() {} }; // révélation désormais pilotée par le défilement (voir tick)
+
+    if (reduce) { root?.querySelector('.op-sphere--rouge')?.classList.add('op-sphere--fallback'); cleanup = () => { io.disconnect(); dio.disconnect(); rio.disconnect(); sigRo.disconnect(); vio?.disconnect(); removeEventListener('scroll', updateSig); }; return; }
+    drawRouge();
+    // Les sphères restent en image haute qualité : rendues en SVG, leurs traits ultra-fins deviennent un grain informe à l'écran.
+    const stopFx = () => {};
+
+    const mobile = () => innerWidth <= 820;
+    let raf = 0;
+
+
+    // --- Mesures mises en cache (pas de lecture de mise en page à chaque image) ---
+    // Sens du rideau et du voile par carte (bas, gauche, haut, droite…) et sens de rotation d'arrivée
+    // Plage d'apparition de chaque carte, en pixels de la timeline « cover » (0 = haut de la carte au bas de l'écran).
+    // Une carte déjà visible au chargement démarre à la position actuelle : aucune image avant de défiler.
+    const slots = [...collage.querySelectorAll('[data-slot]')];
+    if (mobile()) slots.forEach((s) => s.classList.add('is-revealed'));
+    const vh0 = innerHeight, sy0 = scrollY, colTop0 = collage.getBoundingClientRect().top + sy0;
+    const ranges = slots.map((slot) => {
+      const h = slot.offsetHeight;
+      const coverStart = colTop0 + slot.offsetTop - vh0;            // défilement où le haut de la carte touche le bas de l'écran
+      const start = Math.max(0, sy0 - coverStart + 2);
+      const end = Math.max(h * 0.25 + vh0 * 0.32, start + vh0 * 0.3); // photo entière dès le tiers bas de l'écran
+      slot.style.setProperty('--rs', `cover ${start.toFixed(0)}px`);
+      slot.style.setProperty('--re', `cover ${end.toFixed(0)}px`);
+      return { slot, start, end, lockRel: coverStart + end - colTop0 };
+    });
+
+    // Lamelles : 5 bandes, chacune avec une copie exacte du contenu de la carte recadrée sur sa hauteur (animation en CSS).
+    // Mise en scène : elles arrivent après le tracé du cadre (à partir de 18 % de la plage).
+    const NSTRIPS = 5;
+    ranges.filter(({ slot }) => slot.classList.contains('mv-strips')).forEach(({ slot, start, end }) => {
+      const wrap = slot.querySelector('.op-card-strips'), inner = slot.querySelector('.op-card-inner');
+      if (!wrap || !inner) return;
+      const span = end - start;
+      // les éléments créés en JS doivent porter le marqueur de style du composant, sinon les styles scopés ne s'appliquent pas
+      const cid = [...slot.attributes].find((at) => at.name.startsWith('data-astro-cid'))?.name;
+      for (let j = 0; j < NSTRIPS; j++) {
+        const band = document.createElement('span');
+        band.className = `op-strip ${j % 2 ? 'is-r' : 'is-l'}`;
+        const bs = start + span * (0.18 + j * 0.06), be = start + span * Math.min(0.92, 0.6 + j * 0.08);
+        band.style.cssText = `top:${(j * 100) / NSTRIPS}%;height:${100 / NSTRIPS}%;animation-range:cover ${bs.toFixed(0)}px cover ${be.toFixed(0)}px`;
+        const plate = document.createElement('span');
+        plate.className = 'op-strip-plate';
+        plate.style.cssText = `top:${-j * 100}%;height:${NSTRIPS * 100}%`;
+        const clone = inner.cloneNode(true);
+        clone.querySelectorAll('video').forEach((v) => v.remove());
+        clone.querySelectorAll('img').forEach((im) => { im.style.animation = 'none'; });
+        plate.appendChild(clone);
+        if (cid) { band.setAttribute(cid, ''); plate.setAttribute(cid, ''); }
+        band.appendChild(plate);
+        wrap.appendChild(band);
+      }
+    });
+
+    // Apparition jouée une seule fois : quand le défilement dépasse la fin de sa plage, on retire ses animations
+    // d'apparition (état final identique). Le parallaxe continue.
+    let lockRaf = 0;
+    const checkLocks = () => {
+      lockRaf = 0;
+      // position du collage relue en direct : la séquence épinglée du hero décale la page
+      const y = scrollY - (collage.getBoundingClientRect().top + scrollY);
+      for (const r of ranges) {
+        if (r.done || y < r.lockRel) continue;
+        r.done = true;
+        r.slot.classList.add('is-revealed');
+        r.slot.querySelectorAll('.op-strip').forEach((b) => b.remove());
+      }
+    };
+    const onLockScroll = () => { if (!lockRaf) lockRaf = requestAnimationFrame(checkLocks); };
+    addEventListener('scroll', onLockScroll, { passive: true });
+    const doneIo = { disconnect() { removeEventListener('scroll', onLockScroll); } };
+
+    let collageTop = 0, collageH = 0, heroTop = 0, heroLeft = 0, heroW = 0, heroH = 0;
+    const sphereRest = new Map(); // élément → centre au repos (coordonnées du hero) + rayon
+    const measure = () => {
+      const sy = scrollY;
+      const cr = collage.getBoundingClientRect();
+      collageTop = cr.top + sy; collageH = cr.height;
+      if (hero) {
+        const hr = hero.getBoundingClientRect();
+        heroTop = hr.top + sy; heroLeft = hr.left; heroW = hero.clientWidth; heroH = hero.clientHeight;
+        spheres.forEach((sp) => {
+          // centre réel à l'écran, moins le décalage d'animation en cours (la rotation et l'échelle ne bougent pas le centre)
+          const el = sp.el;
+          if (el.style.position === 'fixed') return; // boule en voyage (artist-motion) : on garde sa position de repos
+          const r = el.getBoundingClientRect();
+          const hx = parseFloat(el.style.getPropertyValue('--hx')) || 0;
+          const hy = parseFloat(el.style.getPropertyValue('--hy')) || 0;
+          const w = el.clientWidth || r.width;
+          sphereRest.set(sp.key, { x: r.left + r.width / 2 - hr.left - hx, y: r.top + r.height / 2 - hr.top - hy, R: w / 2 });
+        });
+      }
+    };
+    spheres.forEach((sp, i) => {
+      sp.key = i;
+      sp.mx = 0; sp.my = 0; sp.vx = 0; sp.vy = 0; sp.ms = 1; sp.k = 0;
+      sp.ang = i * 40;
+      sp.speed = [4, -5.2, 3.3][i] || 4;           // degrés par seconde (rotation au repos)
+      sp.ph = [0, 2.1, 4.3][i] || 0;              // décalage de phase du flottement
+    });
+    measure();
+    const ro = new ResizeObserver(() => measure());
+    ro.observe(document.body);
+
+    // Survol du collage : seule la carte survolée reste en couleur
+    const onOver = (e) => collage.classList.toggle('has-hover', !!e.target.closest('[data-card]'));
+    const onLeave = () => collage.classList.remove('has-hover');
+    collage.addEventListener('pointerover', onOver);
+    collage.addEventListener('pointerleave', onLeave);
+
+    const hm = { x: 0, y: 0, tx: 0, ty: 0, cx: -1e4, cy: -1e4 };
+    const onHeroMove = (e) => { hm.cx = e.clientX; hm.cy = e.clientY; hm.tx = e.clientX / innerWidth - 0.5; hm.ty = (e.clientY - (heroTop - scrollY)) / (hero?.clientHeight || 1) - 0.5; };
+    const onHeroLeave = () => { hm.tx = 0; hm.ty = 0; hm.cx = -1e4; hm.cy = -1e4; };
+    hero?.addEventListener('pointermove', onHeroMove);
+    hero?.addEventListener('pointerleave', onHeroLeave);
+
+    const lastHit = new Map();
+
+    let last = performance.now();
+    const tick = (time) => {
+      const dt = Math.min(0.05, (time - last) / 1000); last = time;
+      const t = time / 1000;
+      const vh = innerHeight;
+      const sy = scrollY;
+      const isMobile = mobile();
+
+      // --- Sphères : flottement passif, respiration, rotation, magnétisme ---
+      const heroScreenTop = heroTop - sy;
+      if (hero && spheres.length && heroScreenTop + heroH > 0) {
+        hm.x += (hm.tx - hm.x) * 0.05;
+        hm.y += (hm.ty - hm.y) * 0.05;
+        const U = isMobile ? 0.6 : Math.min(innerWidth, 1680) / 1440;
+        const F = dt * 60; // normalise sur 60 images/s
+        const W = heroW || innerWidth, H = heroH || 500;
+        // 1) forces : dérive, rappel élastique vers la maquette, souris
+        for (const sp of spheres) {
+          const rest = sphereRest.get(sp.key);
+          if (!rest) continue;
+          sp.th = (sp.th ?? sp.ph) + (Math.sin(t * 0.4 + sp.ph * 3) * 0.6 + (Math.random() - 0.5)) * 0.025 * F;
+          let ax = Math.cos(sp.th) * 0.02 * U, ay = Math.sin(sp.th) * 0.016 * U;
+          ax -= sp.mx * 0.00016; ay -= sp.my * 0.0002;                 // élastique vers la position Figma
+          const cx = heroLeft + rest.x + sp.mx, cy = heroScreenTop + rest.y + sp.my;
+          const dx = hm.cx - cx, dy = hm.cy - cy, dm = Math.hypot(dx, dy) || 1;
+          const kk = Math.max(0, 1 - dm / (rest.R * 2.2));
+          const ease = kk * kk * (3 - 2 * kk);
+          sp.k += (ease - sp.k) * 0.06;
+          ax += (dx / dm) * ease * 0.22 * U; ay += (dy / dm) * ease * 0.22 * U; // attirée par le curseur
+          sp.vx = (sp.vx + ax * F) * Math.pow(0.978, F);
+          sp.vy = (sp.vy + ay * F) * Math.pow(0.978, F);
+          const v = Math.hypot(sp.vx, sp.vy), vmax = 1.1 * U;
+          if (v > vmax) { sp.vx *= vmax / v; sp.vy *= vmax / v; }
+          sp.mx += sp.vx * F; sp.my += sp.vy * F;
+          // bords du hero (rebond amorti)
+          const x = rest.x + sp.mx, y = rest.y + sp.my, r = rest.R * 0.6;
+          if (x < r) { sp.mx += r - x; sp.vx = Math.abs(sp.vx) * 0.8; }
+          if (x > W - r) { sp.mx -= x - (W - r); sp.vx = -Math.abs(sp.vx) * 0.8; }
+          if (y < r * 0.4) { sp.my += r * 0.4 - y; sp.vy = Math.abs(sp.vy) * 0.8; }
+          if (y > H - r * 0.4) { sp.my -= y - (H - r * 0.4); sp.vy = -Math.abs(sp.vy) * 0.8; }
+        }
+        // 2) collisions entre sphères
+        for (let i = 0; i < spheres.length; i++) {
+          for (let j = i + 1; j < spheres.length; j++) {
+            const A = spheres[i], B = spheres[j];
+            const ra = sphereRest.get(A.key), rb = sphereRest.get(B.key);
+            if (!ra || !rb) continue;
+            const dx = (rb.x + B.mx) - (ra.x + A.mx), dy = (rb.y + B.my) - (ra.y + A.my);
+            const d = Math.hypot(dx, dy) || 1, minD = (ra.R * A.ms + rb.R * B.ms) * 0.9;
+            if (d >= minD) continue;
+            const nx = dx / d, ny = dy / d, overlap = (minD - d) / 2;
+            A.mx -= nx * overlap; A.my -= ny * overlap; B.mx += nx * overlap; B.my += ny * overlap;
+            const rel = (B.vx - A.vx) * nx + (B.vy - A.vy) * ny;
+            if (rel < 0) {
+              const imp = -rel * 0.92; // restitution
+              A.vx -= nx * imp; A.vy -= ny * imp; B.vx += nx * imp; B.vy += ny * imp;
+              const kick = Math.min(20, -rel * 14);
+              A.spin = (A.spin || 0) + kick; B.spin = (B.spin || 0) - kick;
+              // déformation légère : la sphère s'écrase un peu dans l'axe du choc puis rebondit (balle souple)
+              const key = i * 10 + j;
+              if (time - (lastHit.get(key) || 0) > 400) {
+                lastHit.set(key, time);
+                const amt = Math.min(0.05, 0.022 + -rel * 0.025);
+                const n = Math.atan2(ny, nx);
+                A.sqN = n; B.sqN = n; A.sq = amt; B.sq = amt; A.sqv = 0; B.sqv = 0;
+              }
+            }
+          }
+        }
+        // 3) rendu
+        for (const sp of spheres) {
+          const breathe = 1 + Math.sin(t * 0.9 + sp.ph) * 0.035;
+          sp.ms += (breathe + 0.07 * sp.k - sp.ms) * 0.1;
+          sp.spin = (sp.spin || 0) * Math.pow(0.96, F);
+          // ressort de la déformation : quelques petites oscillations puis retour à la forme ronde
+          if (sp.sq) {
+            sp.sqv = ((sp.sqv || 0) - sp.sq * 0.2 * F) * Math.pow(0.8, F);
+            sp.sq += sp.sqv * F;
+            if (Math.abs(sp.sq) < 0.0008 && Math.abs(sp.sqv) < 0.0008) sp.sq = 0;
+          }
+          sp.ang += (sp.speed * (1 + sp.k * 4) + sp.spin) * dt;
+          const st = sp.el.style;
+          st.setProperty('--hx', (sp.mx + hm.x * 30 * sp.d).toFixed(1) + 'px');
+          st.setProperty('--hy', (sp.my + hm.y * 22 * sp.d).toFixed(1) + 'px');
+          st.setProperty('--ms', sp.ms.toFixed(4));
+          // écrasement dans l'axe du choc, exprimé dans le repère de l'écran (compense la rotation de la sphère)
+          if (sp.sq) {
+            const a = (sp.sqN * 180 / Math.PI - sp.ang).toFixed(2);
+            st.transform = `rotate(${a}deg) scale(${(1 - sp.sq).toFixed(4)}, ${(1 + sp.sq * 0.6).toFixed(4)}) rotate(${-a}deg) scale(${sp.ms.toFixed(4)})`;
+          } else if (st.transform) st.transform = '';
+          st.rotate = sp.ang.toFixed(2) + 'deg';
+          const rest = sphereRest.get(sp.key);
+          // pose lue par artist-motion (docY : position dans la page, indépendante du moment où le défilement est lu)
+          if (rest) sp.el._pose = { cx: heroLeft + rest.x + sp.mx + hm.x * 30 * sp.d, cy: heroScreenTop + rest.y + sp.my + hm.y * 22 * sp.d, docY: heroTop + rest.y + sp.my + hm.y * 22 * sp.d, w: rest.R * 2, ms: sp.ms, ang: sp.ang };
+        }
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    cleanup = () => {
+      cancelAnimationFrame(raf);
+      doneIo.disconnect();
+      io.disconnect();
+      dio.disconnect();
+      vio?.disconnect();
+      rio.disconnect();
+      removeEventListener('scroll', updateSig);
+     
+      sigRo.disconnect();
+      stopFx();
+      ro.disconnect();
+      hero?.removeEventListener('pointermove', onHeroMove);
+      hero?.removeEventListener('pointerleave', onHeroLeave);
+      collage.removeEventListener('pointerleave', onLeave);
+      collage.removeEventListener('pointerover', onOver);
+      cleanup = null;
+    };
+  }
+
+  document.addEventListener('astro:page-load', init);
+  document.addEventListener('astro:before-swap', () => cleanup?.());
+
+  // Mise en mouvement GSAP (hero, sphères voyageuses, projets, marques, offres, studios)
+  let artCleanup = null;
+  document.addEventListener('astro:page-load', () => { artCleanup?.(); artCleanup = initArtistMotion(document.querySelector('.op')); });
+  document.addEventListener('astro:before-swap', () => { artCleanup?.(); artCleanup = null; });
+
+  // (profondeur physique du collage retirée : le récit épinglé de « Nos projets » la remplace sur ordinateur)
+
+  // « Nos projets » : le fil d'encre qui relie les projets, le projet au centre et son nom, l'ouverture au clic
+  let fxCleanup = null;
+  document.addEventListener('astro:page-load', () => { fxCleanup?.(); fxCleanup = initProjectsFx(document.querySelector('[data-collage]')); });
+  document.addEventListener('astro:before-swap', () => { fxCleanup?.(); fxCleanup = null; });
+  // profondeur douce du collage (suit un peu la souris)
+  let depthCleanup = null;
+  document.addEventListener('astro:page-load', () => { depthCleanup?.(); depthCleanup = initCollageDepth(document.querySelector('[data-collage]')); });
+  document.addEventListener('astro:before-swap', () => { depthCleanup?.(); depthCleanup = null; });
+</script>
+
+<style>
+  .op {
+    /* 1 --u = 1 px de la maquette à 1440 px ; plafonné à 1680 px de large */
+    --u: calc(min(100vw, 2560px) / 1440);
+    --bordeaux: #510000;
+    --bordeaux-foot: #510000;
+    --brique: #a43636;
+    --brique-soft: #a64e4e;
+    --ink: #0a0a0a;
+    --muted: #545454;
+    --rule: #e3e3dc;
+    font-family: var(--sans);
+  }
+  .op section { padding: 0; border: 0; position: relative; }
+  .op-frame { position: relative; width: calc(1440 * var(--u)); margin: 0 auto; }
+  .op-h2 {
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: calc(22.6 * var(--u));
+    letter-spacing: -0.051em;
+    line-height: 1;
+    text-align: center;
+    margin: 0;
+  }
+
+  /* ---------- HERO ---------- */
+  .op-hero { background: var(--bordeaux); color: #fff; overflow: hidden; }
+  .op-hero-in { height: calc(528 * var(--u)); }
+  .op-sphere { position: absolute; width: calc(236 * var(--u)); height: auto; pointer-events: none; mix-blend-mode: screen; z-index: 2; }
+  .op-sphere--corail { left: calc(257.6 * var(--u)); top: calc(146.1 * var(--u)); }
+  .op-sphere--rose { left: calc(720 * var(--u)); top: calc(62.4 * var(--u)); }
+  .op-sphere--rouge { left: calc(1061.6 * var(--u)); top: calc(189 * var(--u)); }
+  .op-title {
+    position: absolute;
+    left: calc(17 * var(--u));
+    top: calc(225 * var(--u));
+    margin: 0;
+    font-family: var(--sans);
+    text-transform: uppercase;
+    letter-spacing: -0.045em;
+    line-height: 0.845;
+    text-wrap: nowrap;
+    z-index: 1;
+  }
+  .op-title span { display: block; }
+  .op-title-a { font-size: calc(51.7 * var(--u)); font-weight: 700; }
+  .op-title-b { font-size: calc(43.5 * var(--u)); font-weight: 250; line-height: 0.95; } /* Thin, comme la maquette */
+  .op-title-a + .op-title-b { margin-top: calc(4 * var(--u)); }
+  .op-desc {
+    position: absolute;
+    left: calc(21 * var(--u));
+    top: calc(412 * var(--u));
+    width: calc(730 * var(--u));
+    margin: 0;
+    font-family: var(--sans-a);
+    font-weight: 300;
+    font-size: calc(13.6 * var(--u));
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    z-index: 3;
+  }
+  .op-actions {
+    position: absolute;
+    left: calc(20.3 * var(--u));
+    top: calc(462 * var(--u));
+    display: flex;
+    gap: calc(8.4 * var(--u));
+    z-index: 3;
+  }
+  .op-hero-chevron { position: absolute; left: calc(1427.6 * var(--u)); top: calc(520.6 * var(--u)); width: calc(4.3 * var(--u)); min-width: 4px; opacity: 0.8; z-index: 3; }
+  .op-hero-rule {
+    position: absolute;
+    left: calc(21 * var(--u));
+    top: calc(512 * var(--u));
+    width: calc(419.5 * var(--u));
+    height: 1px;
+    background: var(--brique);
+  }
+
+  /* Boutons (hero + studios) */
+  .op-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: calc(12 * var(--u));
+    height: calc(41.6 * var(--u));
+    padding: 0 calc(20 * var(--u));
+    font-family: var(--sans-a);
+    font-size: max(9px, calc(9 * var(--u)));
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+    transition: background 220ms ease, color 220ms ease, border-color 220ms ease;
+  }
+  .op-btn span { white-space: nowrap; }
+  .op-btn .arw { width: calc(17.3 * var(--u)); height: auto; min-width: 14px; transition: transform 220ms cubic-bezier(.16,1,.3,1); }
+  .op-btn:hover .arw { transform: translateX(3px); }
+  .op-btn--fill { min-width: calc(194.2 * var(--u)); background: var(--brique); border-color: var(--brique); color: #fff; }
+  .op-btn--fill:hover { color: #000; }
+  .op-btn--fill:hover { background: #fff; border-color: #fff; }
+  .op-btn--line { min-width: calc(218.1 * var(--u)); border-color: var(--brique-soft); color: #e8a0a0; }   /* rose pâle : contraste 7:1 sur bordeaux */
+  .op-btn--line:hover { border-color: #fff; color: #fff; }
+  .op-btn--ink { min-width: calc(297 * var(--u)); height: calc(38.6 * var(--u)); border-color: var(--ink); color: var(--ink); font-family: var(--sans); font-size: max(9px, calc(8.9 * var(--u))); }
+  
+  .op-btn--ink:hover { background: var(--ink); color: #fff; }
+
+  /* ---------- NOS PROJETS : collage en parallaxe multi-couches ---------- */
+  .op-projects { padding-top: calc(78.4 * var(--u)) !important; overflow: clip; }
+  .op-projects-title { position: absolute; left: 0; right: 0; top: calc(3.7 * var(--u)); z-index: 50; }
+  .op-projects-title a { display: inline-block; overflow: hidden; padding: 0.08em 0.02em 0.12em; vertical-align: top; }
+  .op-collage { z-index: 1; position: relative; height: calc(var(--ch) * var(--u)); }
+
+  /* Titre géant en fond, défile à l'horizontale */
+
+  /* ===== Récit épinglé (ordinateur, voir projects-stage.js) ===== */
+  .op-ink, .op-globe, .op-credits { display: none; }
+  @media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+    .op-projects.is-stage { overflow: visible !important; }
+    .op-projects.is-stage .op-pin { position: relative; height: calc(var(--len) * 100vh + 100vh); }
+    .op-projects.is-stage .op-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+    .op-projects.is-stage .op-cam { position: absolute; left: 0; top: 0; width: 100%; transform-origin: 0 0; will-change: transform; }
+    /* les animations au défilement de l'ancien collage sont coupées : le récit pilote tout */
+    .op-projects.is-stage .op-slot, .op-projects.is-stage .op-slot * { animation: none !important; }
+    .op-projects.is-stage .op-slot :is(.op-card-strips, .op-card-shade, .op-card-veil, .op-trace, .op-card-type, .op-card-index, .op-cap) { display: none !important; }
+    .op-projects.is-stage .op-card-orb { display: block; }
+    .op-projects.is-stage .op-card-inner { scale: 1.04; transition: scale 1400ms cubic-bezier(.16,1,.3,1); }
+    .op-projects.is-stage .op-slot.is-focus .op-card-inner { scale: 1.08; }
+    .op-projects.is-stage .op-card { will-change: auto; }
+    /* encre : sous toutes les images */
+    .op-projects.is-stage .op-ink { display: block; position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; z-index: 0; pointer-events: none; }
+    .op-ink path { fill: none; stroke: #a10000; stroke-width: 1.6px; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+    .op-projects.is-stage .op-globe {
+      display: block; position: absolute; z-index: 0; pointer-events: none; opacity: 0; transition: opacity 300ms ease;
+      left: calc((var(--gx) - var(--gr)) * var(--u)); top: calc((var(--gy) - var(--gr)) * var(--u));
+      width: calc(var(--gr) * 2 * var(--u)); height: calc(var(--gr) * 2 * var(--u));
+    }
+    .op-globe :global(svg) { width: 100%; height: 100%; display: block; overflow: visible; }
+    /* générique : bandeau fixe en bas de la scène, le nom du projet s'y écrit toujours au même endroit */
+    .op-projects.is-stage .op-credits {
+      display: block; position: absolute; left: 0; right: 0; bottom: 0; height: 118px; z-index: 40;
+      background: var(--paper, #fff); border-top: 1px solid var(--rule, #e3e3dc);
+    }
+    .op-credit { position: absolute; left: calc(54 * var(--u)); right: calc(54 * var(--u)); bottom: 20px; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto; align-items: end; column-gap: 40px; row-gap: 6px; pointer-events: none; }
+    .op-credit.is-on { pointer-events: auto; }
+    .op-credit b { grid-column: 1; grid-row: 1; display: flex; flex-wrap: nowrap; column-gap: 0.24em; overflow: hidden; font-family: var(--sans); font-weight: 400; font-size: clamp(28px, 2.7vw, 44px); letter-spacing: -0.045em; line-height: 0.95; color: var(--ink); }
+    .op-credit b a { color: inherit; text-decoration: none; }
+    .op-credit-n { grid-column: 1; grid-row: 2; align-self: start; font-family: var(--sans); font-weight: 300; font-size: clamp(14px, 1.1vw, 18px); letter-spacing: -0.02em; color: var(--muted); }
+    .op-credit-k { grid-column: 2; grid-row: 2; justify-self: end; align-self: end; font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+    .op-credit-k i { font-style: normal; color: var(--ink); }
+    .op-credit-k em { font-style: normal; margin-left: 2em; }
+    .op-credit-w { display: inline-flex; overflow: hidden; padding-bottom: 0.12em; margin-bottom: -0.12em; }
+    /* sortie : le nom file vers le haut et s'efface ; entrée : lettres qui montent une à une, puis titre et repères */
+    .op-credit-ch, .op-credit b a { display: inline-block; translate: 0 -105%; opacity: 0; transition: translate 380ms cubic-bezier(.7,0,.84,0), opacity 260ms ease; }
+    .op-credit-n, .op-credit-k { opacity: 0; translate: 0 8px; transition: opacity 240ms ease, translate 380ms cubic-bezier(.7,0,.84,0); }
+    .op-credit.is-on .op-credit-ch, .op-credit.is-on b a { animation: op-credit-in 900ms cubic-bezier(.16,1,.3,1) calc(80ms + var(--c, 0) * 24ms) both; translate: 0 0; opacity: 1; transition: none; }
+    .op-credit.is-on .op-credit-n { opacity: 1; translate: 0 0; transition: opacity 600ms ease 380ms, translate 900ms cubic-bezier(.16,1,.3,1) 380ms; }
+    .op-credit.is-on .op-credit-k { opacity: 1; translate: 0 0; transition: opacity 600ms ease 260ms, translate 900ms cubic-bezier(.16,1,.3,1) 260ms; }
+    @keyframes op-credit-in { from { translate: 0 105%; opacity: 1; } to { translate: 0 0; opacity: 1; } }
+    /* repère d'avancée : 8 traits, celui du projet courant s'allume */
+    .op-credits-bar { position: absolute; right: calc(54 * var(--u)); top: 18px; display: flex; gap: 6px; }
+    .op-credits-bar i { width: 18px; height: 1px; background: var(--rule, #e3e3dc); transition: background 500ms ease; }
+    .op-credits-bar i.is-on { background: var(--ink); }
+  }
+
+  /* Emplacement : position exacte de la maquette ; porte le parallaxe (défilement) */
+  .op-slot {
+    position: absolute;
+    left: calc(var(--x) * var(--u));
+    top: calc(var(--y) * var(--u));
+    width: calc(var(--w) * var(--u));
+    height: calc(var(--h) * var(--u));
+    z-index: calc(1 + var(--k, var(--i)));        /* empilement fixe, dans l'ordre de lecture : chaque projet posé sur le précédent */
+  }
+  /* Carte : porte l'apparition (plus d'inclinaison 3D à la souris : elle créait des dizaines de calques 3D, trop lourd) */
+  .op-card {
+    position: absolute; inset: 0;
+    display: block;
+    overflow: hidden;
+    transition: box-shadow 600ms ease;
+  }
+  /* Apparition pilotée par le défilement (valeurs écrites en JS). Sans JS : état final, tout visible. */
+  .op-card-media { position: absolute; inset: 0; overflow: hidden; background: var(--bg); }
+  .op-card-inner { position: absolute; inset: 0; scale: 1.08; }
+  .op-collage-end { position: absolute; left: 0; bottom: 0; width: 1px; height: 1px; pointer-events: none; }
+
+  /* ===== Parallaxe + apparition, calculés par le navigateur (synchrones avec la molette, aucun calcul JS) =====
+     - Parallaxe continu, uniquement dans la section : l'emplacement monte/descend selon sa profondeur (--d),
+       position exacte de la maquette quand la carte est au centre de l'écran ; la photo glisse à contre-sens.
+     - Apparition : chorégraphie par carte (lamelles, bloc, dépliage, iris) + typo, jouée une seule fois
+       (.is-revealed retire ces animations une fois la carte au centre : état final identique). */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .op-collage { view-timeline: --collage block; }
+      .op-slot { view-timeline: --card block; }
+
+      /* 1) animations (raccourcis sans timeline) */
+      .op-slot { animation: op-parallax linear both; }
+      .op-slot .op-card-media :is(img, video) { animation: op-counter linear both; }
+      .op-slot:not(.is-revealed) .op-card { animation: op-arrive cubic-bezier(.16, 1, .3, 1) both; }
+      .op-slot:not(.is-revealed) .op-card-inner { animation: op-zoom cubic-bezier(.16, 1, .3, 1) both; }
+      .op-slot:not(.is-revealed) .op-card-type > span { animation: op-type linear both; }
+      .op-slot:not(.is-revealed) .op-card-index { animation: op-index linear both; }
+      .op-slot:not(.is-revealed) .op-trace--t { animation: op-trace-t linear both; }
+      .op-slot:not(.is-revealed) .op-trace--r { animation: op-trace-r linear both; }
+      .op-slot:not(.is-revealed) .op-trace--b { animation: op-trace-b linear both; }
+      .op-slot:not(.is-revealed) .op-trace--l { animation: op-trace-l linear both; }
+      .op-slot.mv-strips:not(.is-revealed) .op-card-media { opacity: 0; }
+      .op-slot.mv-strips:not(.is-revealed) .op-card-strips { visibility: visible; }
+      .op-slot:not(.is-revealed) .op-strip { animation: op-band-l cubic-bezier(.77, 0, .18, 1) both; }
+      .op-slot:not(.is-revealed) .op-strip.is-r { animation-name: op-band-r; }
+      .op-slot.mv-block:not(.is-revealed) .op-card-veil { animation: op-block linear both; }
+      .op-slot.mv-block:not(.is-revealed) .op-card-media { animation: op-block-media linear both; }
+      .op-slot.mv-block:not(.is-revealed) .op-card-inner { animation-name: op-block-inner; }
+      .op-slot.mv-unfold:not(.is-revealed) :is(.op-card-media, .op-card-shade) { transform-origin: 50% 0; animation: op-unfold cubic-bezier(.16, 1, .3, 1) both; }
+      .op-slot.mv-unfold:not(.is-revealed) .op-card-shade { animation-name: op-unfold-shade; }
+      .op-slot.mv-iris:not(.is-revealed) .op-card-media { animation: op-iris linear both; }
+      .op-slot.mv-orb:not(.is-revealed) .op-card-orb { animation: op-orb-disk linear both; }
+      .op-slot.mv-orb:not(.is-revealed) .op-card-media { animation: op-orb-media linear both; }
+      .op-slot.mv-iris:not(.is-revealed) .op-card-inner { animation: op-iris-inner linear both; }
+      .op-slot, .op-slot .op-card-media :is(img, video) { will-change: transform; }
+      .op-slot:not(.is-revealed) :is(.op-card, .op-card-media, .op-card-inner, .op-card-veil, .op-strip, .op-card-type > span) { will-change: transform, translate, scale, opacity; }
+
+      /* 2) timelines et plages dans des règles distinctes (le minifieur ne peut pas les fusionner dans le raccourci) */
+      .op-collage > .op-slot, .op-slot .op-card-media :is(img, video) { animation-timeline: --card; animation-range: cover 0% cover 100%; }
+      .op-slot:not(.is-revealed) :is(.op-card, .op-card-inner, .op-card-type > span, .op-card-index, .op-card-veil, .op-card-media, .op-card-shade, .op-strip, .op-trace, .op-card-orb) {
+        animation-timeline: --card;
+        animation-range: var(--rs, entry 0%) var(--re, cover 50%);
+      }
+      .op-slot.mv-block:not(.is-revealed) .op-card-inner { animation-timeline: --card; animation-range: var(--rs, entry 0%) var(--re, cover 50%); }
+    }
+  }
+  /* ===== Mise en scène (sur la plage d'apparition de chaque carte) =====
+     0–35 % : la carte apparaît en fondu et le tracé bordeaux dessine son cadre, encore vide
+     18–90 % : le mouvement propre à la carte remplit le cadre avec la photo
+     30–80 % : le nom du client passe dans un masque ; 80–100 % : le cadre s'efface, la carte se pose */
+  @keyframes op-parallax {
+    from { transform: translate3d(0, calc(var(--sp) * 90px), 0); }
+    50% { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(0, calc(var(--sp) * -90px), 0); }
+  }
+  /* entrée en cercle : la couleur de l'offre s'ouvre depuis un coin, la photo suit dans le même cercle */
+  @keyframes op-orb-disk {
+    0%, 6% { clip-path: circle(0% at var(--ox) var(--oy)); }
+    20% { clip-path: circle(38% at var(--ox) var(--oy)); }
+    34% { clip-path: circle(80% at var(--ox) var(--oy)); }
+    50%, 100% { clip-path: circle(150% at var(--ox) var(--oy)); }
+  }
+  @keyframes op-orb-media {
+    0%, 20% { clip-path: circle(0% at var(--ox) var(--oy)); }
+    36% { clip-path: circle(34% at var(--ox) var(--oy)); }
+    54% { clip-path: circle(76% at var(--ox) var(--oy)); }
+    74% { clip-path: circle(118% at var(--ox) var(--oy)); }
+    88%, 100% { clip-path: circle(150% at var(--ox) var(--oy)); }
+  }
+  @keyframes op-counter { from { transform: translate3d(0, -60px, 0); } to { transform: translate3d(0, 60px, 0); } }
+  @keyframes op-arrive { from { opacity: 0; translate: 0 calc(140px + var(--d) * 90px); rotate: calc(var(--rd) * 7deg); scale: 0.78; } 14% { opacity: 1; } to { opacity: 1; translate: 0 0; rotate: 0deg; scale: 1; } }
+  @keyframes op-zoom { 0%, 18% { scale: 1.3; translate: 0 28px; } to { scale: 1.08; translate: 0 0; } }
+  @keyframes op-band-l { from { translate: -104% 0; } to { translate: 0 0; } }
+  @keyframes op-band-r { from { translate: 104% 0; } to { translate: 0 0; } }
+  @keyframes op-block {
+    0%, 18% { scale: 0 1; transform-origin: 0 50%; }
+    50% { scale: 1 1; transform-origin: 0 50%; }
+    50.5% { scale: 1 1; transform-origin: 100% 50%; }
+    86%, 100% { scale: 0 1; transform-origin: 100% 50%; }
+  }
+  @keyframes op-block-media { 0%, 50% { opacity: 0; } 50.5%, 100% { opacity: 1; } }
+  @keyframes op-block-inner { 0%, 50% { translate: -9% 28px; scale: 1.25; } 86%, 100% { translate: 0 0; scale: 1.08; } }
+  @keyframes op-unfold { 0%, 18% { transform: perspective(1400px) rotateX(-88deg); } 82%, to { transform: perspective(1400px) rotateX(0deg); } }
+  @keyframes op-unfold-shade { 0%, 18% { opacity: 0.85; transform: perspective(1400px) rotateX(-88deg); } 82%, to { opacity: 0; transform: perspective(1400px) rotateX(0deg); } }
+  /* fenêtre qui s'ouvre (échelle du cadre) et contre-échelle de la photo (taille constante) */
+  @keyframes op-iris {
+    0%, 18% { scale: 0.001; } 22% { scale: 0.08; } 34% { scale: 0.3; } 46% { scale: 0.52; } 58% { scale: 0.72; }
+    70% { scale: 0.88; } 80% { scale: 0.97; } 88%, 100% { scale: 1; }
+  }
+  @keyframes op-iris-inner {
+    0%, 22% { scale: 13.5; } 34% { scale: 3.6; } 46% { scale: 2.077; } 58% { scale: 1.5; }
+    70% { scale: 1.227; } 80% { scale: 1.113; } 88%, 100% { scale: 1.08; }
+  }
+  @keyframes op-trace-t { 0% { opacity: 1; transform: scaleX(0); } 12% { transform: scaleX(1); } 80% { opacity: 1; } 100% { opacity: 0; transform: scaleX(1); } }
+  @keyframes op-trace-r { 0%, 8% { opacity: 1; transform: scaleY(0); } 20% { transform: scaleY(1); } 80% { opacity: 1; } 100% { opacity: 0; transform: scaleY(1); } }
+  @keyframes op-trace-b { 0%, 16% { opacity: 1; transform: scaleX(0); } 28% { transform: scaleX(1); } 80% { opacity: 1; } 100% { opacity: 0; transform: scaleX(1); } }
+  @keyframes op-trace-l { 0%, 24% { opacity: 1; transform: scaleY(0); } 36% { transform: scaleY(1); } 80% { opacity: 1; } 100% { opacity: 0; transform: scaleY(1); } }
+  @keyframes op-type { 0%, 30% { translate: 0 110%; } 48%, 64% { translate: 0 0; } 82%, 100% { translate: 0 -110%; } }
+  @keyframes op-index { 0%, 12% { opacity: 0; translate: 0 12px; } 30%, 70% { opacity: 1; translate: 0 0; } 88%, 100% { opacity: 0; translate: 0 0; } }
+  .op-card-media :is(img, video) {
+    position: absolute; left: 0; top: -12%; width: 100%; height: 124%;
+    object-fit: cover;
+    /* la photo ou vidéo elle-même ne bouge plus : son parallaxe est porté par .op-card-inner (une couche de moins) */
+    transition: scale 900ms cubic-bezier(.16,1,.3,1), filter 600ms ease;
+  }
+  .op-card-media video {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 500ms ease, scale 900ms cubic-bezier(.16,1,.3,1), filter 600ms ease;
+  }
+  .op-card-media video.is-playing {
+    opacity: 1;
+  }
+  .op-collage.has-hover .op-card:not(:hover) .op-card-media :is(img, video) { filter: grayscale(1) brightness(0.92); }
+  .op-card:hover { box-shadow: 0 40px 80px -30px rgba(81, 0, 0, 0.55); }
+  .op-card:hover .op-card-media :is(img, video) { scale: 1.06; }
+  .op-card-orb { position: absolute; inset: 0; background: var(--orb); pointer-events: none; }
+  .op-slot.is-revealed .op-card-orb { display: none; }
+  .op-slot.mv-orb .op-trace { display: none; }
+  /* projet au centre : les autres s'estompent, sa légende monte sous la carte */
+  /* projet au centre : sa photo s'allume (couleur, léger zoom) pendant que son nom s'écrit lettre à lettre dessous,
+     relié à la photo par un filet qui descend ; les autres photos restent visibles, juste passées en noir et blanc */
+  .op-card-media { transition: filter 900ms cubic-bezier(.16,1,.3,1); }
+  .op-collage.has-focus .op-slot:not(.is-focus) .op-card-media { filter: grayscale(1); }
+  .op-collage.has-focus .op-slot:not(.is-focus):hover .op-card-media { filter: none; }
+  .op-slot.is-focus .op-card-inner { transition: scale 1200ms cubic-bezier(.16,1,.3,1); scale: 1.12; }
+  .op-cap {
+    position: absolute; left: 0; top: calc(100% + 26 * var(--u)); width: max(100%, calc(430 * var(--u)));
+    display: grid; gap: calc(6 * var(--u)); pointer-events: none; color: var(--ink);
+    opacity: 0; transition: opacity 240ms ease;
+    box-sizing: border-box;
+  }
+  .op-cap.is-on { opacity: 1; transition: opacity 200ms ease; }
+  /* filet : de la photo au nom */
+  .op-cap::before {
+    content: ''; position: absolute; left: 0; top: calc(-26 * var(--u)); width: 1px; height: calc(20 * var(--u));
+    background: var(--ink); transform-origin: 50% 0; scale: 1 0; transition: scale 220ms cubic-bezier(.5,0,.75,0);
+  }
+  .op-cap.is-on::before { scale: 1 1; transition: scale 600ms cubic-bezier(.16,1,.3,1) 120ms; }
+  /* légende dessous, alignée à droite */
+  .op-cap.cap-below-r { left: auto; right: 0; text-align: right; justify-items: end; }
+  .op-cap.cap-below-r::before { left: auto; right: 0; }
+  .op-cap.cap-above::before { top: auto; bottom: calc(-26 * var(--u)); transform-origin: 50% 100%; }
+  /* légende à côté de l'image, alignée sur son bas (ou son haut) ; le filet devient horizontal et part du bord de la photo */
+  .op-cap:is(.cap-right, .cap-left, .cap-right-top, .cap-left-top, .cap-right-mid, .cap-left-mid) { top: auto; bottom: 0; width: calc(300 * var(--u)); }
+  .op-cap:is(.cap-right-top, .cap-left-top) { top: 0; bottom: auto; }
+  .op-cap:is(.cap-right, .cap-right-top, .cap-right-mid) { left: calc(100% + 28 * var(--u)); }
+  .op-cap:is(.cap-left, .cap-left-top, .cap-left-mid) { left: auto; right: calc(100% + 28 * var(--u)); text-align: right; justify-items: end; }
+  .op-cap:is(.cap-right, .cap-left, .cap-right-top, .cap-left-top, .cap-right-mid, .cap-left-mid)::before { top: auto; bottom: calc(26 * var(--u)); width: calc(20 * var(--u)); height: 1px; scale: 0 1; }
+  .op-cap:is(.cap-right-top, .cap-left-top)::before { top: calc(0.45em); bottom: auto; }
+  .op-cap:is(.cap-right, .cap-right-top, .cap-right-mid)::before { left: calc(-28 * var(--u)); transform-origin: 0 50%; }
+  .op-cap:is(.cap-left, .cap-left-top, .cap-left-mid)::before { left: auto; right: calc(-28 * var(--u)); transform-origin: 100% 50%; }
+  .op-cap:is(.cap-right, .cap-left, .cap-right-top, .cap-left-top, .cap-right-mid, .cap-left-mid).is-on::before { scale: 1 1; }
+  .op-cap-l { display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em; }
+  /* sortie rapide (vers le haut), entrée posée (par le bas) : le relais d'un projet à l'autre se lit d'un seul geste */
+  .op-cap-l > :not(b), .op-cap-ch { display: inline-block; translate: 0 110%; transition: none; }
+  .op-cap:not(.is-on) .op-cap-l > :not(b), .op-cap:not(.is-on) .op-cap-ch { transition-delay: 0ms; }
+  .op-cap.is-on .op-cap-l > :not(b), .op-cap.is-on .op-cap-ch { translate: 0 0; }
+  .op-cap.is-on .op-cap-l > .op-cap-k { animation: op-cap-in 800ms cubic-bezier(.16,1,.3,1) 260ms backwards; }
+  .op-cap.is-on .op-cap-ch { animation: op-cap-in 900ms cubic-bezier(.16,1,.3,1) calc(320ms + var(--c) * 26ms) backwards; }
+  .op-cap.is-on .op-cap-l > .op-cap-n { animation: op-cap-in 900ms cubic-bezier(.16,1,.3,1) 620ms backwards; }
+  /* remplissage « backwards » : après l'animation, la lettre reprend son style normal (translate: 0), identique à la
+     fin de l'animation ; elle ne garde pas de couche graphique (des centaines de lettres) */
+  @keyframes op-cap-in { from { translate: 0 110%; opacity: 1; } to { translate: 0 0; opacity: 1; } }
+  .op-cap-k { font-family: var(--mono); font-size: max(9px, calc(9 * var(--u))); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+  .op-cap-k i { font-style: normal; margin-left: 1.4em; color: var(--ink); }
+  .op-cap b { font-family: var(--sans); font-weight: 400; font-size: calc(46 * var(--u)); letter-spacing: -0.045em; line-height: 0.98; display: flex; flex-wrap: wrap; column-gap: 0.24em; }
+  .op-cap:is(.cap-right-top, .cap-left-top, .cap-right, .cap-left, .cap-right-mid, .cap-left-mid) b { font-size: calc(38 * var(--u)); }
+  .op-cap:is(.cap-left, .cap-left-top, .cap-left-mid, .cap-below-r) b { justify-content: flex-end; }
+  .op-cap-w { display: inline-flex; white-space: nowrap; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em; }
+  .op-cap-n { font-family: var(--sans); font-weight: 300; font-size: calc(18 * var(--u)); letter-spacing: -0.02em; color: var(--muted); }
+  .op-slot.is-opening { z-index: 60; }
+  @media (max-width: 900px) { .op-cap { display: none; } }
+  .op-card-veil { position: absolute; inset: 0; background: var(--bordeaux); scale: 0 1; pointer-events: none; z-index: 3; }
+  .op-card-strips { position: absolute; inset: 0; overflow: hidden; z-index: 2; pointer-events: none; visibility: hidden; }
+  .op-strip { position: absolute; left: 0; right: 0; overflow: hidden; }
+  .op-strip-plate { position: absolute; left: 0; right: 0; }
+  .op-card-shade { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0; background: linear-gradient(180deg, rgba(10, 0, 0, 0.9), rgba(10, 0, 0, 0.35)); }
+  .op-card-type {
+    position: absolute; left: 0; right: 0; bottom: 18%; z-index: 4; overflow: hidden; pointer-events: none;
+    padding: 0 calc(16 * var(--u)); line-height: 0.9;
+  }
+  .op-card-type > span {
+    display: block; translate: 0 110%;
+    font-family: var(--sans); font-weight: 700; text-transform: uppercase; letter-spacing: -0.045em;
+    font-size: clamp(22px, calc(46 * var(--u)), 64px); color: #fff; mix-blend-mode: difference;
+    white-space: nowrap; overflow: hidden; text-overflow: clip;
+  }
+  .op-card-index {
+    position: absolute; top: calc(14 * var(--u)); left: calc(16 * var(--u)); z-index: 4; opacity: 0; pointer-events: none;
+    font-family: var(--mono); font-size: max(9px, calc(9 * var(--u))); letter-spacing: 0.14em; color: #fff; mix-blend-mode: difference;
+  }
+  .op-card-index i { font-style: normal; opacity: 0.55; }
+  .op-trace { position: absolute; z-index: 5; background: var(--bordeaux); pointer-events: none; opacity: 0; }
+  .op-trace--t { left: 0; right: 0; top: 0; height: 2px; transform-origin: 0 50%; }
+  .op-trace--r { top: 0; bottom: 0; right: 0; width: 2px; transform-origin: 50% 0; }
+  .op-trace--b { left: 0; right: 0; bottom: 0; height: 2px; transform-origin: 100% 50%; }
+  .op-trace--l { top: 0; bottom: 0; left: 0; width: 2px; transform-origin: 50% 100%; }
+  .op-slot.is-revealed :is(.op-card-strips, .op-card-shade, .op-card-type, .op-trace) { display: none; }
+  .op-card-meta {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: calc(14 * var(--u)) calc(16 * var(--u)) calc(26 * var(--u));
+    display: flex; flex-direction: column; gap: 2px;
+    color: #fff; font-size: max(11px, calc(12.6 * var(--u)));
+    background: linear-gradient(transparent, rgba(81, 0, 0, 0.85));
+    opacity: 0; transform: translate3d(0, 14px, 40px);
+    transition: opacity 400ms ease, transform 500ms cubic-bezier(.16,1,.3,1);
+  }
+  .op-card-meta b { font-family: var(--mono); font-weight: 400; font-size: max(9px, calc(8.2 * var(--u))); letter-spacing: 0.15em; text-transform: uppercase; }
+  .op-card-chevron { position: absolute; left: 50%; bottom: calc(8 * var(--u)); width: calc(12.5 * var(--u)); transform: translateX(-50%); opacity: 0; transition: opacity 300ms ease, transform 500ms cubic-bezier(.16,1,.3,1); }
+  .op-card:hover .op-card-meta, .op-card:focus-visible .op-card-meta { opacity: 1; transform: translate3d(0, 0, 40px); }
+  .op-card:hover .op-card-chevron { opacity: 1; transform: translate(-50%, -4px); }
+  .op-card[style*="--i:6"] .op-card-chevron { opacity: 1; filter: none; }
+
+
+  @media (prefers-reduced-motion: reduce) {
+    .op-card-media, .op-card-inner, .op-card-veil { transition: none; }
+    .op-card-media :is(img, video) { transform: none; }
+    .op-card-media video { display: none; }
+  }
+
+  .op-rule { display: block; height: 1px; background: var(--rule); width: calc(1012.8 * var(--u)); margin: 0 auto; position: relative; left: calc(-12.8 * var(--u)); }
+  .op-rule--a { margin-top: calc(105.6 * var(--u)); }
+
+  /* ---------- MARQUES ---------- */
+  .op-clients { padding-top: calc(35.5 * var(--u)) !important; color: var(--ink); }
+  .op-clients .op-h2 { margin-bottom: calc(60 * var(--u)); }
+  .op-marquee { overflow: hidden; height: calc(46 * var(--u)); min-height: 40px; }
+  .op-marquee--b { margin-top: calc(46 * var(--u)); margin-bottom: calc(111 * var(--u)); }
+  /* l'écart est une marge à droite de chaque logo (pas un gap) : la bande vaut exactement deux fois la série,
+     le recul de 50 % retombe pile sur le début de la copie, sans saut à chaque tour */
+  .op-track { display: flex; align-items: center; width: max-content; height: 100%; animation: op-scroll 240s linear infinite; }
+  .op-marquee--b .op-track { animation-duration: 260s; } /* même sens que la 1re rangée : les grandes marques arrivent d'abord */
+  .op-track { will-change: transform; }
+  .op-logo { flex: none; height: 100%; margin-right: calc(110 * var(--u)); display: flex; align-items: center; font-family: var(--mono); font-size: max(10px, calc(12 * var(--u))); letter-spacing: 0.12em; color: var(--muted); }
+  /* hauteur optique propre à chaque logo (--lh, calculée au build) : surfaces visuelles équivalentes */
+  .op-logo img { height: calc(var(--lh, 24) * var(--u)); min-height: 14px; width: auto; max-width: none; object-fit: contain; transition: transform 300ms cubic-bezier(.16,1,.3,1); }
+  .op-logo:hover img { transform: scale(1.08); }
+  .op-logo img.is-light { filter: brightness(0); } /* logos blancs prévus pour fond sombre */
+  @keyframes op-scroll { to { transform: translateX(-50%); } }
+  .op-rule--b { margin-top: calc(105 * var(--u)); }
+
+  /* ---------- OFFRES ---------- */
+  .op-offers { background: var(--bordeaux); color: #fff; margin-top: calc(-4.8 * var(--u)); padding: calc(71 * var(--u)) 0 calc(129.6 * var(--u)) !important; }
+  .op-offer-list { list-style: none; margin: calc(70.4 * var(--u)) 0 0 calc(190.9 * var(--u)); padding: 0; width: calc(1109.6 * var(--u)); }
+  .op-offer-list li + li { margin-top: calc(34.4 * var(--u)); }
+  .op-offer {
+    position: relative;
+    display: grid;
+    grid-template-columns: calc(559 * var(--u)) calc(490 * var(--u)) 1fr;
+    align-items: start;
+    padding: 0 0 calc(20 * var(--u)) calc(12.8 * var(--u));
+    min-height: calc(66.4 * var(--u));
+    transition: background 300ms ease;
+  }
+  .op-offer::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--rule); transform: scaleX(0); transform-origin: left; transition: transform 1400ms cubic-bezier(.77,0,.18,1) var(--rd, 0ms); }
+  .is-in > .op-offer::after { transform: scaleX(1); }
+  .op-offer h3 { font-family: var(--sans-a); font-weight: 500; font-size: calc(24.2 * var(--u)); letter-spacing: -0.075em; line-height: 1.1; margin: calc(3.7 * var(--u)) 0 0; }
+  .op-offer p { margin: 0; max-width: calc(345 * var(--u)); font-size: max(11px, calc(12.6 * var(--u))); line-height: 1.35; }
+  .op-offer-go { width: calc(16.8 * var(--u)); margin-top: calc(7.7 * var(--u)); transition: transform 300ms cubic-bezier(.16,1,.3,1); }
+  .op-offer:hover .op-offer-go { transform: translateX(8px); }
+  .op-offer:hover h3 { text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px; }
+
+  /* ---------- STUDIOS ---------- */
+  .op-studios { color: var(--ink); padding: calc(69.3 * var(--u)) 0 calc(170 * var(--u)) !important; }
+  .op-studios-in { padding: 0 calc(109.6 * var(--u)); }
+  .op-studios-head { display: flex; justify-content: space-between; align-items: flex-end; width: calc(1202 * var(--u)); }
+  .op-kicker { font-family: var(--mono); font-size: max(9px, calc(8.2 * var(--u))); letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin: 0 0 calc(18 * var(--u)); }
+  .op-meet { margin: 0 0 calc(10 * var(--u)); }
+  .op-meet:hover { color: var(--ink); }
+  .op-studios-title { font-family: var(--sans); font-weight: 400; font-size: calc(43.4 * var(--u)); letter-spacing: -0.035em; line-height: 1; }
+  .op-studios-text { margin: calc(39 * var(--u)) 0 0; width: calc(383 * var(--u)); font-size: max(13px, calc(16 * var(--u))); line-height: 1.3; color: #2b2b2b; }
+  .op-stats {
+    display: grid;
+    grid-template-columns: calc(241.4 * var(--u)) calc(241.4 * var(--u)) calc(241.4 * var(--u)) 1fr;
+    width: calc(1218.1 * var(--u));
+    height: calc(127.8 * var(--u));
+    margin-top: calc(47 * var(--u));
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  .op-stat { border-right: 1px solid var(--rule); display: flex; padding: calc(28 * var(--u)) calc(28 * var(--u)) 0 0; }
+  .op-stat:nth-child(2), .op-stat:nth-child(3) { justify-content: flex-end; }
+  .op-stat--empty { border-right: 0; }
+  .op-stat b { display: block; font-family: var(--sans); font-weight: 700; font-size: calc(48.6 * var(--u)); letter-spacing: -0.04em; line-height: 1; }
+  .op-stat > div > span { display: block; margin-top: calc(8 * var(--u)); font-family: var(--mono); font-size: max(8px, calc(8.2 * var(--u))); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .op-studios .op-btn--ink { margin-top: calc(24.4 * var(--u)); position: relative; z-index: 2; background: rgba(255, 255, 255, 0.6); }
+
+
+  /* ---------- ANIMATIONS ---------- */
+  /* Hero : lignes du titre qui sortent d'un masque */
+  .op-title-a, .op-title-b { overflow: hidden; padding-top: 0.14em; margin-top: -0.14em; }
+  .op-title > span > span { transform: translate3d(0, 115%, 0) skewY(4deg); transition: transform 1300ms cubic-bezier(.16,1,.3,1) calc(250ms + var(--l) * 110ms); }
+  .op.is-ready .op-title > span > span { transform: none; }
+  .op-desc, .op-actions, .op-hero-rule, .op-hero-chevron { opacity: 0; translate: 0 18px; transition: opacity 1000ms ease 850ms, translate 1200ms cubic-bezier(.16,1,.3,1) 850ms; }
+  .op-actions { transition-delay: 1000ms; }
+  .op-hero-rule { transform-origin: left; scale: 0 1; translate: 0; transition: scale 1400ms cubic-bezier(.77,0,.18,1) 1100ms, opacity 400ms ease 1100ms; }
+  .op.is-ready :is(.op-desc, .op-actions, .op-hero-chevron) { opacity: 1; translate: 0 0; }
+  .op.is-ready .op-hero-rule { opacity: 1; scale: 1 1; }
+
+  /* Sphères : apparition, rotation lente, suivi souris + scroll */
+  /* Couche graphique dédiée : la sphère est dessinée une fois en haute qualité à sa taille réelle,
+     puis déplacée / tournée / agrandie par la carte graphique (lissage, aucune pixelisation).
+     L'entrée est un fondu à taille réelle : aucune réduction qui figerait une basse résolution. */
+  .op-sphere {
+    /* 0,01 et non 0 : invisible sur le bordeaux, mais la boule est « peinte » dès son chargement (les outils de mesure
+       ne comptent pas un élément à opacité nulle : sans cela l'affichage paraissait attendre la fin du fondu) */
+    opacity: 0.01;
+    translate: calc(var(--hx, 0px) * var(--hk, 1) + var(--tx, 0px)) calc(var(--hy, 0px) * var(--hk, 1) + var(--ty, 0px));
+    scale: var(--ts, 1);
+    transition: opacity 1600ms ease calc(200ms + var(--s) * 180ms);
+    will-change: transform, translate, rotate;
+  }
+  .op.is-ready .op-sphere { opacity: 1; }
+  .op-sphere { transform: scale(var(--ms, 1)); }
+  .op.is-ready .op-sphere--rouge:not(.op-sphere--drawn):not(.op-sphere--fallback) { opacity: 0; }
+  .op-sphere--drawn { opacity: 1; transition: none; overflow: visible; }
+  @keyframes op-spin { to { rotate: 360deg; } }
+
+  /* « Nos projets » : lettres qui montent une à une, vague au survol */
+  .op-ch { display: inline-block; transform: translate3d(0, 110%, 0) rotate(10deg); opacity: 0; transition: transform 1000ms cubic-bezier(.16,1,.3,1) calc(var(--c) * 40ms), opacity 700ms ease calc(var(--c) * 40ms); }
+  .is-in .op-ch { transform: none; opacity: 1; }
+  .op-projects-title a:hover .op-ch { animation: op-wave 700ms cubic-bezier(.16,1,.3,1) calc(var(--c) * 30ms); }
+  @keyframes op-wave { 40% { transform: translate3d(0, -22%, 0); color: var(--bordeaux); } }
+  .op-count { display: inline-block; vertical-align: top; margin-left: 6px; font-family: var(--mono); font-size: max(9px, calc(9 * var(--u))); letter-spacing: 0.1em; color: var(--muted); opacity: 0; translate: 0 6px; transition: opacity 600ms ease 600ms, translate 800ms cubic-bezier(.16,1,.3,1) 600ms; }
+  .is-in .op-count { opacity: 1; translate: 0 0; }
+
+  /* Apparitions génériques au défilement */
+  [data-reveal]:not([data-reveal="chars"]) { opacity: 0; translate: 0 40px; transition: opacity 1000ms ease, translate 1300ms cubic-bezier(.16,1,.3,1); }
+  [data-reveal].is-in { opacity: 1; translate: 0 0; }
+  .op-offer-list li:nth-child(1) { --rd: 0ms; } .op-offer-list li:nth-child(2) { --rd: 120ms; transition-delay: 120ms; }
+  .op-offer-list li:nth-child(3) { --rd: 240ms; transition-delay: 240ms; } .op-offer-list li:nth-child(4) { --rd: 360ms; transition-delay: 360ms; }
+  .op-studios-text { transition-delay: 150ms; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .op-title > span > span, .op-ch, [data-reveal], .op-desc, .op-actions, .op-hero-rule, .op-hero-chevron, .op-sphere, .op-count { transform: none !important; translate: none !important; scale: none !important; opacity: 1 !important; animation: none !important; transition: none !important; }
+    .op-offer::after { transform: none; }
+  }
+
+
+  /* ---------- Signature flottante ---------- */
+  .op-sig {
+    position: fixed; left: clamp(12px, 1.6vw, 24px); bottom: clamp(12px, 1.6vw, 24px); z-index: 90;
+    width: clamp(78px, 7.6vw, 112px); aspect-ratio: 705 / 714;
+    opacity: 0; translate: 0 24px; scale: 0.9; pointer-events: none;
+    transition: opacity 600ms ease, translate 900ms cubic-bezier(.16,1,.3,1), scale 900ms cubic-bezier(.16,1,.3,1);
+  }
+  .op-sig.is-on { opacity: 1; translate: 0 0; scale: 1; pointer-events: auto; }
+  .op-sig img { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .op-sig-trio { transition: rotate 1200ms cubic-bezier(.16,1,.3,1); }
+  .op-sig:hover .op-sig-trio { rotate: 25deg; }
+  .op-sig-logo { transition: filter 400ms ease; }
+  .op-sig.on-dark .op-sig-logo { filter: invert(1) brightness(1.4); }
+
+  /* ---------- MOBILE ---------- */
+  @media (max-width: 820px) {
+    .op { --u: 1px; }
+    .op-frame { width: auto; padding: 0 16px; }
+    .op-h2 { font-size: 26px; letter-spacing: -0.03em; }
+
+    /* Hero */
+    .op-hero-in { height: auto; min-height: min(85vh, 620px); padding: 90px 16px 40px; display: flex; flex-direction: column; justify-content: center; }
+    .op-sphere { width: 44vw; max-width: 200px; opacity: 0.8; z-index: 0; pointer-events: none; }
+    .op-sphere--corail { left: -6vw; top: 60px; }
+    .op-sphere--rose { left: 40vw; top: 25px; }
+    .op-sphere--rouge { left: 60vw; top: 95px; }
+    .op-title, .op-desc, .op-actions, .op-hero-rule { position: relative; left: auto; top: auto; z-index: 1; }
+    .op-title { text-wrap: balance; margin-top: 36px; }
+    .op-title-a { font-size: clamp(28px, 8.5vw, 44px); line-height: 1.05; letter-spacing: -0.04em; }
+    .op-title-b { font-size: clamp(22px, 6.8vw, 34px); line-height: 1.1; margin-top: 6px; color: rgba(255, 255, 255, 0.85); }
+    .op-desc { width: 100%; font-size: 15px; line-height: 1.5; color: rgba(255, 255, 255, 0.82); margin-top: 18px; }
+    .op-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+    .op-btn { height: 48px; padding: 0 18px; font-size: 11.5px; border-radius: 4px; }
+    .op-btn .arw { width: 18px; height: 18px; }
+    .op-btn--fill, .op-btn--line, .op-btn--ink { width: 100%; }
+    .op-hero-rule { display: block; width: 100%; margin-top: 28px; border: 0; height: 1px; background: rgba(255, 255, 255, 0.15); }
+    .op-hero-chevron { display: none; }
+
+    /* Nos projets */
+    .op-projects { padding-top: 56px !important; padding-bottom: 36px !important; overflow: hidden; }
+    .op-projects-title { position: static; margin-bottom: 22px; display: flex; align-items: baseline; justify-content: space-between; }
+
+    /* Grille 1 colonne pleine largeur sur mobile */
+    .op-collage {
+      height: auto !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 16px !important;
+      perspective: none !important;
+    }
+
+    /* Neutralisation stricte des animations de parallaxe desktop qui détruisent la grille mobile */
+    .op-slot,
+    .op-slot .op-card-media :is(img, video),
+    .op-slot .op-card,
+    .op-slot .op-card-inner,
+    .op-slot .op-card-veil,
+    .op-strip {
+      animation: none !important;
+      transform: none !important;
+      translate: none !important;
+      rotate: none !important;
+      scale: none !important;
+      animation-timeline: none !important;
+    }
+
+    .op-slot {
+      position: relative !important;
+      left: auto !important;
+      top: auto !important;
+      width: 100% !important;
+      height: auto !important;
+      aspect-ratio: 16 / 10 !important;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      background: var(--bg, #111);
+    }
+    .op-slot:nth-child(3n) {
+      grid-column: auto;
+      aspect-ratio: 16 / 10 !important;
+    }
+
+    .op-card {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      transform: none !important;
+    }
+    .op-card-media {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+    }
+    .op-card-inner {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      scale: 1 !important;
+      transform: none !important;
+    }
+    .op-card-media :is(img, video) {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: none !important;
+      animation: none !important;
+    }
+    .op-card-strips,
+    .op-card-shade,
+    .op-card-veil,
+    .op-trace {
+      display: none !important;
+    }
+
+    /* Index de carte discret en haut à droite */
+    .op-card-index {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      left: auto;
+      bottom: auto;
+      z-index: 4;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: #fff;
+      background: rgba(15, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 3px 8px;
+      border-radius: 3px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .op-card-index i { opacity: 0.6; font-style: normal; }
+
+    /* Label client masqué en haut car déjà présent en grand en bas dans meta */
+    .op-card-type { display: none !important; }
+
+    /* Voile de dégradé sombre permanent en bas pour garantir une lisibilité absolue */
+    .op-card-meta {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 3;
+      padding: 36px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      background: linear-gradient(180deg, transparent 0%, rgba(15, 0, 0, 0.78) 50%, rgba(10, 0, 0, 0.94) 100%);
+      opacity: 1 !important;
+      transform: none !important;
+      color: #fff;
+    }
+    .op-card-meta b {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #fff;
+      opacity: 0.9;
+    }
+    .op-card-meta span {
+      font-family: var(--sans);
+      font-size: 14.5px;
+      font-weight: 500;
+      line-height: 1.25;
+      color: #fff;
+    }
+    .op-card-chevron {
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      left: auto;
+      z-index: 4;
+      width: 14px;
+      height: 14px;
+      opacity: 0.8 !important;
+      transform: none !important;
+    }
+    .op-rule { width: calc(100% - 32px); left: 0; }
+    .op-rule--a { margin-top: 48px; }
+
+    /* Marques & Maisons */
+    .op-clients { padding: 44px 0 !important; }
+    .op-clients .op-h2 { margin-bottom: 24px; padding: 0 16px; font-size: 24px; }
+    .op-marquee { height: 40px; }
+    .op-marquee--b { margin-top: 20px; padding: 0; }
+    .op-logo { margin-right: 36px; }
+    .op-logo { font-size: 11px; }
+    .op-logo img { height: calc(var(--lh, 24) * 0.78px); min-height: 12px; max-height: none; width: auto; max-width: none; }
+    .op-rule--b { margin-top: 44px; }
+
+    /* Nos offres */
+    .op-offers { margin-top: 0; padding: 52px 0 60px !important; }
+    .op-offers .op-h2 { font-size: 26px; }
+    .op-offer-list { margin: 24px 0 0; width: 100%; }
+    .op-offer-list li { border-top: 1px solid var(--rule, rgba(255, 255, 255, 0.15)); }
+    .op-offer-list li + li { margin-top: 0; }
+    .op-offer {
+      display: grid;
+      grid-template-columns: 1fr 28px;
+      gap: 6px 12px;
+      padding: 18px 0;
+      align-items: center;
+    }
+    .op-offer h3 { font-size: 20px; font-weight: 500; margin: 0; line-height: 1.2; }
+    .op-offer p {
+      grid-column: 1 / 2;
+      font-size: 13.5px;
+      line-height: 1.45;
+      color: rgba(255, 255, 255, 0.78);
+      margin: 4px 0 0;
+    }
+    .op-offer-go {
+      grid-column: 2 / 3;
+      grid-row: 1 / 3;
+      width: 18px;
+      height: 18px;
+      align-self: center;
+      justify-self: end;
+      opacity: 0.85;
+    }
+
+    /* Les Studios */
+    .op-studios { padding: 52px 0 100px !important; }
+    .op-studios-in { padding: 0 16px; }
+    .op-studios-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+    .op-kicker { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 6px; }
+    .op-studios-title { font-size: 32px; letter-spacing: -0.03em; }
+    .op-meet { font-size: 12.5px; font-weight: 500; }
+    .op-studios-text { font-size: 15px; line-height: 1.55; margin-top: 18px; color: var(--ink); }
+    .op-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 24px;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      padding: 18px 0;
+    }
+    .op-stat { border: none !important; padding: 0; }
+    .op-stat b { font-size: 30px; line-height: 1; letter-spacing: -0.03em; }
+    .op-stat > div > span { font-size: 9.5px; line-height: 1.25; margin-top: 4px; display: block; text-transform: uppercase; letter-spacing: 0.08em; }
+    .op-studios .op-btn--ink { width: 100%; height: 48px; margin-top: 24px; }
+
+    /* Signature jaune flottante */
+    .op-sig {
+      left: 14px;
+      bottom: 14px;
+      width: 54px;
+    }
+  }
+
+  /* ---------- TABLETTE (600px - 820px) ---------- */
+  @media (min-width: 600px) and (max-width: 820px) {
+    .op-collage {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 16px !important;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .op-track { animation: none; }
+  }
+</style>

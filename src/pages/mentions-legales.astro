@@ -13,39 +13,92 @@ const breadcrumb = {
   ],
 };
 ---
-<Base lang={lang} path="/mentions-legales" title="Mentions légales" description="Mentions légales et informations réglementaires de l'agence BrunierObadia Studios." jsonLd={[breadcrumb]}>
+<Base lang={lang} path="/mentions-legales" title="Mentions légales" description="Mentions légales obligatoires conformes à la loi LCEN n° 2004-575 et aux exigences légales françaises de l'agence BrunierObadia Studios." jsonLd={[breadcrumb]}>
   <div class="wrap" style="padding-top:clamp(40px,6vw,90px);padding-bottom:clamp(60px,8vw,120px)">
     <div class="sec-head">
       <h1>Mentions légales</h1>
-      <span class="label">Réglementation</span>
+      <span class="label">Conformité réglementaire · Loi LCEN</span>
     </div>
 
     <div class="legal-content prose" style="max-width:76ch;margin-top:clamp(32px,4vw,64px)">
+      <p style="font-size:0.95rem;color:var(--muted);line-height:1.6;margin-bottom:32px">
+        Conformément aux dispositions des articles 6-III et 19 de la Loi n° 2004-575 du 21 juin 2004 pour la Confiance dans l'Économie Numérique (dite LCEN), ainsi qu'aux dispositions de l'article R. 123-237 du Code de commerce et du Règlement Général sur la Protection des Données (RGPD 2016/679), les utilisateurs du site sont informés des présentes mentions légales.
+      </p>
+
       <section style="border:none;padding:0 0 32px 0">
         <h3>1. Éditeur du site</h3>
-        <p>Le présent site est édité par <strong>{SITE.legalName}</strong>.<br />
-        Siège social : Paris, France.<br />
-        Fondateurs : Jean-Paul Brunier &amp; Jonas Obadia.<br />
-        Courriels : <a href={`mailto:${SITE.emails[0]}`}>{SITE.emails[0]}</a> · <a href={`mailto:${SITE.emails[1]}`}>{SITE.emails[1]}</a><br />
-        Directeur de la publication : Jean-Paul Brunier &amp; Jonas Obadia.</p>
+        <p>Le site <strong>{SITE.url}</strong> est la propriété exclusive et est édité par la société :</p>
+        <ul style="list-style:disc;padding-left:24px;margin:16px 0;line-height:1.8">
+          <li><strong>Dénomination sociale :</strong> {SITE.legalName}</li>
+          <li><strong>Forme juridique :</strong> {SITE.legalForm}</li>
+          <li><strong>Capital social :</strong> {SITE.shareCapital}</li>
+          <li><strong>Siège social :</strong> {SITE.headquarters}</li>
+          <li><strong>Numéro SIREN :</strong> {SITE.siren}</li>
+          <li><strong>Numéro SIRET (siège) :</strong> {SITE.siret}</li>
+          <li><strong>Registre du Commerce et des Sociétés :</strong> R.C.S. {SITE.rcs}</li>
+          <li><strong>Numéro de TVA intracommunautaire :</strong> {SITE.vatNumber}</li>
+          <li><strong>Code APE / NAF :</strong> {SITE.codeApe}</li>
+          <li><strong>Téléphone :</strong> <a href={`tel:${SITE.phone.replace(/\s+/g, '')}`}>{SITE.phone}</a></li>
+          <li><strong>Courriels :</strong> <a href={`mailto:${SITE.emails[0]}`}>{SITE.emails[0]}</a> · <a href={`mailto:${SITE.emails[1]}`}>{SITE.emails[1]}</a></li>
+        </ul>
       </section>
 
       <section style="border-top:1px solid var(--line);padding:32px 0">
-        <h3>2. Hébergement</h3>
-        <p>Le site est hébergé sur une infrastructure haute disponibilité conforme aux normes de sécurité européennes (RGPD).<br />
-        Hébergeur : Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis.</p>
+        <h3>2. Directeur de la publication</h3>
+        <p>
+          <strong>Directeur de la publication :</strong><br />
+          {SITE.publicationDirectors.fr}<br />
+          Contact : <a href={`mailto:${SITE.emails[0]}`}>{SITE.emails[0]}</a>
+        </p>
       </section>
 
       <section style="border-top:1px solid var(--line);padding:32px 0">
-        <h3>3. Propriété intellectuelle</h3>
-        <p>L'ensemble des contenus (textes, visuels, photographies, identités de marque, animations, typographies et code source) présents sur ce site relève de la législation française et internationale sur le droit d'auteur et la propriété intellectuelle.<br />
-        Toute reproduction, représentation, modification ou diffusion, totale ou partielle, sans l'accord préalable écrit de BrunierObadia Studios ou de ses clients partenaires est strictement interdite.</p>
+        <h3>3. Prestataire d'hébergement</h3>
+        <p>
+          Le site internet est hébergé par :<br />
+          <strong>{SITE.host.name}</strong><br />
+          Adresse : {SITE.host.address}<br />
+          Téléphone : {SITE.host.phone}<br />
+          Site web : <a href={SITE.host.url} target="_blank" rel="noopener noreferrer">{SITE.host.url}</a>
+        </p>
       </section>
 
       <section style="border-top:1px solid var(--line);padding:32px 0">
-        <h3>4. Données personnelles et cookies</h3>
-        <p>Le site respecte la vie privée des utilisateurs et ne déploie aucun traceur commercial invasif ni cookie publicitaire tiers. Les éventuelles données transmises par courriel ou formulaire de contact sont utilisées exclusivement pour traiter les demandes de projets et ne sont jamais cédées à des tiers.<br />
-        Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez d'un droit d'accès, de rectification et de suppression de vos données en écrivant à : <a href={`mailto:${SITE.emails[0]}`}>{SITE.emails[0]}</a>.</p>
+        <h3>4. Propriété intellectuelle et contrefaçons</h3>
+        <p>
+          L'ensemble des éléments constituant ce site web (incluant, de manière non limitative, l'architecture globale, les créations graphiques, logos, typographies, textes, photographies, vidéos, identités visuelles de marque, études de cas et code source) est protégé par les lois françaises et internationales relatives au droit d'auteur, aux marques et à la propriété intellectuelle (articles L. 111-1 et suivants du Code de la propriété intellectuelle).
+        </p>
+        <p>
+          Toute reproduction, représentation, diffusion, adaptation ou exploitation, totale ou partielle, de l'un quelconque de ces éléments, par quelque procédé que ce soit, sans l'accord préalable écrit et exprès de <strong>{SITE.legalName}</strong> ou de ses clients et titulaires de droits, est constitutive d'une contrefaçon sanctionnée par les articles L. 335-2 et suivants du Code de la propriété intellectuelle.
+        </p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>5. Données personnelles et respect du RGPD</h3>
+        <p>
+          Pour toute information relative à la collecte, au traitement, à la durée de conservation et aux droits dont vous disposez sur vos données à caractère personnel conformément au RGPD (Règlement UE 2016/679) et à la loi n° 78-17 « Informatique et Libertés », nous vous invitons à consulter notre <a href="/confidentialite">Politique de confidentialité</a>, accessible directement depuis le bas de chaque page du site.
+        </p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>6. Cookies et traceurs</h3>
+        <p>
+          Le site <strong>{SITE.url}</strong> ne déploie aucun cookie publicitaire, traceur de profilage, ni technologie de tracking tiers nécessitant le consentement préalable de l'utilisateur conformément à l'article 82 de la loi Informatique et Libertés et aux recommandations de la CNIL. Aucun bandeau intrusif n'est requis car votre navigation demeure strictement privée et non monétisée.
+        </p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>7. Limitation de responsabilité</h3>
+        <p>
+          {SITE.legalName} s'efforce d'assurer au mieux de ses possibilités l'exactitude et la mise à jour des informations diffusées sur le site. Toutefois, la société décline toute responsabilité pour toute imprécision, inexactitude ou omission portant sur des informations disponibles sur le site, ainsi que pour tout dommage résultant d'une intrusion frauduleuse d'un tiers.
+        </p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>8. Droit applicable et juridiction compétente</h3>
+        <p>
+          Les présentes mentions légales sont régies par le droit français. En cas de litige relatif à la validité, l'interprétation ou l'exécution des présentes, et à défaut d'accord amiable, compétence exclusive est attribuée aux tribunaux compétents du ressort de la Cour d'appel de Paris.
+        </p>
       </section>
     </div>
   </div>

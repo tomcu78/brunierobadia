@@ -1,0 +1,86 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../data/site.js';
+import { abs } from '../../lib/seo.js';
+
+const lang = 'en';
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: abs('/en') },
+    { '@type': 'ListItem', position: 2, name: 'Terms of Use', item: abs('/en/cgu') },
+  ],
+};
+---
+<Base lang={lang} path="/cgu" title="Terms of Use (CGU)" description="General Terms of Use governing access to and usage of the official BrunierObadia Studios website." jsonLd={[breadcrumb]}>
+  <div class="wrap" style="padding-top:clamp(40px,6vw,90px);padding-bottom:clamp(60px,8vw,120px)">
+    <div class="sec-head">
+      <h1>Terms of Use</h1>
+      <span class="label">Legal Framework · Terms &amp; Conditions</span>
+    </div>
+
+    <div class="legal-content prose" style="max-width:76ch;margin-top:clamp(32px,4vw,64px)">
+      <p style="font-size:0.95rem;color:var(--muted);line-height:1.6;margin-bottom:32px">
+        These General Terms of Use ("Terms") define the legal framework governing access, navigation, and use of the website <strong>{SITE.url}</strong>, operated by <strong>{SITE.legalName}</strong>.
+      </p>
+
+      <section style="border:none;padding:0 0 32px 0">
+        <h3>1. Acceptance of Terms</h3>
+        <p>
+          By accessing and browsing this website, you acknowledge that you have read, understood, and agreed without reservation to these Terms. If you do not accept these terms, you must refrain from using the site.
+        </p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>2. Website Access &amp; Availability</h3>
+        <p>
+          The website is provided free of charge to any user with internet access. While {SITE.legalName} makes reasonable efforts to maintain continuous availability 24/7, we reserve the right to suspend or restrict access at any time for technical updates or maintenance without liability.
+        </p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>3. Intellectual Property Rights</h3>
+        <p>
+          All creative works, brand identities, typography, photographs, motion graphics, texts, case studies, and proprietary code featured on this website are protected by international intellectual property laws.
+        </p>
+        <p>
+          These assets remain the exclusive intellectual property of <strong>{SITE.legalName}</strong> or its licensed client partners. The following actions are strictly prohibited without prior written authorization:
+        </p>
+        <ul style="list-style:disc;padding-left:24px;margin:16px 0;line-height:1.8">
+          <li>Any reproduction, public communication, framing, or distribution of site content;</li>
+          <li>Automated web scraping or unauthorized data harvesting for commercial use or AI model training;</li>
+          <li>Decompilation, reverse engineering, or attempts to disrupt website security and infrastructure.</li>
+        </ul>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>4. Limitation of Liability</h3>
+        <p>
+          Information published on the website is provided for promotional and informational purposes. {SITE.legalName} disclaims liability for any indirect damages, loss of data, or operational disruptions arising from website consultation.
+        </p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>5. Hyperlinks</h3>
+        <p>
+          Hyperlinks pointing to third-party web domains are provided for convenience. {SITE.legalName} exercises no editorial control over external platforms and assumes no responsibility for third-party practices.
+        </p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>6. Privacy &amp; Data Protection</h3>
+        <p>
+          For information on how personal data is handled and protected, please refer to our <a href="/en/confidentialite">Privacy Policy</a> and <a href="/en/mentions-legales">Legal Notice</a>.
+        </p>
+      </section>
+
+      <section style="border-top:1px solid var(--line);padding:32px 0">
+        <h3>7. Governing Law &amp; Jurisdiction</h3>
+        <p>
+          These Terms are governed by French law. Any dispute relating to the validity or interpretation of these Terms shall be subject to the exclusive jurisdiction of the competent courts of Paris, France.
+        </p>
+      </section>
+    </div>
+  </div>
+</Base>

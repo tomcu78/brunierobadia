@@ -57,6 +57,7 @@ export const projects = [
       "layout"
     ],
     "image": "/projets/mad-paris-metal-design.webp",
+    "video": "/projets/mad-paris-metal-design.webm",
     "gallery": [
       "/projets/mad-paris-metal-design-2.webp",
       "/projets/mad-paris-metal-design-3.webp",
@@ -170,6 +171,7 @@ export const projects = [
     "tags_fr": [],
     "tags_en": [],
     "image": "/projets/jeep-jeep-animaux.webp",
+    "video": "/projets/jeep-jeep-animaux.webm",
     "gallery": [
       "/projets/jeep-jeep-animaux-2.webp",
       "/projets/jeep-jeep-animaux-3.webp",
@@ -244,6 +246,7 @@ export const projects = [
     "tags_fr": [],
     "tags_en": [],
     "image": "/projets/museum-of-natural-history-london-life-s-journey.webp",
+    "video": "/projets/museum-of-natural-history-london-life-s-journey.webm",
     "gallery": [],
     "allImages": [
       "/projets/museum-of-natural-history-london-life-s-journey.webp"
@@ -695,6 +698,7 @@ export const projects = [
     "tags_en": [
       "motion 3D"
     ],
+    "video": "/projets/aston-martin-db4-60-ans.webm",
     "image": "/projets/aston-martin-db4-60-ans.webp",
     "gallery": [
       "/projets/aston-martin-db4-60-ans-2.webp"

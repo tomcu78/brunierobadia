@@ -1,0 +1,357 @@
+---
+// Corps de la page « Brand transformation ». Même direction artistique que Création et AI Endorsement (bordeaux,
+// boules, Styrene serré, filets, mono), mais une mise en scène propre à une offre de conseil :
+//  1. les questions de dirigeants : des panneaux plein écran qui s'empilent au défilement, un défi par panneau,
+//     illustré par le projet réel qui y a répondu ;
+//  2. deux regards, sur bande bordeaux : les deux associés côte à côte, chacun avec sa boule ;
+//  3. la méthode sur une ligne : les trois points du logo se remplissent, un par étape ;
+//  4. une bande de réalisations.
+import { localizePath } from '../lib/seo.js';
+import { projects } from '../data/site.js';
+const { lang } = Astro.props;
+const en = lang === 'en';
+const P = (slug) => projects.find((p) => p.slug === slug);
+
+const T = {
+  fr: {
+    qKicker: 'Ce que nous transformons',
+    qTitle: 'Chaque transformation commence par une question.',
+    qText: 'Celles que des dirigeants nous ont posées, et ce que leur marque est devenue.',
+    questions: [
+      { q: 'Donner naissance à une nouvelle banque, en neuf mois.', kind: 'Repositionnement', a: 'Une banque cédée, repositionnée sur une nouvelle clientèle : nom, promesse et identité, livrés en neuf mois.', slug: 'milleis-milleis-nouvelle-banque-privee', img: 'milleis-milleis-nouvelle-banque-privee' },
+      { q: 'Relancer une marque devenue un nom commun.', kind: 'Relance', a: 'Rendre à une marque iconique ce qui la distingue de sa catégorie. Les ventes ont suivi.', slug: 'sopalin-comment-relancer-l-interet-et-les-ventes-d-une-marqu', img: 'sopalin-comment-relancer-l-interet-et-les-ventes-d-une-marqu', video: true },
+      { q: 'Faire ré-émerger une marque que plus personne ne regarde.', kind: 'Ré-émergence', a: 'Retrouver du désir dans la catégorie la plus banale qui soit, face aux marques de distributeur.', slug: 'le-trefle-emma', img: 'le-trefle-emma', video: true },
+      { q: 'Faire entrer un modèle dans un univers qui n’était pas le sien.', kind: 'Territoire', a: 'Inscrire une berline dans un territoire technologique jusqu’alors éloigné de la marque.', slug: 'peugeot-futureship', img: 'peugeot-futureship-2' },
+      { q: 'Faire adopter une innovation plus chère à l’achat.', kind: 'Adoption', a: 'Changer le regard sur un produit pour changer les habitudes : le confort, avant le prix.', slug: 'atlantic-heat-is-life', img: 'atlantic-heat-is-life', video: true },
+      { q: 'Sortir un 4×4 des clichés du 4×4.', kind: 'Différenciation', a: 'Une identité qui célèbre à la fois le rêve d’aventure et la technologie, loin des codes de la catégorie.', slug: 'nissan-x-trail-escapes', img: 'nissan-x-trail-escapes' },
+    ],
+    see: 'Voir le projet',
+    duoKicker: 'Deux regards',
+    duoTitle: 'La stratégie et les équipes, dans la même pièce.',
+    duo: [
+      { name: 'Jean-Paul Brunier', role: 'Stratégie de marque', bio: 'Ancien président de Leo Burnett France, vingt-deux ans chez Publicis. Des décennies de conseil aux présidents, comités exécutifs et institutions.', orb: '/brand/vectors/sphere-rose.svg' },
+      { name: 'Christophe Attelé', role: 'Culture & transformation', bio: 'Spécialiste de la transformation culturelle des grandes organisations : il relie stratégie, engagement des équipes et marque.', orb: '/brand/sphere-rouge.svg' },
+    ],
+    methodKicker: 'Comment nous travaillons',
+    methodTitle: 'Écouter. Écrire. Rallier.',
+    method: [
+      { name: 'Écouter', text: 'Dirigeants, équipes, clients : trouver la vérité de l’entreprise.', get: ['Entretiens dirigeants', 'Immersion terrain', 'Diagnostic de marque'] },
+      { name: 'Écrire', text: 'La plateforme et le récit que l’entreprise portera dix ans.', get: ['Plateforme de marque', 'Raison d’être & manifeste', 'Récit de marque'] },
+      { name: 'Rallier', text: 'Faire vivre la marque au quotidien, du comité de direction aux équipes.', get: ['Ateliers de direction', 'Playbook interne', 'Mesure de l’adhésion'] },
+    ],
+    workKicker: 'Réalisations',
+    workTitle: 'Des marques qui ont changé de cap.',
+    all: (n) => `Tous les projets (${n})`,
+  },
+  en: {
+    qKicker: 'What we transform',
+    qTitle: 'Every transformation starts with a question.',
+    qText: 'The ones leaders asked us, and what their brand became.',
+    questions: [
+      { q: 'Give birth to a new bank, in nine months.', kind: 'Repositioning', a: 'A divested bank, repositioned for a new clientele: name, promise and identity, delivered in nine months.', slug: 'milleis-milleis-nouvelle-banque-privee', img: 'milleis-milleis-nouvelle-banque-privee' },
+      { q: 'Revive a brand that became a common noun.', kind: 'Revival', a: 'Giving an iconic brand back what sets it apart from its category. Sales followed.', slug: 'sopalin-comment-relancer-l-interet-et-les-ventes-d-une-marqu', img: 'sopalin-comment-relancer-l-interet-et-les-ventes-d-une-marqu', video: true },
+      { q: 'Bring back a brand nobody looks at anymore.', kind: 'Re-emergence', a: 'Rekindling desire in the most ordinary category there is, against private labels.', slug: 'le-trefle-emma', img: 'le-trefle-emma', video: true },
+      { q: 'Move a model into a world that was not its own.', kind: 'Territory', a: 'Placing a saloon in a technological territory the brand had never claimed.', slug: 'peugeot-futureship', img: 'peugeot-futureship-2' },
+      { q: 'Get people to adopt an innovation that costs more.', kind: 'Adoption', a: 'Changing how a product is seen to change habits: comfort before price.', slug: 'atlantic-heat-is-life', img: 'atlantic-heat-is-life', video: true },
+      { q: 'Take a 4×4 out of the 4×4 clichés.', kind: 'Differentiation', a: 'An identity that celebrates both the dream of adventure and technology, far from the category’s codes.', slug: 'nissan-x-trail-escapes', img: 'nissan-x-trail-escapes' },
+    ],
+    see: 'See the project',
+    duoKicker: 'Two perspectives',
+    duoTitle: 'Strategy and teams, in the same room.',
+    duo: [
+      { name: 'Jean-Paul Brunier', role: 'Brand strategy', bio: 'Former president of Leo Burnett France, twenty-two years at Publicis. Decades advising chairmen, executive committees and institutions.', orb: '/brand/vectors/sphere-rose.svg' },
+      { name: 'Christophe Attelé', role: 'Culture & transformation', bio: 'A specialist in the cultural transformation of large organisations: he connects strategy, team engagement and brand.', orb: '/brand/sphere-rouge.svg' },
+    ],
+    methodKicker: 'How we work',
+    methodTitle: 'Listen. Write. Rally.',
+    method: [
+      { name: 'Listen', text: 'Leaders, teams, customers: finding the truth of the company.', get: ['Leadership interviews', 'Field immersion', 'Brand diagnosis'] },
+      { name: 'Write', text: 'The platform and the story the company will carry for ten years.', get: ['Brand platform', 'Purpose & manifesto', 'Brand narrative'] },
+      { name: 'Rally', text: 'Bringing the brand to life every day, from the board to the teams.', get: ['Leadership workshops', 'Internal playbook', 'Buy-in measurement'] },
+    ],
+    workKicker: 'Selected work',
+    workTitle: 'Brands that changed course.',
+    all: (n) => `All projects (${n})`,
+  },
+}[lang];
+
+const pad = (i) => String(i + 1).padStart(2, '0');
+const qs = T.questions.map((d) => ({ ...d, p: P(d.slug) })).filter((d) => d.p);
+// images régénérées en haute qualité depuis les originaux (les .webp d'origine étaient trop compressés)
+const hq = (n) => `/projets/${n}-hq.webp`;
+const srcset = (n) => `/projets/${n}-hq-960.webp 960w, /projets/${n}-hq.webp 1920w`;
+const WORK = [['societe-generale-ensemble-tout-se-joue'], ['valeo-move-up-valeo'], ['merci-raymond-pour-des-villes-plus-vertes', 'merci-raymond-pour-des-villes-plus-vertes-2'], ['penninghen-creation-site-web']].map(([slug, img]) => ({ p: P(slug), img: img || slug })).filter((w) => w.p);
+const nameOf = (p) => (en ? p.name_en || p.name_fr : p.name_fr);
+---
+<div class="otr">
+  <!-- 1. Les questions de dirigeants : panneaux empilés -->
+  <section class="otr-q" data-otr-reveal>
+    <div class="otr-q-head">
+      <div>
+        <p class="otr-kicker">{T.qKicker}</p>
+        <h2 class="otr-title">{T.qTitle}</h2>
+      </div>
+      <p class="otr-text">{T.qText}</p>
+    </div>
+    <ol class="otr-stack" data-stack>
+      {qs.map((d, i) => (
+        <li class="otr-panel" style={`--i:${i}`}>
+          <div class="otr-panel-in">
+            <div class="otr-panel-copy">
+              <div class="otr-panel-top">
+                <span class="otr-num">{pad(i)} / {pad(qs.length - 1)}</span>
+                <span class="otr-kind">{d.kind}</span>
+              </div>
+              <h3>{d.q}</h3>
+              <div class="otr-panel-foot">
+                <p>{d.a}</p>
+                <a href={localizePath(`/projets/${d.p.slug}`, lang)}><span class="otr-client">{d.p.client}</span><span class="otr-see">{T.see}<i class="arw arw--right" aria-hidden="true"></i></span></a>
+              </div>
+            </div>
+            <a class="otr-panel-media" href={localizePath(`/projets/${d.p.slug}`, lang)} tabindex="-1" aria-hidden="true">
+              <img src={hq(d.img)} srcset={srcset(d.img)} sizes="(max-width: 900px) 100vw, 55vw" alt="" width="1920" height="1280" loading="lazy" decoding="async" />
+              {d.video && <video data-loop muted loop playsinline preload="none" width="1280" height="720"><source src={`/projets/${d.img}-loop.webm`} type="video/webm" /></video>}
+            </a>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- 2. Deux regards, sur bande bordeaux -->
+  <section class="otr-duo" data-otr-reveal>
+    <div class="otr-duo-head">
+      <p class="otr-kicker">{T.duoKicker}</p>
+      <h2>{T.duoTitle}</h2>
+    </div>
+    <ul>
+      {T.duo.map((m, i) => (
+        <li style={`--i:${i}`}>
+          <img class="otr-duo-orb" src={m.orb} alt="" width="480" height="480" loading="lazy" decoding="async" aria-hidden="true" />
+          <span class="otr-kicker">{m.role}</span>
+          <h3>{m.name}</h3>
+          <p>{m.bio}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- 3. La méthode sur une ligne : les trois points du logo -->
+  <section class="otr-method" data-otr-reveal>
+    <p class="otr-kicker">{T.methodKicker}</p>
+    <h2 class="otr-title">{T.methodTitle}</h2>
+    <div class="otr-line" aria-hidden="true"><span></span></div>
+    <ol>
+      {T.method.map((m, i) => (
+        <li style={`--i:${i}`}>
+          <span class="otr-dot" aria-hidden="true"></span>
+          <span class="otr-num">{pad(i)}</span>
+          <h3>{m.name}</h3>
+          <p>{m.text}</p>
+          <ul class="otr-get">{m.get.map((g) => <li>{g}</li>)}</ul>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- 4. Bande de réalisations -->
+  <section class="otr-work" data-otr-reveal>
+    <div class="otr-work-head">
+      <div>
+        <p class="otr-kicker">{T.workKicker}</p>
+        <h2 class="otr-title">{T.workTitle}</h2>
+      </div>
+      <a class="otr-all" href={localizePath('/projets', lang)}>{T.all(projects.length)}<i class="arw arw--right" aria-hidden="true"></i></a>
+    </div>
+    <div class="otr-strip">
+      {WORK.map(({ p, img }, i) => (
+        <a class="otr-card" style={`--i:${i}`} href={localizePath(`/projets/${p.slug}`, lang)}>
+          <span class="otr-card-media"><img src={hq(img)} srcset={srcset(img)} sizes="(max-width: 900px) 50vw, 25vw" alt={`${p.client} – ${nameOf(p)}`} width="800" height="1000" loading="lazy" decoding="async" /></span>
+          <span class="otr-card-client">{p.client}</span>
+          <span class="otr-card-name">{nameOf(p)}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</div>
+
+<script>
+  const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Panneaux empilés : quand le suivant vient se poser dessus, le panneau du dessous recule légèrement et s'assombrit.
+  function initStack(stack) {
+    if (stack.dataset.ready) return;
+    stack.dataset.ready = '1';
+    if (reduce() || matchMedia('(max-width: 900px)').matches) return;
+    const panels = [...stack.querySelectorAll('.otr-panel')];
+    const inners = panels.map((p) => p.querySelector('.otr-panel-in'));
+    let raf = 0;
+    const tick = () => {
+      raf = 0;
+      for (let i = 0; i < panels.length - 1; i++) {
+        const a = panels[i].getBoundingClientRect(), b = panels[i + 1].getBoundingClientRect();
+        // 0 : le suivant est encore loin ; 1 : il est posé sur celui-ci
+        const k = Math.min(1, Math.max(0, 1 - (b.top - a.top - 14) / Math.max(1, a.height)));
+        inners[i].style.transform = `scale(${(1 - k * 0.05).toFixed(4)})`;
+        inners[i].style.filter = k > 0.001 ? `brightness(${(1 - k * 0.06).toFixed(3)})` : '';
+      }
+    };
+    const on = () => { if (!raf) raf = requestAnimationFrame(tick); };
+    addEventListener('scroll', on, { passive: true });
+    tick();
+    document.addEventListener('astro:before-swap', () => removeEventListener('scroll', on), { once: true });
+  }
+
+  // boucles vidéo des panneaux : elles jouent seulement quand le panneau est à l'écran (l'image reste en attendant)
+  function initLoops() {
+    const vids = [...document.querySelectorAll('video[data-loop]:not([data-ready])')];
+    if (!vids.length || reduce()) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { const v = e.target; if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); });
+    }, { threshold: 0.35 });
+    vids.forEach((v) => { v.dataset.ready = '1'; v.addEventListener('playing', () => v.classList.add('is-playing'), { once: true }); io.observe(v); });
+    document.addEventListener('astro:before-swap', () => io.disconnect(), { once: true });
+  }
+
+  const init = () => {
+    document.querySelectorAll('[data-stack]').forEach(initStack);
+    initLoops();
+    const els = document.querySelectorAll('[data-otr-reveal]:not(.is-in)');
+    if (!els.length) return;
+    if (!('IntersectionObserver' in window) || reduce()) { els.forEach((el) => el.classList.add('is-in')); return; }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -15% 0px' });
+    els.forEach((el) => { el.classList.add('is-pending'); io.observe(el); });
+  };
+  document.addEventListener('astro:page-load', init);
+</script>
+
+<style>
+  .otr {
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --rule: #e3e3dc;
+    --red: #ff4a4a;
+    font-family: var(--sans);
+  }
+  .otr section { border: 0; position: relative; }
+  .otr p { margin: 0; text-wrap: pretty; }
+  .otr h2, .otr h3 { font-family: var(--sans); font-weight: 400; margin: 0; }
+  .otr-kicker { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin: 0 0 18px !important; }
+  .otr-title { font-size: clamp(32px, 3.6vw, 52px); letter-spacing: -0.045em; line-height: 0.98; max-width: 16ch; }
+  .otr-text { max-width: 430px; font-size: clamp(15px, 1.15vw, 17px); line-height: 1.55; color: #2b2b2b; }
+  .otr-num { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; color: var(--muted); }
+
+  /* 1. Questions : panneaux empilés */
+  .otr-q { padding: clamp(24px, 3vw, 48px) 0 clamp(110px, 11vw, 180px); }
+  .otr-q-head { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 112px); align-items: end; margin-bottom: clamp(40px, 5vw, 80px); }
+  .otr-stack { list-style: none; margin: 0; padding: 0; }
+  .otr-panel { position: sticky; top: calc(var(--head-h) + 24px + var(--i) * 14px); height: min(calc(100vh - var(--head-h) - 120px), 640px); margin-bottom: clamp(48px, 8vh, 96px); }
+  .otr-panel:last-child { margin-bottom: 0; }
+  .otr-panel-in { height: 100%; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); background: var(--paper); border-top: 1px solid var(--ink); transform-origin: 50% 0; will-change: transform; }
+  .otr-panel-copy { display: flex; flex-direction: column; justify-content: space-between; gap: 24px; padding: 22px clamp(20px, 3vw, 48px) 26px 0; }
+  .otr-panel-top { display: flex; justify-content: space-between; gap: 16px; }
+  .otr-kind { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--bordeaux); }
+  .otr-panel h3 { font-size: clamp(28px, 3vw, 46px); letter-spacing: -0.05em; line-height: 1.02; max-width: 15ch; }
+  .otr-panel-foot p { font-size: clamp(14px, 1.05vw, 16px); line-height: 1.45; color: #2b2b2b; max-width: 38ch; }
+  .otr-panel-foot a { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--rule); color: var(--ink); text-decoration: none; }
+  .otr-client { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+  .otr-see { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; transition: color 300ms ease; }
+  .otr-see .arw { width: 15px; transition: transform 300ms var(--ease); }
+  .otr-panel-foot a:hover .otr-see { color: var(--bordeaux); }
+  .otr-panel-foot a:hover .arw { transform: translateX(4px); }
+  .otr-panel-media { display: block; overflow: hidden; background: #ebe9e2; }
+  .otr-panel-media img { display: block; width: 100%; height: 100%; object-fit: cover; transition: scale 1400ms var(--ease); }
+  .otr-panel-media:hover img { scale: 1.03; }
+  .otr-panel-media { position: relative; }
+  .otr-panel-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 600ms ease; }
+  .otr-panel-media video.is-playing { opacity: 1; }
+
+  /* 2. Deux regards : bande bordeaux */
+  .otr-duo {
+    border-image: conic-gradient(var(--bordeaux) 0 0) fill 0 // 0 100vmax !important;
+    color: #fff;
+    padding: clamp(90px, 9vw, 150px) 0;
+    overflow: clip;
+    overflow-clip-margin: 100vmax;
+  }
+  .otr-duo .otr-kicker { color: rgba(255, 255, 255, 0.5); }
+  .otr-duo-head h2 { font-size: clamp(32px, 3.6vw, 52px); letter-spacing: -0.045em; line-height: 0.98; max-width: 18ch; color: #fff; }
+  .otr-duo ul { list-style: none; margin: clamp(56px, 6vw, 96px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid rgba(255, 255, 255, 0.35); }
+  .otr-duo li { position: relative; padding: clamp(28px, 3vw, 44px) clamp(20px, 3vw, 56px) 0 0; }
+  .otr-duo li + li { padding-left: clamp(20px, 3vw, 56px); border-left: 1px solid rgba(255, 255, 255, 0.18); }
+  .otr-duo-orb { display: block; width: clamp(96px, 10vw, 150px); aspect-ratio: 1; margin-bottom: clamp(28px, 3vw, 44px); mix-blend-mode: screen; animation: otr-spin calc(50s + var(--i) * 16s) linear infinite; }
+  .otr-duo h3 { font-size: clamp(30px, 3.2vw, 48px); letter-spacing: -0.05em; line-height: 1; color: #fff; }
+  .otr-duo li p { margin-top: 18px !important; max-width: 40ch; font-size: clamp(14px, 1.05vw, 16px); line-height: 1.45; color: rgba(255, 255, 255, 0.8); }
+  .otr-duo li .otr-kicker { margin-bottom: 12px !important; }
+  @keyframes otr-spin { to { rotate: 360deg; } }
+
+  /* 3. Méthode : une ligne, les trois points du logo */
+  .otr-method { padding: clamp(110px, 11vw, 180px) 0; }
+  .otr-line { position: relative; height: 1px; margin-top: clamp(56px, 6vw, 96px); background: var(--rule); }
+  .otr-line span { position: absolute; inset: 0; background: var(--ink); transform-origin: 0 50%; }
+  .otr-method > ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 4vw, 72px); }
+  .otr-method > ol > li { position: relative; padding-top: 34px; }
+  .otr-dot { position: absolute; top: -7px; left: 0; width: 13px; height: 13px; border-radius: 50%; background: var(--paper); box-shadow: inset 0 0 0 1px var(--ink); }
+  .otr-dot::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--red); scale: 1; }
+  .otr-method h3 { margin: 12px 0 8px; font-size: clamp(26px, 2.4vw, 36px); letter-spacing: -0.05em; line-height: 1.05; }
+  .otr-method li p { font-size: clamp(13px, 1vw, 15px); line-height: 1.4; color: #2b2b2b; max-width: 30ch; }
+  .otr-get { list-style: none; margin: 22px 0 0; padding: 0; max-width: 300px; border-bottom: 1px solid var(--rule); }
+  .otr-get li { padding: 9px 0; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); }
+
+  /* 4. Bande de réalisations : quatre images égales, en hauteur */
+  .otr-work { padding: 0 0 clamp(40px, 4vw, 64px); }
+  .otr-work-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; flex-wrap: wrap; }
+  .otr-all { display: inline-flex; align-items: center; gap: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--ink); font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+  .otr-all .arw { width: 17px; transition: transform 300ms var(--ease); }
+  .otr-all:hover { color: var(--bordeaux); border-color: var(--bordeaux); }
+  .otr-all:hover .arw { transform: translateX(4px); }
+  .otr-strip { margin-top: clamp(40px, 4.5vw, 72px); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(12px, 1.4vw, 24px); }
+  .otr-card { display: block; color: inherit; text-decoration: none; }
+  .otr-card:nth-child(even) { margin-top: clamp(32px, 4vw, 72px); }
+  .otr-card-media { display: block; overflow: hidden; aspect-ratio: 4 / 5; background: #ebe9e2; margin-bottom: 14px; }
+  .otr-card-media img { display: block; width: 100%; height: 100%; object-fit: cover; transition: scale 1200ms var(--ease), filter 600ms ease; }
+  .otr-card:hover img { scale: 1.05; }
+  .otr-strip:has(.otr-card:hover) .otr-card:not(:hover) img { filter: grayscale(1); }
+  .otr-card-client { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .otr-card-name { display: block; font-size: clamp(16px, 1.3vw, 19px); letter-spacing: -0.04em; line-height: 1.15; transition: color 300ms ease; }
+  .otr-card:hover .otr-card-name { color: var(--bordeaux); }
+
+  /* Apparitions */
+  .is-pending :is(.otr-kicker, .otr-title, .otr-text, .otr-duo-head h2, .otr-all) { opacity: 0; translate: 0 24px; }
+  .is-in :is(.otr-kicker, .otr-title, .otr-text, .otr-duo-head h2, .otr-all) { opacity: 1; translate: 0 0; transition: opacity 1000ms ease, translate 1200ms var(--ease); }
+  .is-in :is(.otr-title, .otr-duo-head h2) { transition-delay: 90ms; }
+  .is-in .otr-text { transition-delay: 200ms; }
+  .otr-duo.is-pending li { opacity: 0; translate: 0 30px; }
+  .otr-duo.is-in li { opacity: 1; translate: 0 0; transition: opacity 1s ease calc(0.35s + var(--i) * 0.2s), translate 1.2s var(--ease) calc(0.35s + var(--i) * 0.2s); }
+  .otr-duo.is-pending .otr-duo-orb { scale: 0.4; opacity: 0; }
+  .otr-duo.is-in .otr-duo-orb { scale: 1; opacity: 1; transition: scale 1.6s cubic-bezier(0.16, 1.2, 0.3, 1) calc(0.5s + var(--i) * 0.25s), opacity 1s ease calc(0.5s + var(--i) * 0.25s); }
+  .otr-method.is-pending .otr-line span { transform: scaleX(0); }
+  .otr-method.is-in .otr-line span { transform: scaleX(1); transition: transform 1.8s var(--ease) 0.3s; }
+  .otr-method.is-pending .otr-dot::after { scale: 0; }
+  .otr-method.is-in .otr-dot::after { scale: 1; transition: scale 0.7s cubic-bezier(0.16, 1.4, 0.3, 1) calc(0.6s + var(--i) * 0.45s); }
+  .otr-method.is-pending > ol > li > :not(.otr-dot) { opacity: 0; translate: 0 14px; }
+  .otr-method.is-in > ol > li > :not(.otr-dot) { opacity: 1; translate: 0 0; transition: opacity 0.9s ease calc(0.7s + var(--i) * 0.45s), translate 0.9s var(--ease) calc(0.7s + var(--i) * 0.45s); }
+  .otr-work.is-pending .otr-card { opacity: 0; translate: 0 30px; }
+  .otr-work.is-in .otr-card { opacity: 1; translate: 0 0; transition: opacity 1s ease calc(0.2s + var(--i) * 0.12s), translate 1.2s var(--ease) calc(0.2s + var(--i) * 0.12s); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .otr-duo-orb { animation: none; }
+  }
+  @media (max-width: 900px) {
+    .otr-q-head { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+    .otr-panel { position: static; height: auto; margin-bottom: 56px; }
+    .otr-panel-in { grid-template-columns: minmax(0, 1fr); }
+    .otr-panel-copy { padding: 18px 0 22px; }
+    .otr-panel-media { order: -1; aspect-ratio: 3 / 2; margin-top: 0; }
+    .otr-duo ul { grid-template-columns: minmax(0, 1fr); }
+    .otr-duo li + li { padding-left: 0; border-left: 0; margin-top: 40px; border-top: 1px solid rgba(255, 255, 255, 0.18); }
+    .otr-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 760px) {
+    .otr-line { display: none; }
+    .otr-method > ol { grid-template-columns: minmax(0, 1fr); gap: 48px; }
+    .otr-method > ol > li { padding-top: 26px; border-top: 1px solid var(--ink); }
+    .otr-dot { top: -7px; }
+  }
+</style>
