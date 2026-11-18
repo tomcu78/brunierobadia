@@ -9,7 +9,8 @@
    Remplace Styrene B (textes) ; BO Grotesk Wide, élargie, remplace Styrene A (boutons, titres d'offres). */
 /* polices de secours aux mêmes mesures que BO Grotesk (largeur, hauteurs) : pendant le chargement, le texte occupe
    déjà sa place définitive ; la vraie police le remplace sans rien décaler (pas de saut de mise en page) */
-@font-face { font-family: 'BO Grotesk Fallback'; src: local('Arial'), local('ArialMT'), local('Helvetica Neue'), local('Helvetica'); size-adjust: 115.2%; ascent-override: 91.1%; descent-override: 20.8%; line-gap-override: 0%; }
+@font-face { font-family: 'BO Grotesk Fallback'; font-weight: 100 600; src: local('Arial'), local('ArialMT'), local('Helvetica Neue'), local('Helvetica'); size-adjust: 115.2%; ascent-override: 91.1%; descent-override: 20.8%; line-gap-override: 0%; }
+@font-face { font-family: 'BO Grotesk Fallback'; font-weight: 700 900; src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Neue Bold'), local('Helvetica Bold'); size-adjust: 105.3%; ascent-override: 99.7%; descent-override: 22.8%; line-gap-override: 0%; }
 @font-face { font-family: 'BO Grotesk Wide Fallback'; src: local('Arial'), local('ArialMT'), local('Helvetica Neue'), local('Helvetica'); size-adjust: 122.1%; ascent-override: 86%; descent-override: 19.7%; line-gap-override: 0%; }
 @font-face { font-family: 'BO Grotesk'; src: url('/fonts/bo-grotesk/BOGrotesk-Thin.woff2') format('woff2'); font-weight: 250; font-style: normal; font-display: swap; }
 @font-face { font-family: 'BO Grotesk'; src: url('/fonts/bo-grotesk/BOGrotesk-Light.woff2') format('woff2'); font-weight: 300; font-style: normal; font-display: swap; }
