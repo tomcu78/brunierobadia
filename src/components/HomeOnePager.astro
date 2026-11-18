@@ -418,20 +418,25 @@ const stats = about.stats.slice(0, 3);
         }
         svg.setAttribute('aria-hidden', 'true');
         svg.removeAttribute('width'); svg.removeAttribute('height');
-        img.replaceWith(svg);
-        const entry = spheres.find((sp) => sp.el === img);
-        if (entry) entry.el = svg;
+        // préparation HORS de la page, par lots qui rendent la main au navigateur : pas de longue tâche au chargement
+        // (avant : 900 traits insérés puis mesurés d'un bloc, chaque mesure forçant un calcul de mise en page)
         const vb = svg.viewBox.baseVal;
         const cx = vb.x + vb.width / 2, cy = vb.y + vb.height / 2;
         const paths = [...svg.querySelectorAll('path')];
-        paths.forEach((p) => {
+        const yieldMain = () => new Promise((r) => (window.scheduler?.yield ? window.scheduler.yield().then(r) : setTimeout(r, 0)));
+        for (let k = 0; k < paths.length; k++) {
+          const p = paths[k];
           const L = p.getTotalLength();
-          const b = p.getBBox();
-          const ang = (Math.atan2(b.y + b.height / 2 - cy, b.x + b.width / 2 - cx) + Math.PI) / (Math.PI * 2);
+          const m = p.getPointAtLength(L / 2);                         // milieu du trait : sa place autour du cercle
+          const ang = (Math.atan2(m.y - cy, m.x - cx) + Math.PI) / (Math.PI * 2);
           p.style.strokeDasharray = `${L} ${L}`;
           p.style.strokeDashoffset = String(L);
           p.style.transition = `stroke-dashoffset 1500ms cubic-bezier(.65,0,.35,1) ${Math.round(500 + ang * 1300 + Math.random() * 350)}ms`;
-        });
+          if (k % 120 === 119) await yieldMain();
+        }
+        img.replaceWith(svg);
+        const entry = spheres.find((sp) => sp.el === img);
+        if (entry) entry.el = svg;
         svg.classList.add('op-sphere--drawn');
         requestAnimationFrame(() => requestAnimationFrame(() => paths.forEach((p) => { p.style.strokeDashoffset = '0'; })));
         setTimeout(() => {

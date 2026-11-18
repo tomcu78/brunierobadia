@@ -62,21 +62,28 @@ export function initProjectsFx(collage) {
   globe.style.cssText = 'position:absolute;left:0;top:0;pointer-events:none;z-index:1;opacity:0';
   collage.appendChild(globe);
   let gPaths = [], gReady = false, gLast = -1;
-  fetch('/brand/sphere-rouge.svg').then((r) => r.text()).then((txt) => {
+  // préparée quand le navigateur est libre (elle n'apparaît qu'en bas du collage), hors de la page et par lots :
+  // aucune longue tâche au chargement
+  const yieldMain = () => new Promise((r) => (window.scheduler?.yield ? window.scheduler.yield().then(r) : setTimeout(r, 0)));
+  const loadGlobe = () => fetch('/brand/sphere-rouge.svg').then((r) => r.text()).then(async (txt) => {
     const svg = document.importNode(new DOMParser().parseFromString(txt, 'image/svg+xml').documentElement, true);
     svg.removeAttribute('width'); svg.removeAttribute('height');
     svg.style.cssText = 'width:100%;height:100%;display:block;overflow:visible';
-    globe.appendChild(svg);
     const vb = svg.viewBox.baseVal, cx = vb.x + vb.width / 2, cy = vb.y + vb.height / 2;
-    gPaths = [...svg.querySelectorAll('path')].map((p) => {
-      const L = p.getTotalLength(), b = p.getBBox();
+    const all = [...svg.querySelectorAll('path')], out = [];
+    for (let k = 0; k < all.length; k++) {
+      const p = all[k], L = p.getTotalLength(), m = p.getPointAtLength(L / 2);
       // ordre de dessin : en tournant autour du centre, depuis l'endroit où le trait arrive (à gauche)
-      const ang = ((Math.atan2(b.y + b.height / 2 - cy, b.x + b.width / 2 - cx) + Math.PI) / (Math.PI * 2) + 0.5) % 1;
+      const ang = ((Math.atan2(m.y - cy, m.x - cx) + Math.PI) / (Math.PI * 2) + 0.5) % 1;
       p.style.strokeDasharray = `${L} ${L}`; p.style.strokeDashoffset = String(L);
-      return { p, L, at: ang * 0.7 + Math.random() * 0.12 };
-    });
-    gReady = true;
+      out.push({ p, L, at: ang * 0.7 + Math.random() * 0.12 });
+      if (k % 120 === 119) await yieldMain();
+    }
+    globe.appendChild(svg);
+    gPaths = out; gReady = true;
   }).catch(() => {});
+  const whenIdle = (fn) => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 3000 }) : setTimeout(fn, 1200));
+  if (document.readyState === 'complete') whenIdle(loadGlobe); else addEventListener('load', () => whenIdle(loadGlobe), { once: true });
 
   let focus = null, pCur = 0, last = 0, raf = 0, visible = false;
   // FLUIDITÉ : rien n'est relu ni réécrit inutilement à chaque image (chaque lecture après une écriture force le
